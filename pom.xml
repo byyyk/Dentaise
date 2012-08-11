@@ -9,6 +9,6 @@
   <description>Top level project</description>
 
   <modules>
-    <module>dentaise-mobile</module>
+  	<module>dentaise-mobile</module>
   </modules>
 </project>

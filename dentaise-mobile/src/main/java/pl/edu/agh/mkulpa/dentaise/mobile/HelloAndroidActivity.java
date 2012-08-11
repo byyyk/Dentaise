@@ -1,4 +1,4 @@
-package pl.edu.agh.mkulpa.dentaise;
+package pl.edu.agh.mkulpa.dentaise.mobile;
 
 import android.app.Activity;
 import android.os.Bundle;
