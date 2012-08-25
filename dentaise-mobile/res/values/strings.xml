@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello dentaise-mobile!</string>
+
     <string name="app_name">dentaise-mobile</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_add_patient">Dodaj pacjenta</string>
+    <string name="title_activity_add_patient_section1">Pacjent</string>
+    <string name="title_activity_add_patient_section2">Opiekun</string>
+    <string name="title_activity_add_patient_section3">Section 3</string>
+
 </resources>

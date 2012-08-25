@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="pl.edu.agh.mkulpa.dentaise.mobile" android:versionCode="1" android:versionName="0.0.1-SNAPSHOT">
+    package="pl.edu.agh.mkulpa.dentaise.mobile"
+    android:versionCode="1"
+    android:versionName="0.0.1-SNAPSHOT" >
 
-  <application android:icon="@drawable/icon" android:label="@string/app_name">
-    <activity android:name=".HelloAndroidActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-  </application>
+    <uses-sdk
+        android:maxSdkVersion="16"
+        android:minSdkVersion="14"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddPatientActivity"
+            android:label="@string/title_activity_add_patient" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="pl.edu.agh.mkulpa.dentaise.mobile.MainActivity" />
+        </activity>
+    </application>
 
 </manifest>
-
