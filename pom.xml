@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>pl.edu.agh.mkulpa.dentaise</groupId>
-  <artifactId>dentaise-project</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Dentaise Project</name>
-  <description>Top level project</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modules>
-  	<module>dentaise-mobile</module>
-  </modules>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>pl.edu.agh.mkulpa.dentaise</groupId>
+	<artifactId>dentaise-project</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Dentaise Project</name>
+	<description>Top level project</description>
+
+	<modules>
+		<module>dentaise-mobile</module>
+		<module>dentaise-server</module>
+	</modules>
+
 </project>
