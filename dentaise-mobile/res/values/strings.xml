@@ -7,5 +7,8 @@
     <string name="title_activity_add_patient_section1">Pacjent</string>
     <string name="title_activity_add_patient_section2">Opiekun</string>
     <string name="title_activity_add_patient_section3">Section 3</string>
+    <string name="title_activity_find_patient">FindPatientActivity</string>
+    <string name="searched_patient_editbox_hint">Nazwisko lub PESEL</string>
+    <string name="filter">Filtruj: </string>
 
 </resources>

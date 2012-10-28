@@ -25,6 +25,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private static final String SETTINGS_MENU_ITEM_LABEL = "Ustawienia";
 	private static final String EXIT_MENU_ITEM_LABEL = "Wyjdź";
     
+	//TODO: move to nested class
     private String[] menuItemLabels = {
     		NEW_PATIENT_MENU_ITEM_LABEL,
     		FIND_PATIENT_MENU_ITEM_LABEL,
@@ -69,6 +70,9 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		if (NEW_PATIENT_MENU_ITEM_LABEL.equals(label)) {
 			intent = new Intent(this, AddPatientActivity.class);
 			startActivity(intent);
+		} else if (FIND_PATIENT_MENU_ITEM_LABEL.equals(label)) {
+			intent = new Intent(this, FindPatientActivity.class);
+			startActivity(intent);
 		}
 		
 	}
@@ -83,7 +87,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = getLayoutInflater();
 			View view = inflater.inflate(R.layout.main_menu_item, parent, false);
-			TextView textView = (TextView) view.findViewById(R.id.main_menu_text);
+			TextView textView = (TextView) view.findViewById(R.id.main_menu_item);
 			textView.setText(menuItemLabels[position]);
 			textView.setCompoundDrawablesWithIntrinsicBounds(0, menuItemIcons[position], 0, 0);
 			return view;

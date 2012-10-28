@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:id="@+id/searched_patient_editbox"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="fill_vertical|top"
+    	android:hint="@string/searched_patient_editbox_hint"
+    />
+    
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        android:layout_toLeftOf="@id/searched_patient_editbox"
+    />
+    
+	<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/patients_list"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/searched_patient_editbox"
+	/>
+	
+</RelativeLayout>
