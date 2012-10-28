@@ -12,7 +12,7 @@
 	
 	<artifactId>dentaise-mobile</artifactId>
 	<packaging>apk</packaging>
-	<name>dentaise-mobile</name>
+	<name>Dentaise Mobile</name>
 
 	<properties>
 		<platform.version>4.0.1.2</platform.version>
