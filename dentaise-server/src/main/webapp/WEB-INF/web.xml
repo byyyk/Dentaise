@@ -5,30 +5,26 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 id="WebApp_ID" version="2.5">
 
 	<display-name>pl.edu.agh.mkulpa.dentaise.server</display-name>
-	
+
 	<!-- FIXME: applicationContext should go to /WEB-INF/ -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/classes/applicationContext.xml</param-value>
 	</context-param>
-
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
 	<servlet>
-		<servlet-name>Jersey Servlet</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>pl.edu.agh.mkulpa.dentaise.server</param-value>
-		</init-param>
+		<servlet-name>springDispatcher</servlet-name>
+		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
 	<servlet-mapping>
-		<servlet-name>Jersey Servlet</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<servlet-name>springDispatcher</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

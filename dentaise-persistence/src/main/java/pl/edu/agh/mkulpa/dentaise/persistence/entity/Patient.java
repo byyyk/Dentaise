@@ -12,7 +12,7 @@ public class Patient implements Serializable {
 
 	private static final long serialVersionUID = -2036408534891065777L;
 
-	private int id;
+	private long id;
 	private String forename;
 	private String surname;
 	
@@ -27,11 +27,11 @@ public class Patient implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
