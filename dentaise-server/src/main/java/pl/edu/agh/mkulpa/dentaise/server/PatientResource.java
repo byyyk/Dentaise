@@ -1,11 +1,14 @@
 package pl.edu.agh.mkulpa.dentaise.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -77,6 +80,16 @@ public class PatientResource {
 			response = Response.created(uriInfo.getAbsolutePath()).build();
 		}
 		return response;
+	}
+
+	@POST
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public void newPatient(
+			@FormParam("forename") String forename,
+			@FormParam("surname") String surname) throws IOException {
+		Patient patient = new Patient(forename, surname);
+		patientDao.save(patient);
 	}
 
 	@DELETE
