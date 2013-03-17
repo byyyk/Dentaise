@@ -36,18 +36,4 @@ http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 	<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
-	<!--
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-	<property name="dataSource" ref="dataSource" />
-	<property name="hibernateProperties">
-	<props>
-	<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-	<prop key="hibernate.show_sql">true</prop>
-	<prop key="hibernate.hbm2ddl.auto">update</prop>
-	</props>
-	</property>
-	<property name="packagesToScan" value="pl.edu.agh.mkulpa.dentaise.persistence.entity" />
-	</bean>
-	-->
-
 </beans>
