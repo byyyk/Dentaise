@@ -22,6 +22,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import pl.edu.agh.mkulpa.dentaise.persistence.entity.Patient;
@@ -97,5 +98,5 @@ public class PatientResource {
 	public void deletePatient(@PathParam("id") Long id) {
 		patientDao.delete(id);
 	}
-
+	
 }

@@ -1,0 +1,29 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security 
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+			
+	<http use-expressions="true">
+		<intercept-url pattern="/service/**" access="isAuthenticated() or hasIpAddress('127.0.0.1/24')" />
+		<form-login />
+		<logout logout-success-url="/loggedout.jsp" delete-cookies="JSESSIONID"/>
+		<remember-me />
+	</http>
+
+	<beans:bean id="encoder" 
+		class="org.springframework.security.crypto.password.StandardPasswordEncoder"/>
+
+	<authentication-manager>
+	  <authentication-provider>
+		<password-encoder ref="encoder" />
+		<user-service>
+		  <user name="mkulpa" 
+			  password="f02c85acb1476b038dfa53ac1c1f545551e508aa62c9aafce09f49e6bc2a4a1e493de29b88525a04" 
+			  authorities="user" />
+		  </user-service>
+	  </authentication-provider>
+	</authentication-manager>
+</beans:beans>   

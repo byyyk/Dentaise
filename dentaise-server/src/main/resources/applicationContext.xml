@@ -8,6 +8,7 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<import resource="classpath:hibernateContext.xml"/>
+	<import resource="classpath:springSecurityContext.xml"/>
 	<context:component-scan	base-package="pl.edu.agh.mkulpa.dentaise.server" />
 
 </beans>
