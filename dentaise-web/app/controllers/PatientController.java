@@ -1,26 +1,20 @@
 package controllers;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import models.Patient;
-import models.PatientDao;
+import play.db.jpa.JPA;
+import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
-import settings.Global;
 import views.html.index;
 
 public class PatientController extends Controller {
 
-	private static PatientDao patientDao = Global.getBean(PatientDao.class);
-
 	@Transactional
 	public static Result list() {
-		String content = "";
+		//TODO: ebean...
+		Patient patient = JPA.em().find(Patient.class, Long.valueOf(1));
 		
-		for (Patient patient : patientDao.findAll()) {
-			content += patient.getId() + " ";
-		}
-		return ok(index.render(content));
+		return ok(index.render(patient.getForename() + " " + patient.getSurname()));
 	}
 
 }
