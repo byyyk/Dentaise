@@ -33,6 +33,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pl.edu.agh.mkulpa.dentaise.mobile.MainActivity" />
         </activity>
+        <uses-library android:name="android.test.runner" />
     </application>
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:label="Dentaise"
+        android:targetPackage="pl.edu.agh.mkulpa.dentaise.mobile" />
 
 </manifest>
