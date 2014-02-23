@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +41,11 @@ public class FindPatientActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    public void onSearchButtonClicked(View view) {
+    	EditText filterText = (EditText) findViewById(R.id.searched_patient_editbox);
+    	filterText.getText().toString();
     }
 
     private class PatientListAdapter extends BaseAdapter {
