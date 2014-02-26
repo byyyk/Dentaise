@@ -21,9 +21,9 @@ public class MainActivity extends Activity implements OnItemClickListener {
     private GridView menu;
     
     private static final String NEW_PATIENT_MENU_ITEM_LABEL = "Dodaj pacjenta";
-    private static final String FIND_PATIENT_MENU_ITEM_LABEL = "Znajd≈∫ pacjenta";
+    private static final String FIND_PATIENT_MENU_ITEM_LABEL = "Znajdü pacjenta";
 	private static final String SETTINGS_MENU_ITEM_LABEL = "Ustawienia";
-	private static final String EXIT_MENU_ITEM_LABEL = "Wyjd≈∫";
+	private static final String EXIT_MENU_ITEM_LABEL = "Wyjdü";
     
 	//TODO: move to nested class
     private String[] menuItemLabels = {
