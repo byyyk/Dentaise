@@ -16,7 +16,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
-import org.junit.Assert;
 
 import android.net.http.AndroidHttpClient;
 
@@ -40,7 +39,6 @@ public class RestClient {
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 
 			HttpResponse response = httpClient.execute(httpPost, context);
-			Assert.assertTrue(response.getStatusLine().getStatusCode() == 200);
 			
 			System.out.println("Post logon cookies:");
 			List<Cookie> cookies = cookieStore.getCookies();

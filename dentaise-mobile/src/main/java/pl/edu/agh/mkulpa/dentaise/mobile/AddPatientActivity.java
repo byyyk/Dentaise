@@ -35,7 +35,8 @@ public class AddPatientActivity extends FragmentActivity implements ActionBar.Ta
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_patient);
+        PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+        setContentView(R.layout.activity_add_patient_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
