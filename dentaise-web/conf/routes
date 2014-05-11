@@ -8,6 +8,9 @@ GET     /login                  	controllers.Application.login()
 POST    /login                      controllers.Application.authenticate()
 
 GET     /patient                    controllers.PatientController.list()
+GET     /patient-edit               controllers.PatientController.edit()
+GET     /patient-search/:phrase     controllers.PatientController.search(phrase: String)
+POST    /patient                    controllers.PatientController.save()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
