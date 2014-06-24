@@ -36,6 +36,7 @@ public class Application extends Controller {
         public String password;
         
         public String validate() {
+        	System.out.println("Validating " + username + ":" + password);
             if (!"admin".equals(username) || !"dupa123".equals(password)) {
               return "Invalid username or password";
             }

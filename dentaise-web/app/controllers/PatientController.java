@@ -12,16 +12,20 @@ import play.db.jpa.Transactional;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Security;
 import views.html.index;
 import views.html.patient;
+import views.html.patients;
 
+@Security.Authenticated(Secured.class)
 public class PatientController extends Controller {
 
+	//TODO: check if works
 	@Transactional
 	public static Result save() {
 		Form<Patient> patientForm = Form.form(Patient.class);
 		Patient patient = patientForm.bindFromRequest().get();
-		JPA.em().persist(patient);
+		JPA.em().merge(patient); 
 		return ok(index.render("user saved!"));
 	}
 	
@@ -50,11 +54,15 @@ public class PatientController extends Controller {
 	}
 	
 	@Transactional
-	public static Result list() {
-		//TODO: ebean...
-		Patient patient = JPA.em().find(Patient.class, Long.valueOf(1));
+	public static Result get(long id) {
+		Patient patient = JPA.em().find(Patient.class, id);
 		
 		return ok(index.render(patient.getForename() + " " + patient.getSurname()));
+	}
+	
+	@Transactional
+	public static Result list() {
+		return ok(patients.render());
 	}
 
 }

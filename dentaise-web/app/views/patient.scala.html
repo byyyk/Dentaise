@@ -1,26 +1,18 @@
-@(form: Form[Patient])
-
-@main("Patient") {
-    
-		@helper.form(routes.PatientController.save) {
-			<h1>Sign in</h1>
-		
-			<p>
-				<input type="text" name="forename" placeholder="Imię">
-			</p>
-			<p>
-				<input type="text" name="surname" placeholder="Nazwisko">
-			</p>
-			
-			@if(form.hasGlobalErrors) {
-				<p class="error">
-					@form.globalError.message
-				</p>
-			}
-			
-			<p>
-				<button type="submit">Zapisz</button>
-			</p>
-		}
-    
+@(form: Form[Patient]) @main("Pacjent", "patient") {
+    @helper.form(routes.PatientController.save) {
+        <p>
+            <input type="text" name="forename" placeholder="Imię">
+        </p>
+        <p>
+            <input type="text" name="surname" placeholder="Nazwisko">
+        </p>
+        
+        @if(form.hasGlobalErrors) {
+            <p class="error">@form.globalError.message</p>
+        }
+        
+        <p>
+            <button type="submit">Zapisz</button>
+        </p>
+    }
 }

@@ -1,0 +1,9 @@
+body {
+  padding-top: 100px;
+}
+
+.fit {
+    margin-top: -7px;
+    margin-right: 10px;
+    max-width:100%; max-height:100%;
+}
