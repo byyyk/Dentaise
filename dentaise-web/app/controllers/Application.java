@@ -1,7 +1,18 @@
 package controllers;
 
 import static play.data.Form.form;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+
+import models.Doctor;
+import models.Session;
 import play.data.Form;
+import play.db.jpa.JPA;
+import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -10,6 +21,8 @@ import views.html.login;
 
 public class Application extends Controller {
 
+	private static Random random = new SecureRandom();
+	
 	@Security.Authenticated(Secured.class)
     public static Result index() {
         return ok(index.render("For the swarm."));
@@ -24,29 +37,55 @@ public class Application extends Controller {
         return login();
     }
     
+    public static String generateSessionId() {
+    	return new BigInteger(130, random).toString();
+    }
+    
+    @Transactional
     public static Result authenticate() {
         Form<Login> loginForm = form(Login.class).bindFromRequest();
         if (loginForm.hasErrors()) {
         	return badRequest(login.render(loginForm));
         } else {
         	session().clear();
-        	session().put("username", loginForm.get().username);
+        	String username = loginForm.get().username;
+        	Doctor doctor = findDoctor(username);
+        	Session session = new Session();
+        	session.setId(generateSessionId());
+        	session.setDoctor(doctor);
+        	session.setLastActivity(new Date());
+        	JPA.em().merge(session);
+        	session().put("sessionId", session.getId());
         	return redirect(routes.Application.index());
         }
     }
+
+	private static Doctor findDoctor(String username) {
+		List<Doctor> doctors = JPA.em().createQuery("FROM Doctor WHERE username='" + username + "'", Doctor.class).getResultList();
+		return doctors.size() > 0 ? doctors.get(0) : null;
+	}
     
-    public static class Login {
+	public static class Login {
+		public String username;
+		public String password;
 
-        public String username;
-        public String password;
-        
-        public String validate() {
-        	System.out.println("Validating " + username + ":" + password);
-            if (!"admin".equals(username) || !"dupa123".equals(password)) {
-              return "Invalid username or password";
-            }
-            return null;
-        }
+		public String validate() {
+			if (passwordMatches()) {
+				return null;
+			} else {
+				return "Invalid username or password";
+			}
+		}
 
-    }
+		private boolean passwordMatches() {
+			Doctor doctor = findDoctor(username);
+			if (doctor != null) {
+				String checkedPasswordHash = PasswordHashing.hash(password, doctor.getSalt());
+				String actualPasswordHash = doctor.getPassword();
+				
+				return checkedPasswordHash.equals(actualPasswordHash);
+			}
+			return false;
+		}
+	}
 }

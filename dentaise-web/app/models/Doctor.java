@@ -16,6 +16,7 @@ public class Doctor implements Serializable {
 	private String surname;
 	private String username;
 	private String password;
+	private String salt;
 	private String email;
 
 	@Id
@@ -45,7 +46,8 @@ public class Doctor implements Serializable {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
-
+	
+	@Column
 	public String getUsername() {
 		return username;
 	}
@@ -54,6 +56,7 @@ public class Doctor implements Serializable {
 		this.username = username;
 	}
 
+	@Column
 	public String getPassword() {
 		return password;
 	}
@@ -62,12 +65,22 @@ public class Doctor implements Serializable {
 		this.password = password;
 	}
 
+	@Column
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Column
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 }
