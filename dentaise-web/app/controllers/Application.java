@@ -14,9 +14,14 @@ public class Application extends Controller {
     public static Result index() {
         return ok(index.render("For the swarm."));
     }
-  
+	
     public static Result login() {
         return ok(login.render(form(Login.class)));
+    }
+    
+    public static Result logout() {
+    	session().clear();
+        return login();
     }
     
     public static Result authenticate() {
