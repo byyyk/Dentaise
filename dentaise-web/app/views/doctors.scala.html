@@ -1,3 +1,31 @@
-@main("Lekarze", "doctors") {
-    Lista lekarzy.
+@(page: Integer, doctors: List[Doctor]) @main("Lekarze", "doctors") {
+<script type="text/javascript">
+jQuery.noConflict();
+jQuery(document).ready(function() {
+      $(".clickable").click(function() {
+    	  alert("dupa");
+            window.document.location = $(this).data(url);
+      });
+});
+</script>
+
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Nazwa użytkownika</th>
+            <th>E-mail</th>
+        </tr>
+    </thead>
+    @for(doctor <- doctors) {
+    <tr class="clickable" data-url="http://wp.pl">
+        <td>@doctor.getForename()</td>
+        <td>@doctor.getSurname()</td>
+        <td>@doctor.getUsername()</td>
+        <td>@doctor.getEmail()</td>
+    </tr>
+    }
+</table>
+
 }
