@@ -3,8 +3,7 @@
 jQuery.noConflict();
 jQuery(document).ready(function() {
       $(".clickable").click(function() {
-    	  alert("dupa");
-            window.document.location = $(this).data(url);
+            window.document.location = $(this).data("url");
       });
 });
 </script>
