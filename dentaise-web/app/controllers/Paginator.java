@@ -1,12 +1,10 @@
 package controllers;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Query;
 
-import models.Session;
 import play.Logger;
 import play.db.jpa.JPA;
 import play.libs.F.Function0;
@@ -35,7 +33,20 @@ public class Paginator<T extends Serializable> {
 			Logger.error(null, e);
 			return null;
 		}
-		
+	}
 
+	public int getPageCount() {
+		try {
+			return JPA.withTransaction(new Function0<Integer>() {
+				@Override
+				public Integer apply() {
+					double count = JPA.em().createQuery("SELECT count(*) FROM " + tableName, Long.class).getSingleResult();
+					return (int) Math.ceil(count / PAGE_SIZE);
+				}
+			});
+		} catch (Throwable e) {
+			Logger.error(null, e);
+			return 0;
+		}
 	}
 }

@@ -1,7 +1,7 @@
-@(page: Integer, doctors: List[Doctor]) @main("Lekarze", "doctors") {
+@(page: Integer, doctors: List[Doctor], pageCount: Integer) @main("Lekarze", "doctors") {
+
 <script type="text/javascript">
-jQuery.noConflict();
-jQuery(document).ready(function() {
+jQuery(document).ready(function($) {
       $(".clickable").click(function() {
             window.document.location = $(this).data("url");
       });
@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
         </tr>
     </thead>
     @for(doctor <- doctors) {
-    <tr class="clickable" data-url="http://wp.pl">
+    <tr class="clickable" data-url="@routes.DoctorController.get(doctor.getId)">
         <td>@doctor.getForename()</td>
         <td>@doctor.getSurname()</td>
         <td>@doctor.getUsername()</td>
@@ -26,5 +26,19 @@ jQuery(document).ready(function() {
     </tr>
     }
 </table>
-
+<ul class="pagination">
+    @if(page==1) {
+    <li class="disabled"><a href="#">&laquo;</a></li>
+    } else {
+    <li><a href="@routes.DoctorController.list(page-1)">&laquo;</a></li>
+    }
+    @for(i <- 1 to pageCount) {
+    <li @if(page==i){class="active"}><a href="@routes.DoctorController.list(i)">@i</a></li>
+    }
+    @if(page==pageCount) {
+    <li class="disabled"><a href="#">&raquo;</a></li>
+    } else {
+    <li><a href="@routes.DoctorController.list(page+1)">&raquo;</a></li>
+    }
+</ul>
 }
