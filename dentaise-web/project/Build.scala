@@ -1,6 +1,6 @@
 import sbt._
-import play.Play.autoImport._
-import PlayKeys._
+import Keys._
+import play.Project._
 
 object ApplicationBuild extends Build {
 
@@ -16,7 +16,7 @@ object ApplicationBuild extends Build {
     "org.hibernate" % "hibernate-entitymanager" % "4.1.9.Final"
   )
 
-  val main = Project(appName, file(".")).enablePlugins(play.PlayJava).settings(
+  val main = play.Project(appName, appVersion, appDependencies).settings(
   	ebeanEnabled := false 
     // Add your own project settings here      
   )
