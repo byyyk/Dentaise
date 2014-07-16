@@ -17,23 +17,23 @@ public class Secured extends Security.Authenticator {
 	@Override
 	public String getUsername(final Context context) {
 		try {
-			return JPA.withTransaction(new Function0<String>() {
+			return JPA.withTransaction(new Function0<String>() { //FIXME this causes other @Transactional annotations to fail, forcing to use JPA.withTransaction even inside Controllers where annotation should work
 				@Override
 				public String apply() {
 					String result = null;
 					String sessionId = context.session().get("sessionId");
-					
 					if (sessionId != null) {
 						Session session = JPA.em().find(Session.class, sessionId);
-						if (!expired(session)) {
-							session.setLastActivity(new Date());
-							JPA.em().merge(session);
-							result = session.getDoctor().getUsername();
-						} else {
-							JPA.em().remove(session);
+						if (session != null) {
+							if (expired(session)) {
+								JPA.em().remove(session);
+							} else {
+								session.setLastActivity(new Date());
+								JPA.em().merge(session);
+								result = session.getDoctor().getUsername();
+							}
 						}
 					}
-					
 					return result;
 				}
 			});
@@ -44,15 +44,11 @@ public class Secured extends Security.Authenticator {
 	}
 	
 	private boolean expired(Session session) {
-		if (session != null) {
-			Date lastActivity = session.getLastActivity();
-			Date now = new Date();
-			
-			long timeDifference = now.getTime() - lastActivity.getTime();
-			return timeDifference > SESSION_TIMEOUT_MILIS;
-		} else {
-			return true;
-		}
+		Date lastActivity = session.getLastActivity();
+		Date now = new Date();
+		
+		long timeDifference = now.getTime() - lastActivity.getTime();
+		return timeDifference > SESSION_TIMEOUT_MILIS;
 	}
 
 	@Override

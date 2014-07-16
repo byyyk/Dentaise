@@ -83,4 +83,10 @@ public class Doctor implements Serializable {
 		this.salt = salt;
 	}
 
+	@Override
+	public String toString() {
+		return "Doctor [id=" + id + ", forename=" + forename + ", surname="
+				+ surname + "]";
+	}
+
 }

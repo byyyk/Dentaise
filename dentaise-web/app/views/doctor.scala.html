@@ -1,0 +1,21 @@
+@(form: Form[Doctor])
+@import helper.twitterBootstrap._
+
+@main("Doctor", "doctor") {
+
+@helper.form(routes.DoctorController.save) {
+<div class="form-horizontal">
+    @forms.input("text", "forename", "Imię", form.get.getForename)
+    @forms.input("text", "surname", "Nazwisko", form.get.getSurname)
+    @forms.input("email", "email", "E-mail", form.get.getEmail)
+    
+    @if(form.hasGlobalErrors) {
+    <p class="error">@form.globalError.message</p>
+    }
+
+    <p>
+        <button type="submit">Zapisz</button>
+    </p>
+</div>
+}
+}
