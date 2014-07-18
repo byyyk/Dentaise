@@ -1,56 +1,32 @@
 package controllers;
 
-import java.util.Date;
-
-import models.Session;
-import play.Logger;
-import play.db.jpa.JPA;
-import play.libs.F.Function0;
+import play.libs.ws.WS;
+import play.mvc.Call;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.Security;
 
 public class Secured extends Security.Authenticator {
 
-	private static final long SESSION_TIMEOUT_MILIS = 10 * 60 * 1000;
-
 	@Override
 	public String getUsername(final Context context) {
-		try {
-			return JPA.withTransaction(new Function0<String>() { //FIXME this causes other @Transactional annotations to fail, forcing to use JPA.withTransaction even inside Controllers where annotation should work
-				@Override
-				public String apply() {
-					String result = null;
-					String sessionId = context.session().get("sessionId");
-					if (sessionId != null) {
-						Session session = JPA.em().find(Session.class, sessionId);
-						if (session != null) {
-							if (expired(session)) {
-								JPA.em().remove(session);
-							} else {
-								session.setLastActivity(new Date());
-								JPA.em().merge(session);
-								result = session.getDoctor().getUsername();
-							}
-						}
-					}
-					return result;
-				}
-			});
-		} catch (Throwable e) {
-			Logger.error(null, e);
-			return null;
+		String result = null;
+		String sessionId = context.session().get("sessionId");
+		if (sessionId != null) {
+			Call call = routes.Application.processSession(sessionId);
+			String baseUrl = play.Play.application().configuration().getString("application.baseUrl");
+			String url = baseUrl + call.url();
+			String username = WS.url(url).get().get(3000).getBody();
+			if (username == null || username.isEmpty()) {
+				result = null;
+			} else {
+				result = username;
+			}
 		}
+		System.out.println("Current user: [" + result + "]");
+		return result;
 	}
 	
-	private boolean expired(Session session) {
-		Date lastActivity = session.getLastActivity();
-		Date now = new Date();
-		
-		long timeDifference = now.getTime() - lastActivity.getTime();
-		return timeDifference > SESSION_TIMEOUT_MILIS;
-	}
-
 	@Override
 	public Result onUnauthorized(Context context) {
 		//invoked when getUsername(Context) == null

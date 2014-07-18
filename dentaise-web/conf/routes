@@ -7,6 +7,7 @@ GET     /                           controllers.Application.index()
 GET     /login                  	controllers.Application.login()
 POST    /login                      controllers.Application.authenticate()
 GET     /logout                     controllers.Application.logout()
+GET     /processSession/:id         controllers.Application.processSession(id: String)
 
 GET     /patient-list               controllers.PatientController.list()
 GET     /patient/:id                controllers.PatientController.get(id: Long)

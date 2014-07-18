@@ -20,7 +20,7 @@ import views.html.index;
 import views.html.login;
 
 public class Application extends Controller {
-
+	private static final long SESSION_TIMEOUT_MILIS = 10 * 60 * 1000;
 	private static Random random = new SecureRandom();
 	
 	@Security.Authenticated(Secured.class)
@@ -40,6 +40,30 @@ public class Application extends Controller {
     public static String generateSessionId() {
     	return new BigInteger(130, random).toString();
     }
+    
+    @Transactional
+    public static Result processSession(String sessionId) {
+    	String username = null;
+		Session session = JPA.em().find(Session.class, sessionId);
+		if (session != null) {
+			if (expired(session)) {
+				JPA.em().remove(session);
+			} else {
+				session.setLastActivity(new Date());
+				JPA.em().merge(session);
+				username = session.getDoctor().getUsername();
+			}
+		}
+		return ok(username == null ? "" : username);
+    }
+    
+	private static boolean expired(Session session) {
+		Date lastActivity = session.getLastActivity();
+		Date now = new Date();
+		
+		long timeDifference = now.getTime() - lastActivity.getTime();
+		return timeDifference > SESSION_TIMEOUT_MILIS;
+	}
     
     @Transactional
     public static Result authenticate() {

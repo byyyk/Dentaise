@@ -9,7 +9,6 @@ import models.Patient;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
-import play.libs.F.Function0;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -23,40 +22,30 @@ public class PatientController extends Controller {
 
 	//TODO: check if works
 	@Transactional
-	public static Result save() throws Throwable {
-		return JPA.withTransaction(new Function0<Result>() {
-			@Override
-			public Result apply() throws Throwable {
-				Form<Patient> patientForm = Form.form(Patient.class);
-				Patient patient = patientForm.bindFromRequest().get();
-				JPA.em().merge(patient); 
-				return ok(index.render("user saved!"));
-			}
-		});
+	public static Result save() {
+		Form<Patient> patientForm = Form.form(Patient.class);
+		Patient patient = patientForm.bindFromRequest().get();
+		JPA.em().merge(patient); 
+		return ok(index.render("user saved!"));
 	}
 	
 	@Transactional
-	public static Result search(final String phrase) throws Throwable {
-		return JPA.withTransaction(new Function0<Result>() {
-			@Override
-			public Result apply() throws Throwable {
-				String parts[] = phrase.split(" ");
-				if (parts.length > 0) {
-					String conditions = "";
-					for (int i = 0; i < parts.length; i++) {
-						String part = parts[i];
-						if (i > 0) {
-							conditions += " AND";
-						}
-						conditions += " forename LIKE '" + part + "%' OR surname LIKE '" + part + "%'";// OR pesel LIKE '" + part + "%'" ;
-					}
-					List<Patient> patients = JPA.em().createQuery("FROM Patient WHERE" + conditions, Patient.class).getResultList();
-					return ok(Json.toJson(patients));
-				} else {
-					return ok(Json.toJson(new ArrayList<Patient>()));
+	public static Result search(final String phrase) {
+		String parts[] = phrase.split(" ");
+		if (parts.length > 0) {
+			String conditions = "";
+			for (int i = 0; i < parts.length; i++) {
+				String part = parts[i];
+				if (i > 0) {
+					conditions += " AND";
 				}
+				conditions += " forename LIKE '" + part + "%' OR surname LIKE '" + part + "%'";// OR pesel LIKE '" + part + "%'" ;
 			}
-		});
+			List<Patient> patients = JPA.em().createQuery("FROM Patient WHERE" + conditions, Patient.class).getResultList();
+			return ok(Json.toJson(patients));
+		} else {
+			return ok(Json.toJson(new ArrayList<Patient>()));
+		}
 	}
 	
 	@Transactional
@@ -65,14 +54,9 @@ public class PatientController extends Controller {
 	}
 	
 	@Transactional
-	public static Result get(final long id) throws Throwable {
-		return JPA.withTransaction(new Function0<Result>() {
-			@Override
-			public Result apply() throws Throwable {
-				Patient patient = JPA.em().find(Patient.class, id);
-				return ok(index.render(patient.getForename() + " " + patient.getSurname()));
-			}
-		});
+	public static Result get(final long id) {
+		Patient patient = JPA.em().find(Patient.class, id);
+		return ok(index.render(patient.getForename() + " " + patient.getSurname()));
 	}
 	
 	@Transactional
