@@ -37,7 +37,7 @@ public class DoctorController extends Controller {
 		Doctor doctor = form.bindFromRequest().get();
 		System.out.println("doc id: " + doctor.getId());
 		System.out.println(doctor.toString());
-		JPA.em().merge(doctor); //update recznie? co z saltem??
+		JPA.em().merge(doctor);
 		return list(1);
 	}
 

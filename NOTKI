@@ -1,0 +1,37 @@
+PROBLEMY:
+Lekarze teoretycznie mogą zmieniać sobie dane przez API
+
+plugin gradle do eclipse uzywa gradle 1.5 - pewnie nie zadziala z android, uzyc plugina eclipe do gradle
+
+O CZYM PISAĆ?
+- konfiguracja (application.conf - baseUrl, smtp.host), uruchomienie, sbt
+
+- orm
+- rest vs soap
+- rozdwojenie api dla mobile i przegladarki
+- wybór technologii frontend backend - play, bootstrap
+- poziomy autoryzacji/autentykacji (administrator)
+- paginacja ?
+- interfejs restowy (paginacja w url czy header Range?)
+
+- rodzaje mech. logowania
+- haslo przesyłane clear text czy od razu md5 u klienta?
+- sql injection (I POPRAWIĆ W KODZIE!)
+- mechanizm resetu hasła
+- https
+- session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf, stateless? baza mi nie przeszkadza
+
+
+
+
+
+
+
+
+
+	public static void main(String[] arg) {
+		for (int i = 0; i < 100; i++) {
+			int id = i + 10;
+			System.out.println("INSERT INTO doctor(id, email, forename, password, salt, surname, username) VALUES (" + id + ", 'lekarz@gmail.com', 'Lekarz', '1341d1e9016ab6eb548017e87a6bd397', '328e9a09283a24684f4e6106cd8c56bb', 'Lekarski', 'lekarz" + i + "');");
+		}
+	}

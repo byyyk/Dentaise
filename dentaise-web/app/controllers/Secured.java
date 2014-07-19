@@ -23,7 +23,6 @@ public class Secured extends Security.Authenticator {
 				result = username;
 			}
 		}
-		System.out.println("Current user: [" + result + "]");
 		return result;
 	}
 	

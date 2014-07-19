@@ -16,5 +16,6 @@ libraryDependencies ++= Seq(
     javaWs,
     "postgresql" % "postgresql" % "9.1-901.jdbc4",
     "org.hibernate" % "hibernate-ehcache" % "4.1.8.Final",
-    "org.hibernate" % "hibernate-entitymanager" % "4.1.9.Final"
+    "org.hibernate" % "hibernate-entitymanager" % "4.1.9.Final",
+    "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.0"
 )

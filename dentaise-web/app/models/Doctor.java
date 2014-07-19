@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import controllers.PasswordHashing;
+
 @Entity
 public class Doctor implements Serializable {
 	private static final long serialVersionUID = 3671519875344263155L;
@@ -47,7 +49,7 @@ public class Doctor implements Serializable {
 		this.surname = surname;
 	}
 	
-	@Column
+	@Column(unique = true)
 	public String getUsername() {
 		return username;
 	}
@@ -65,7 +67,7 @@ public class Doctor implements Serializable {
 		this.password = password;
 	}
 
-	@Column
+	@Column(unique = true)
 	public String getEmail() {
 		return email;
 	}
@@ -86,7 +88,14 @@ public class Doctor implements Serializable {
 	@Override
 	public String toString() {
 		return "Doctor [id=" + id + ", forename=" + forename + ", surname="
-				+ surname + "]";
+				+ surname + ", username=" + username + ", password=" + password
+				+ ", salt=" + salt + ", email=" + email + "]";
 	}
 
+	public void update(Doctor updatedDoctor) {
+		setEmail(updatedDoctor.getEmail());
+		setForename(updatedDoctor.getForename());
+		setSurname(updatedDoctor.getSurname());
+	}
+	
 }

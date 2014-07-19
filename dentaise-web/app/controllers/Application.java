@@ -5,11 +5,18 @@ import static play.data.Form.form;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import javax.persistence.TypedQuery;
+
+import org.hibernate.metamodel.source.binder.JpaCallbackClass;
 
 import models.Doctor;
 import models.Session;
+import models.Token;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
@@ -18,9 +25,16 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.index;
 import views.html.login;
+import views.html.resetPassword;
+import views.html.passwordNotice;
+import views.html.changePassword;
+
+import com.typesafe.plugin.MailerAPI;
+import com.typesafe.plugin.MailerPlugin;
 
 public class Application extends Controller {
-	private static final long SESSION_TIMEOUT_MILIS = 10 * 60 * 1000;
+	private static final long SESSION_TIMEOUT_MILIS = 30 * 60 * 1000;
+	private static final long TOKEN_TIMEOUT_MILIS = 15 * 60 * 1000;
 	private static Random random = new SecureRandom();
 	
 	@Security.Authenticated(Secured.class)
@@ -37,6 +51,67 @@ public class Application extends Controller {
         return login();
     }
     
+    public static Result resetPassword() {
+    	return ok(resetPassword.render(form(PasswordResetRequest.class)));
+    }
+    
+    @Transactional
+    public static Result sendPasswordChangeLink() {
+    	Form<PasswordResetRequest> emailForm = form(PasswordResetRequest.class).bindFromRequest();
+    	if (emailForm.hasErrors()) {
+    		return badRequest(resetPassword.render(emailForm));
+    	} else {
+    		Doctor doctor = emailForm.get().getDoctor();
+    		Token token = new Token();
+    		token.setDoctor(doctor);
+    		token.setCreated(new Date());
+    		token.setId(PasswordHashing.generateSalt()); //this has nothing to do with salt but it is used as id for simplicity
+    		JPA.em().persist(token);
+    		
+    		String baseUrl = play.Play.application().configuration().getString("application.outerBaseUrl");
+    		String link = baseUrl + routes.Application.changePassword(token.getId()).url();
+    		
+    		MailerAPI mail = play.Play.application().plugin(MailerPlugin.class).email();
+    		mail.setSubject("Dentaise - Zmiana hasła");
+    		mail.setRecipient(doctor.getEmail());
+    		mail.setFrom(play.Play.application().configuration().getString("smtp.from"));
+    		mail.sendHtml("Skorzystaj z linku aby zresetować hasło: <a href=\"" + link + "\">"+link+"</a>. Link będzie aktywny tylko przez 15 minut.");
+    		
+    		return ok(passwordNotice.render("Link do zmiany hasła został wysłany w wiadomości na podany adres e-mail. Postępuj zgodnie z przekazanymi w niej informacjami."));
+    	}
+    }
+    
+    public static Result changePassword(String token) {
+    	Map<String, String> data = new HashMap<String, String>();
+    	data.put("token", token);
+    	Form<PasswordChangeRequest> passChangeForm = form(PasswordChangeRequest.class).bind(data);
+    	return ok(changePassword.render(passChangeForm));
+    }
+    
+    @Transactional
+    public static Result savePassword() {
+        Form<PasswordChangeRequest> passChangeForm = form(PasswordChangeRequest.class).bindFromRequest();
+        if (passChangeForm.hasErrors()) {
+        	return badRequest(changePassword.render(passChangeForm));
+        } else {
+        	PasswordChangeRequest req = passChangeForm.get();
+        	String newPassword = req.password;
+			String newSalt = PasswordHashing.generateSalt();
+			String hashedNewPassword = PasswordHashing.hash(newPassword, newSalt);
+			
+			Token token = JPA.em().find(Token.class, req.token);
+			Doctor doctor = token.getDoctor();
+			JPA.em().remove(token);
+			
+			doctor.setSalt(newSalt);
+			doctor.setPassword(hashedNewPassword);
+			JPA.em().merge(doctor);
+        }
+		
+    	return ok();
+    }
+    
+    
     public static String generateSessionId() {
     	return new BigInteger(130, random).toString();
     }
@@ -46,7 +121,7 @@ public class Application extends Controller {
     	String username = null;
 		Session session = JPA.em().find(Session.class, sessionId);
 		if (session != null) {
-			if (expired(session)) {
+			if (expired(session.getLastActivity(), SESSION_TIMEOUT_MILIS)) {
 				JPA.em().remove(session);
 			} else {
 				session.setLastActivity(new Date());
@@ -57,11 +132,9 @@ public class Application extends Controller {
 		return ok(username == null ? "" : username);
     }
     
-	private static boolean expired(Session session) {
-		Date lastActivity = session.getLastActivity();
+	private static boolean expired(Date date, long timeout) {
 		Date now = new Date();
-		
-		long timeDifference = now.getTime() - lastActivity.getTime();
+		long timeDifference = now.getTime() - date.getTime();
 		return timeDifference > SESSION_TIMEOUT_MILIS;
 	}
     
@@ -85,8 +158,63 @@ public class Application extends Controller {
     }
 
 	private static Doctor findDoctor(String username) {
-		List<Doctor> doctors = JPA.em().createQuery("FROM Doctor WHERE username='" + username + "'", Doctor.class).getResultList();
+		TypedQuery<Doctor> query = JPA.em().createQuery("FROM Doctor WHERE username=:username", Doctor.class);
+		query.setParameter("username", username);
+		List<Doctor> doctors = query.getResultList();
 		return doctors.size() > 0 ? doctors.get(0) : null;
+	}
+	
+	public static class PasswordResetRequest {
+		public String email;
+
+		public String validate() {
+			if (getDoctor() == null) {
+				return "Podany adres e-mail nie istnieje w bazie.";
+			} else {
+				return null;
+			}
+		}
+		
+		public Doctor getDoctor() {
+			System.out.println(email);
+			TypedQuery<Doctor> query = JPA.em().createQuery("FROM Doctor d WHERE d.email=:email", Doctor.class);
+			query.setParameter("email", email);
+			List<Doctor> doctors = query.getResultList();
+			System.out.println(doctors.size());
+			return doctors.size() > 0 ? doctors.get(0) : null;
+		}
+	}
+	
+	public static class PasswordChangeRequest {
+		public String password;
+		public String passwordRepeat;
+		public String token;
+
+		public String validate() {
+			if (passwordTooWeak()) {
+				return "Hasło musi mieć przynajmniej 6 znaków";
+			}
+			if (passwordsNotMatching()) {
+				return "Podane hasła nie są identyczne.";
+			} 
+			if (badToken()) {
+				return "Token wygasł lub nie istnieje. Ponów żądanie o reset hasła.";
+			}
+			return null;
+		}
+
+		private boolean passwordTooWeak() {
+			return password == null || password.length() < 6;
+		}
+
+		private boolean passwordsNotMatching() {
+			return !password.equals(passwordRepeat);
+		}
+		
+		private boolean badToken() {
+			Token t = JPA.em().find(Token.class, token);
+			return t == null || expired(t.getCreated(), TOKEN_TIMEOUT_MILIS);
+		}
 	}
     
 	public static class Login {
@@ -102,6 +230,7 @@ public class Application extends Controller {
 		}
 
 		private boolean passwordMatches() {
+			System.out.println(username);
 			Doctor doctor = findDoctor(username);
 			if (doctor != null) {
 				String checkedPasswordHash = PasswordHashing.hash(password, doctor.getSalt());
@@ -112,4 +241,5 @@ public class Application extends Controller {
 			return false;
 		}
 	}
+
 }

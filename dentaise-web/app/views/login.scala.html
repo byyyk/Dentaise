@@ -1,50 +1,26 @@
 @(form: Form[Application.Login])
 
-<html>
-<head>
-<title>Dentaise - Logowanie</title>
-<link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-<link rel="stylesheet" type="text/css" media="screen"
-    href="@routes.Assets.at("stylesheets/login.css")">
-<!-- Bootstrap core CSS -->
-<link href="@routes.Assets.at("bootstrap-3.1.1-dist/css/bootstrap.min.css")" rel="stylesheet">
+@passwordMain("Logowanie") {
+    @helper.form(routes.Application.authenticate) {
+    <h3 class="form-signin-heading">Zaloguj się</h3>
 
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-</head>
-<body>
-    <h1 class="text-center"><img class="fit" src="@routes.Assets.at("images/icon.png")" /> Dentaise</h1>
+    <p>
+        <input type="text" class="form-control" name="username"
+            placeholder="Username" value="@form("username").value">
+    </p>
+    <p>
+        <input type="password" class="form-control" name="password"
+            placeholder="Password">
+    </p>
 
-    <div class="container">
-        @helper.form(routes.Application.authenticate) {
-        <h3 class="form-signin-heading">Please sign in</h3>
+    @if(form.hasGlobalErrors) {
+    <p class="error">@form.globalError.message</p>
+    }
+
+    <p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Wejdź</button>
+    </p>
+    }
     
-        <p>
-            <input type="text" class="form-control" name="username"
-                placeholder="Username" value="@form("username").value">
-        </p>
-        <p>
-            <input type="password" class="form-control" name="password"
-                placeholder="Password">
-        </p>
-    
-        @if(form.hasGlobalErrors) {
-        <p class="error">@form.globalError.message</p>
-        }
-    
-        <p>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </p>
-        }
-    </div>
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script
-        src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="@routes.Assets.at("bootstrap-3.1.1-dist/js/bootstrap.min.js")"></script>
-</body>
-</html>
+    <a href="@routes.Application.resetPassword">Reset hasła</a>
+}
