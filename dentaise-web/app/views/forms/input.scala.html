@@ -1,8 +1,8 @@
-@(inputType: String, id: String, label: String, value: String)
+@(inputType: String, id: String, label: String, value: String, enabled: Boolean)
 <div class="form-group">
     <label for="@id" class="col-sm-2 control-label">@label</label>
     <div class="col-sm-10">
         <input type=@inputType class="form-control" id="@id"
-            placeholder="@label" name="@id" value="@value">
+            placeholder="@label" name="@id" value="@value" @if(!enabled){disabled}>
     </div>
 </div>

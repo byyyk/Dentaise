@@ -94,6 +94,7 @@ public class Doctor implements Serializable {
 
 	public void update(Doctor updatedDoctor) {
 		setEmail(updatedDoctor.getEmail());
+		setUsername(updatedDoctor.getUsername());
 		setForename(updatedDoctor.getForename());
 		setSurname(updatedDoctor.getSurname());
 	}

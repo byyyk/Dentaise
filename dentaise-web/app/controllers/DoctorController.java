@@ -1,6 +1,9 @@
 package controllers;
 
 import static play.data.Form.form;
+
+import org.hibernate.metamodel.source.binder.JpaCallbackClass;
+
 import models.Doctor;
 import play.data.Form;
 import play.db.jpa.JPA;
@@ -18,6 +21,13 @@ public class DoctorController extends Controller {
 			Doctor.class.getName());
 
 	@Transactional
+	public static Result create() {
+		Doctor doctor = new Doctor();
+		JPA.em().persist(doctor);
+		return get(doctor.getId());
+	}
+	
+	@Transactional
 	public static Result list(int page) {
 		return ok(doctors.render(page, paginator.get(page),
 				paginator.getPageCount()));
@@ -34,10 +44,9 @@ public class DoctorController extends Controller {
 	@Transactional
 	public static Result save() {
 		Form<Doctor> form = Form.form(Doctor.class);
-		Doctor doctor = form.bindFromRequest().get();
-		System.out.println("doc id: " + doctor.getId());
-		System.out.println(doctor.toString());
-		JPA.em().merge(doctor);
+		Doctor updatedDoctor = form.bindFromRequest().get();
+		Doctor realDoctor = JPA.em().find(Doctor.class, updatedDoctor.getId());
+		realDoctor.update(updatedDoctor);
 		return list(1);
 	}
 	

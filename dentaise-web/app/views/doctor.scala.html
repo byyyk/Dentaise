@@ -6,9 +6,10 @@
 @helper.form(routes.DoctorController.save) {
 <div class="form-horizontal">
     <input type="hidden" name="id" value="@form.get.getId">
-    @forms.input("text", "forename", "Imię", form.get.getForename)
-    @forms.input("text", "surname", "Nazwisko", form.get.getSurname)
-    @forms.input("email", "email", "E-mail", form.get.getEmail)
+    @forms.input("text", "username", "Nazwa użytkownika", form.get.getUsername, true)
+    @forms.input("text", "forename", "Imię", form.get.getForename, true)
+    @forms.input("text", "surname", "Nazwisko", form.get.getSurname, true)
+    @forms.input("email", "email", "E-mail", form.get.getEmail, true)
     
     @if(form.hasGlobalErrors) {
     <p class="error">@form.globalError.message</p>
@@ -17,7 +18,7 @@
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
             <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń</button>
-            <button type="button" onclick='window.open("@routes.Application.sendPasswordChangeLinkGet(form.get.getEmail)","_self");' class="btn btn-sm btn-primary">Zmień hasło</button>
+            <button type="button" onclick='window.open("@if(form.get.getEmail != null) {@routes.Application.sendPasswordChangeLinkGet(form.get.getEmail)} else {@routes.Application.sendPasswordChangeLink}","_self");' class="btn btn-sm btn-primary">Zmień hasło</button>
         </div>
     </div>
 

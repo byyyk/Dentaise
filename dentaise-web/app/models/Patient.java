@@ -15,7 +15,13 @@ public class Patient implements Serializable {
 	private long id;
 	private String forename;
 	private String surname;
-
+	private String pesel;
+	private String street;
+	private String homeNumber;
+	private String flatNumber;
+	private String city;
+	private String postCode;
+	
 	public Patient() {
 
 	}
@@ -53,6 +59,60 @@ public class Patient implements Serializable {
 		this.surname = surname;
 	}
 
+	@Column
+	public String getPesel() {
+		return pesel;
+	}
+
+	public void setPesel(String pesel) {
+		this.pesel = pesel;
+	}
+
+	@Column
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	@Column
+	public String getHomeNumber() {
+		return homeNumber;
+	}
+
+	public void setHomeNumber(String homeNumber) {
+		this.homeNumber = homeNumber;
+	}
+
+	@Column
+	public String getFlatNumber() {
+		return flatNumber;
+	}
+
+	public void setFlatNumber(String flatNumber) {
+		this.flatNumber = flatNumber;
+	}
+
+	@Column
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	@Column
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
+	}
+	
 	@Override
 	public String toString() {
 		return "Patient [id=" + id + ", forename=" + forename + ", surname="

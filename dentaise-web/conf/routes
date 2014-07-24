@@ -22,9 +22,9 @@ POST    /patient                    controllers.PatientController.save()
 
 GET     /doctors                    controllers.DoctorController.list(page: Int ?= 1)
 GET     /doctors/:id                controllers.DoctorController.get(id: Long)
+GET     /doctors-create             controllers.DoctorController.create()
 POST    /doctors                    controllers.DoctorController.save()
 GET     /doctors-delete/:id         controllers.DoctorController.remove(id: Long)
-DELETE  /doctors/:id                controllers.DoctorController.remove(id: Long)
 
 GET     /visit-list                 controllers.VisitController.list()
 
