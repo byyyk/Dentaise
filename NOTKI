@@ -22,6 +22,7 @@ O CZYM PISAĆ?
 - https
 - session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf, stateless? baza mi nie przeszkadza
 
+- UX? układ formularza, komunikaty po akcji, walidacja pól, kalendarz, wyszukiwarka, walidacja PESEL??
 
 
 
@@ -34,5 +35,13 @@ O CZYM PISAĆ?
 		for (int i = 0; i < 100; i++) {
 			int id = i + 10;
 			System.out.println("INSERT INTO doctor(id, email, forename, password, salt, surname, username) VALUES (" + id + ", 'lekarz@gmail.com', 'Lekarz', '1341d1e9016ab6eb548017e87a6bd397', '328e9a09283a24684f4e6106cd8c56bb', 'Lekarski', 'lekarz" + i + "');");
+		}
+	}
+
+	public static void main(String[] arg) {
+		for (int i = 0; i < 100; i++) {
+			int id = i + 10;
+			System.out.println("INSERT INTO patient(id, forename, surname, city, flatnumber, homenumber, pesel, postcode, street) VALUES ("
+			+ id + ", 'Jan', 'Kowalski', 'Kraków', '19', '20A', '85113478423', '30-121', 'Zmyślona');");
 		}
 	}

@@ -1,18 +1,33 @@
 @(form: Form[Patient]) @main("Pacjent", "patient") {
-    @helper.form(routes.PatientController.save) {
-        <p>
-            <input type="text" name="forename" placeholder="Imię">
-        </p>
-        <p>
-            <input type="text" name="surname" placeholder="Nazwisko">
-        </p>
-        
-        @if(form.hasGlobalErrors) {
-            <p class="error">@form.globalError.message</p>
-        }
-        
-        <p>
-            <button type="submit">Zapisz</button>
-        </p>
+@helper.form(routes.PatientController.save) {
+<div class="form-horizontal">
+    <input type="hidden" name="id" value="@form.get.getId">
+    @forms.input("text", "pesel", "PESEL", form.get.getPesel)
+    @forms.input("text", "forename", "Imię", form.get.getForename)
+    @forms.input("text", "surname", "Nazwisko", form.get.getSurname)
+    @forms.input("text", "phone", "Telefon", form.get.getPhone)
+    @forms.input("text", "street", "Ulica", form.get.getStreet)
+    @forms.input("text", "homeNumber", "Numer domu", form.get.getHomeNumber)
+    @forms.input("text", "flatNumber", "Numer mieszkania", form.get.getFlatNumber)
+    @forms.input("text", "postCode", "Kod pocztowy", form.get.getPostCode)
+    @forms.input("text", "city", "Miejscowość", form.get.getCity)
+    
+    @if(form.hasGlobalErrors) {
+    <p class="error">@form.globalError.message</p>
     }
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="button" onclick='window.open("@routes.PatientController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Pacjenta</button>
+        </div>
+    </div>
+
+    <div class="form-group text-right">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button class="btn btn-default">Anuluj</button>
+            <button type="submit" class="btn btn-success">Zapisz</button>
+        </div>
+    </div>
+</div>
+}
 }

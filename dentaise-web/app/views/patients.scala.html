@@ -1,3 +1,64 @@
-@main("Pacjenci", "patients") {
-    Lista pacjentów.
+@(page: Integer, patients: List[Patient], pageCount: Integer) @main("Pacjenci", "patients") {
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+      $(".clickable").click(function() {
+            window.document.location = $(this).data("url");
+      });
+});
+</script>
+
+<div class="row">
+  <div class="col-lg-2">
+    <button type="button" onclick='window.open("@routes.PatientController.create()","_self");' class="btn btn-sm btn-primary">Dodaj Pacjenta</button>
+  </div>
+  <div class="col-lg-10">
+    <div class="input-group">
+      <span class="input-group-btn">
+        <button class="btn btn-sm btn-primary" type="button">Szukaj</button>
+      </span>
+      <input type="text" class="input-sm form-control" placeholder="Imię, nazwisko lub PESEL...">
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div>
+<br/><br/>
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Pesel</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Miasto</th>
+            <th>Ulica</th>
+            <th>Numer Domu</th>
+            <th>Numer Mieszkania</th>
+        </tr>
+    </thead>
+    @for(patient <- patients) {
+    <tr class="clickable" data-url="@routes.PatientController.get(patient.getId)">
+        <td>@patient.getPesel()</td>
+        <td>@patient.getForename()</td>
+        <td>@patient.getSurname()</td>
+        <td>@patient.getCity()</td>
+        <td>@patient.getStreet()</td>
+        <td>@patient.getHomeNumber()</td>
+        <td>@patient.getFlatNumber()</td>
+    </tr>
+    }
+</table>
+<ul class="pagination">
+    @if(page==1) {
+    <li class="disabled"><a href="#">&laquo;</a></li>
+    } else {
+    <li><a href="@routes.PatientController.list(page-1)">&laquo;</a></li>
+    }
+    @for(i <- 1 to pageCount) {
+    <li @if(page==i){class="active"}><a href="@routes.PatientController.list(i)">@i</a></li>
+    }
+    @if(page==pageCount) {
+    <li class="disabled"><a href="#">&raquo;</a></li>
+    } else {
+    <li><a href="@routes.PatientController.list(page+1)">&raquo;</a></li>
+    }
+</ul>
 }

@@ -16,6 +16,7 @@ public class Patient implements Serializable {
 	private String forename;
 	private String surname;
 	private String pesel;
+	private String phone;
 	private String street;
 	private String homeNumber;
 	private String flatNumber;
@@ -113,6 +114,14 @@ public class Patient implements Serializable {
 		this.postCode = postCode;
 	}
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	@Override
 	public String toString() {
 		return "Patient [id=" + id + ", forename=" + forename + ", surname="

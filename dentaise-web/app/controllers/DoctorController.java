@@ -52,7 +52,6 @@ public class DoctorController extends Controller {
 	
 	@Transactional
 	public static Result remove(long id) {
-		System.out.println("doc id to remove: " + id);
 		Doctor doctor = JPA.em().find(Doctor.class, id);
 		JPA.em().remove(doctor);
 		return list(1);
