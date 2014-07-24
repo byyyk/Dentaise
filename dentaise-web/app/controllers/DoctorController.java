@@ -24,7 +24,7 @@ public class DoctorController extends Controller {
 	}
 
 	@Transactional
-	public static Result get(final long id) {
+	public static Result get(long id) {
 		Doctor doctorEntity = JPA.em().find(Doctor.class, id);
 		Form<Doctor> form = form(Doctor.class);
 		form = form.fill(doctorEntity);
@@ -38,6 +38,14 @@ public class DoctorController extends Controller {
 		System.out.println("doc id: " + doctor.getId());
 		System.out.println(doctor.toString());
 		JPA.em().merge(doctor);
+		return list(1);
+	}
+	
+	@Transactional
+	public static Result remove(long id) {
+		System.out.println("doc id to remove: " + id);
+		Doctor doctor = JPA.em().find(Doctor.class, id);
+		JPA.em().remove(doctor);
 		return list(1);
 	}
 

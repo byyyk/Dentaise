@@ -2,6 +2,21 @@
 @import helper.twitterBootstrap._
 
 @main("Doctor", "doctor") {
+<!-- 
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+      $("#remove").click(function() {
+    	    $.ajax({
+    	        url: "@routes.DoctorController.remove(form.get.getId)",
+    	        type: "DELETE",
+	            success:function(data) {
+	                document.write(data);
+	            } 
+    	    });
+      });
+});
+</script>
+ -->
 
 @helper.form(routes.DoctorController.save) {
 <div class="form-horizontal">
@@ -14,9 +29,19 @@
     <p class="error">@form.globalError.message</p>
     }
 
-    <p>
-        <button type="submit">Zapisz</button>
-    </p>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' id="remove" class="btn btn-sm btn-primary">Usuń</button>
+            <button type="button" name="changePass" class="btn btn-sm btn-primary">Zmień hasło</button>
+        </div>
+    </div>
+
+    <div class="form-group text-right">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button class="btn btn-default">Anuluj</button>
+            <button type="submit" class="btn btn-success">Zapisz</button>
+        </div>
+    </div>
 </div>
 }
 }

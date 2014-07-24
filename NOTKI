@@ -1,5 +1,6 @@
 PROBLEMY:
 Lekarze teoretycznie mogą zmieniać sobie dane przez API
+http://stackoverflow.com/questions/9253256/playframework-need-a-good-create-update-delete-example-using-same-html-page
 
 plugin gradle do eclipse uzywa gradle 1.5 - pewnie nie zadziala z android, uzyc plugina eclipe do gradle
 
@@ -12,7 +13,7 @@ O CZYM PISAĆ?
 - wybór technologii frontend backend - play, bootstrap
 - poziomy autoryzacji/autentykacji (administrator)
 - paginacja ?
-- interfejs restowy (paginacja w url czy header Range?)
+- interfejs restowy (paginacja w url czy header Range?) | PUT i DELETE a HTTP
 
 - rodzaje mech. logowania
 - haslo przesyłane clear text czy od razu md5 u klienta?
