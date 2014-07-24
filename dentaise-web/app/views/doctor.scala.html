@@ -2,21 +2,6 @@
 @import helper.twitterBootstrap._
 
 @main("Doctor", "doctor") {
-<!-- 
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-      $("#remove").click(function() {
-    	    $.ajax({
-    	        url: "@routes.DoctorController.remove(form.get.getId)",
-    	        type: "DELETE",
-	            success:function(data) {
-	                document.write(data);
-	            } 
-    	    });
-      });
-});
-</script>
- -->
 
 @helper.form(routes.DoctorController.save) {
 <div class="form-horizontal">
@@ -31,8 +16,8 @@ jQuery(document).ready(function($) {
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' id="remove" class="btn btn-sm btn-primary">Usuń</button>
-            <button type="button" name="changePass" class="btn btn-sm btn-primary">Zmień hasło</button>
+            <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń</button>
+            <button type="button" onclick='window.open("@routes.Application.sendPasswordChangeLinkGet(form.get.getEmail)","_self");' class="btn btn-sm btn-primary">Zmień hasło</button>
         </div>
     </div>
 

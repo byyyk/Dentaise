@@ -12,8 +12,6 @@ import java.util.Random;
 
 import javax.persistence.TypedQuery;
 
-import org.hibernate.metamodel.source.binder.JpaCallbackClass;
-
 import models.Doctor;
 import models.Session;
 import models.Token;
@@ -23,11 +21,11 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import views.html.changePassword;
 import views.html.index;
 import views.html.login;
-import views.html.resetPassword;
 import views.html.passwordNotice;
-import views.html.changePassword;
+import views.html.resetPassword;
 
 import com.typesafe.plugin.MailerAPI;
 import com.typesafe.plugin.MailerPlugin;
@@ -58,6 +56,17 @@ public class Application extends Controller {
     @Transactional
     public static Result sendPasswordChangeLink() {
     	Form<PasswordResetRequest> emailForm = form(PasswordResetRequest.class).bindFromRequest();
+    	return sendPasswordChangeLinkLogic(emailForm);
+    }
+    
+    @Transactional
+    public static Result sendPasswordChangeLinkGet(final String email) {
+    	@SuppressWarnings("serial")
+		Form<PasswordResetRequest> emailForm = form(PasswordResetRequest.class).bind(new HashMap<String, String>(){{put("email", email);}});
+    	return sendPasswordChangeLinkLogic(emailForm);
+    }
+    
+    private static Result sendPasswordChangeLinkLogic(Form<PasswordResetRequest> emailForm) {
     	if (emailForm.hasErrors()) {
     		return badRequest(resetPassword.render(emailForm));
     	} else {
@@ -108,7 +117,7 @@ public class Application extends Controller {
 			JPA.em().merge(doctor);
         }
 		
-    	return ok();
+    	return ok(passwordNotice.render("Twoje hasło zostało zmienione. Możesz z niego skorzystać przy następnym logowaniu."));
     }
     
     
