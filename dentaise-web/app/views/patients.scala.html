@@ -1,10 +1,13 @@
-@(page: Integer, patients: List[Patient], pageCount: Integer) @main("Pacjenci", "patients") {
+@(page: Integer, patients: List[Patient], pageCount: Integer, query: String) @main("Pacjenci", "patients") {
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
       $(".clickable").click(function() {
             window.document.location = $(this).data("url");
       });
+      $("#search").click(function() {
+    	  window.document.location = '/patients?query=' + document.getElementById("query").value;
+    });
 });
 </script>
 
@@ -15,9 +18,9 @@ jQuery(document).ready(function($) {
   <div class="col-lg-10">
     <div class="input-group">
       <span class="input-group-btn">
-        <button class="btn btn-sm btn-primary" type="button">Szukaj</button>
+        <button id="search" class="btn btn-sm btn-primary" type="button">Szukaj</button>
       </span>
-      <input type="text" class="input-sm form-control" placeholder="Imię, nazwisko lub PESEL...">
+      <input id="query" type="text" class="input-sm form-control" placeholder="Imię, nazwisko lub PESEL..." value="@query">
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
 </div>
@@ -50,15 +53,15 @@ jQuery(document).ready(function($) {
     @if(page==1) {
     <li class="disabled"><a href="#">&laquo;</a></li>
     } else {
-    <li><a href="@routes.PatientController.list(page-1)">&laquo;</a></li>
+    <li><a href="@routes.PatientController.list(page-1, query)">&laquo;</a></li>
     }
     @for(i <- 1 to pageCount) {
-    <li @if(page==i){class="active"}><a href="@routes.PatientController.list(i)">@i</a></li>
+    <li @if(page==i){class="active"}><a href="@routes.PatientController.list(i, query)">@i</a></li>
     }
     @if(page==pageCount) {
     <li class="disabled"><a href="#">&raquo;</a></li>
     } else {
-    <li><a href="@routes.PatientController.list(page+1)">&raquo;</a></li>
+    <li><a href="@routes.PatientController.list(page+1, query)">&raquo;</a></li>
     }
 </ul>
 }

@@ -1,9 +1,6 @@
 package controllers;
 
 import static play.data.Form.form;
-
-import org.hibernate.metamodel.source.binder.JpaCallbackClass;
-
 import models.Doctor;
 import play.data.Form;
 import play.db.jpa.JPA;
@@ -16,10 +13,8 @@ import views.html.doctors;
 
 @Security.Authenticated(Secured.class)
 public class DoctorController extends Controller {
-
-	private static final Paginator<Doctor> paginator = new Paginator<Doctor>(
-			Doctor.class.getName());
-
+	private static final Paginator<Doctor> paginator = new Paginator<Doctor>(Doctor.class.getName(), null);
+	
 	@Transactional
 	public static Result create() {
 		Doctor doctor = new Doctor();

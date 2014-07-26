@@ -22,7 +22,7 @@ O CZYM PISAĆ?
 - https
 - session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf, stateless? baza mi nie przeszkadza
 
-- UX? układ formularza, komunikaty po akcji, walidacja pól, kalendarz, wyszukiwarka, walidacja PESEL??
+- UX? układ formularza, komunikaty po akcji, walidacja pól, kalendarz, wyszukiwarka, paginacja, walidacja PESEL??
 
 
 

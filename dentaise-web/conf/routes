@@ -14,12 +14,11 @@ GET     /changePassword/:token              controllers.Application.changePasswo
 POST    /changePassword                     controllers.Application.savePassword()
 GET     /processSession/:id                 controllers.Application.processSession(id: String)
 
-GET     /patients                           controllers.PatientController.list(page: Int ?= 1)
+GET     /patients                           controllers.PatientController.list(page: Int ?= 1, query: String ?= null)
 GET     /patients/:id                       controllers.PatientController.get(id: Long)
 GET     /patients-create                    controllers.PatientController.create()
 POST    /patient                            controllers.PatientController.save()
 GET     /patient-delete/:id                 controllers.PatientController.remove(id: Long)
-GET     /patient-search/:phrase             controllers.PatientController.search(phrase: String)
 
 GET     /doctors                            controllers.DoctorController.list(page: Int ?= 1)
 GET     /doctors/:id                        controllers.DoctorController.get(id: Long)
