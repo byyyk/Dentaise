@@ -1,7 +1,7 @@
-@(form: Form[Visit]) @main("Wizyta", "visit") {
+@(form: Form[Visit], patient: Patient) @main("Wizyta", "visit") {
 
 <div class="col-lg-offset-2 col-lg-10">
-<h3>@(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
+<h3>@(patient.getForename + " " + patient.getSurname)</h3>
 </div>
 
 <br/><br/><br/>

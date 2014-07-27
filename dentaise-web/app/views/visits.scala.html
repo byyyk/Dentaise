@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
     <tr class="clickable" data-url="@routes.VisitController.get(visit.getId)">
         <td>@(visit.getPatient.getForename + " " + visit.getPatient.getSurname)</td>
         <td>@if(visit.getDoctor != null) {@(visit.getDoctor.getForename + " " + visit.getDoctor.getSurname)}</td>
-        <td>@visit.getDate.format("dd.MM.yyyy hh:mm")</td>
+        <td>@visit.getDate</td>
     </tr>
     }
 </table>

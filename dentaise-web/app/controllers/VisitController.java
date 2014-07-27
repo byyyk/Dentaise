@@ -2,17 +2,13 @@ package controllers;
 
 import static play.data.Form.form;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 import models.Doctor;
 import models.Patient;
 import models.Visit;
 import play.data.Form;
-import play.data.format.Formatters;
-import play.data.format.Formatters.SimpleFormatter;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
@@ -38,8 +34,12 @@ public class VisitController extends Controller {
 	public static Result get(long id) {
 		Visit visitEntity = JPA.em().find(Visit.class, id);
 		Form<Visit> form = form(Visit.class);
-		form = form.fill(visitEntity);
-		return ok(visit.render(form));
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("id", "" + id);
+		data.put("date", visitEntity.getDate().toString(Application.dateTimeFormatter));
+		data.put("notes", visitEntity.getNotes());
+		form = form.bind(data);
+		return ok(visit.render(form, visitEntity.getPatient()));
 	}
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)

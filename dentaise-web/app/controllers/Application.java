@@ -13,6 +13,9 @@ import java.util.Random;
 
 import javax.persistence.TypedQuery;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import models.Doctor;
 import models.Session;
 import models.Token;
@@ -32,7 +35,7 @@ import com.typesafe.plugin.MailerAPI;
 import com.typesafe.plugin.MailerPlugin;
 
 public class Application extends Controller {
-	public static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
 	private static final long SESSION_TIMEOUT_MILIS = 30 * 60 * 1000;
 	private static final long TOKEN_TIMEOUT_MILIS = 15 * 60 * 1000;
 	private static Random random = new SecureRandom();
@@ -241,7 +244,7 @@ public class Application extends Controller {
 			if (passwordMatches()) {
 				return null;
 			} else {
-				return "Invalid username or password";
+				return "Błędny login lub hasło";
 			}
 		}
 
