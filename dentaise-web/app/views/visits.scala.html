@@ -8,26 +8,40 @@ jQuery(document).ready(function($) {
     $("#search").click(function() {
         window.document.location = '/patients?query=' + document.getElementById("query").value;
     });
-    $('.input-group.date').datepicker({
-        todayBtn: "linked",
-        language: "pl"
-    });
 });
 </script>
 
-<div class="row">
-    <div class="col-lg-4">
-        <div class="input-group">
-        <span class="input-group-btn">
-            <button id="search" class="btn btn-sm btn-primary" type="button">Szukaj</button>
-        </span>
-        <input id="query" type="text" class="input-sm form-control" placeholder="Imię, nazwisko lub PESEL...">
+<div class="well well-sm row">
+    <div class="col-lg-3">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox">Pokaż tylko moje wizyty
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox">Nie pokazuj starych wizyt
+            </label>
         </div>
     </div>
-    <div class="col-lg-2">
-        <div class="input-group date">
-            <input type="text" class="input-sm form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+    <div class="col-lg-8" style="margin-top: 14px">
+        <label style="font-weight:normal" for="date" class="label-sm col-lg-3 control-label">Pokaż wizyty tylko dla wybranego dnia: </label>
+        <div style="margin-top: 5px" class="col-lg-3 input-group" id="datetimepicker">
+            <input name="date" type="text" class="input-sm form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+            </span>
         </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker').datetimepicker({
+                    language: 'pl',
+                    pickTime: false
+                });
+            });
+        </script>
+    </div>
+    <div style="margin-top: 18px">
+        <button type="button" onclick='window.open("@routes.VisitController.list(1)","_self");' class="btn btn-sm btn-primary">Filtruj</button>
     </div>
 </div>
 <br/><br/>
