@@ -34,12 +34,8 @@ public class VisitController extends Controller {
 	public static Result get(long id) {
 		Visit visitEntity = JPA.em().find(Visit.class, id);
 		Form<Visit> form = form(Visit.class);
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("id", "" + id);
-		data.put("date", visitEntity.getDate().toString(Application.dateTimeFormatter));
-		data.put("notes", visitEntity.getNotes());
-		form = form.bind(data);
-		return ok(visit.render(form, visitEntity.getPatient()));
+		form = form.fill(visitEntity);
+		return ok(visit.render(form));
 	}
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)

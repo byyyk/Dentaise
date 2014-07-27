@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,15 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-
 @Entity
 public class Visit implements Serializable {
 	private static final long serialVersionUID = 6496243611914464953L;
 	
 	private long id;
-	private DateTime date;
+	private Date date;
 	private Doctor doctor;
 	private Patient patient;
 	private String notes;
@@ -32,13 +30,12 @@ public class Visit implements Serializable {
 		this.id = id;
 	}
 
-	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column
-	public DateTime getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(DateTime date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

@@ -1,7 +1,7 @@
-@(form: Form[Visit], patient: Patient) @main("Wizyta", "visit") {
+@(form: Form[Visit]) @main("Wizyta", "visit") {
 
 <div class="col-lg-offset-2 col-lg-10">
-<h3>@(patient.getForename + " " + patient.getSurname)</h3>
+<h3>@(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
 </div>
 
 <br/><br/><br/>
@@ -11,7 +11,7 @@
     <div class="form-group">
         <label for="date" class="col-lg-2 control-label">Termin</label>
         <div class="col-lg-3 input-group" id="datetimepicker">
-            <input name="date" type="text" class="form-control" value="@form.get.getDate" />
+            <input name="date" type="text" class="form-control" value='@form("date").value' />
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -42,7 +42,7 @@
 
     <div class="form-group text-right">
         <div class="col-lg-offset-2 col-lg-10">
-            <button class="btn btn-default">Anuluj</button>
+            <button type="button" onclick='window.open("@routes.VisitController.list(1)","_self");' class="btn btn-default">Anuluj</button>
             <button type="submit" class="btn btn-success">Zapisz</button>
         </div>
     </div>

@@ -6,14 +6,15 @@ plugin gradle do eclipse uzywa gradle 1.5 - pewnie nie zadziala z android, uzyc 
 
 O CZYM PISAĆ?
 - konfiguracja (application.conf - baseUrl, smtp.host), uruchomienie, sbt
+- opis aplikacji
+
 
 - orm
 - rest vs soap
 - rozdwojenie api dla mobile i przegladarki
 - wybór technologii frontend backend - play, bootstrap
 - poziomy autoryzacji/autentykacji (administrator)
-- paginacja ?
-- interfejs restowy (paginacja w url czy header Range?) | PUT i DELETE a HTTP
+- interfejs restowy a HTML [paginacja w url czy header Range? | PUT i DELETE]
 
 - rodzaje mech. logowania
 - haslo przesyłane clear text czy od razu md5 u klienta?
