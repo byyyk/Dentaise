@@ -1,15 +1,10 @@
 package controllers;
 
 import static play.data.Form.form;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import models.Patient;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
-import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -21,7 +16,9 @@ public class PatientController extends Controller {
 	
 	@Transactional
 	public static Result create() {
-		return ok();
+		Patient patient = new Patient();
+		JPA.em().persist(patient);
+		return get(patient.getId());
 	}
 	
 	@Transactional
@@ -51,7 +48,7 @@ public class PatientController extends Controller {
 			}
 			System.out.println("conditions: " + conditions);
 		}
-		Paginator<Patient> paginator = new Paginator<Patient>(Patient.class.getName(), conditions);
+		Paginator<Patient> paginator = new Paginator<Patient>(Patient.class.getName(), conditions, "surname", "ASC");
 		return ok(patients.render(page, paginator.get(page), paginator.getPageCount(), query));
 	}
 	

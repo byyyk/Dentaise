@@ -2,6 +2,10 @@ body {
   padding-top: 100px;
 }
 
+h3 {
+    margin-top: 0px !important;
+}
+
 .fit {
     margin-top: -7px;
     margin-right: 10px;
@@ -11,3 +15,7 @@ body {
 tr.clickable {
     cursor: pointer;
 } 
+
+#datetimepicker {
+    padding-left: 15px;
+}

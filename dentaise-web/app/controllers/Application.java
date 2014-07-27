@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import com.typesafe.plugin.MailerAPI;
 import com.typesafe.plugin.MailerPlugin;
 
 public class Application extends Controller {
+	public static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
 	private static final long SESSION_TIMEOUT_MILIS = 30 * 60 * 1000;
 	private static final long TOKEN_TIMEOUT_MILIS = 15 * 60 * 1000;
 	private static Random random = new SecureRandom();
@@ -155,7 +157,7 @@ public class Application extends Controller {
         } else {
         	session().clear();
         	String username = loginForm.get().username;
-        	Doctor doctor = findDoctor(username);
+        	Doctor doctor = findDoctorByUsername(username);
         	Session session = new Session();
         	session.setId(generateSessionId());
         	session.setDoctor(doctor);
@@ -166,7 +168,12 @@ public class Application extends Controller {
         }
     }
 
-	private static Doctor findDoctor(String username) {
+    public static Doctor getLoggedInDoctor() {
+    	String username = Secured.readUsernameFromSession(session());
+    	return findDoctorByUsername(username);
+    }
+    
+	private static Doctor findDoctorByUsername(String username) {
 		TypedQuery<Doctor> query = JPA.em().createQuery("FROM Doctor WHERE username=:username", Doctor.class);
 		query.setParameter("username", username);
 		List<Doctor> doctors = query.getResultList();
@@ -240,7 +247,7 @@ public class Application extends Controller {
 
 		private boolean passwordMatches() {
 			System.out.println(username);
-			Doctor doctor = findDoctor(username);
+			Doctor doctor = findDoctorByUsername(username);
 			if (doctor != null) {
 				String checkedPasswordHash = PasswordHashing.hash(password, doctor.getSalt());
 				String actualPasswordHash = doctor.getPassword();

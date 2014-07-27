@@ -1,0 +1,51 @@
+@(form: Form[Visit]) @main("Wizyta", "visit") {
+
+<div class="col-lg-offset-2 col-lg-10">
+<h3>@(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
+</div>
+
+<br/><br/><br/>
+@helper.form(routes.VisitController.save) {
+<div class="form-horizontal">
+    <input type="hidden" name="id" value="@form.get.getId">
+    <div class="form-group">
+        <label for="date" class="col-lg-2 control-label">Termin</label>
+        <div class="col-lg-3 input-group" id="datetimepicker">
+            <input name="date" type="text" class="form-control" value="@form.get.getDate" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker').datetimepicker({
+                    language: 'pl'
+                });
+            });
+        </script>
+    </div>
+    <div class="form-group">
+        <label for="notes" class="col-lg-2 control-label">Notatki</label>
+        <div class="col-lg-10">
+            <textarea name="notes" placeholder="Dodatkowe informacje..." class="form-control" rows="5">@form.get.getNotes</textarea>
+        </div>
+    </div>
+    
+    @if(form.hasGlobalErrors) {
+    <p class="error">@form.globalError.message</p>
+    }
+
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="button" onclick='window.open("@routes.VisitController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Wizytę</button>
+        </div>
+    </div>
+
+    <div class="form-group text-right">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button class="btn btn-default">Anuluj</button>
+            <button type="submit" class="btn btn-success">Zapisz</button>
+        </div>
+    </div>
+</div>
+}
+}

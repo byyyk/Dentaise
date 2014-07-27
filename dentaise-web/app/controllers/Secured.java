@@ -3,6 +3,7 @@ package controllers;
 import play.libs.ws.WS;
 import play.mvc.Call;
 import play.mvc.Http.Context;
+import play.mvc.Http.Session;
 import play.mvc.Result;
 import play.mvc.Security;
 
@@ -10,8 +11,13 @@ public class Secured extends Security.Authenticator {
 
 	@Override
 	public String getUsername(final Context context) {
+		Session session = context.session();
+		return readUsernameFromSession(session);
+	}
+
+	public static String readUsernameFromSession(Session session) {
 		String result = null;
-		String sessionId = context.session().get("sessionId");
+		String sessionId = session.get("sessionId");
 		if (sessionId != null) {
 			Call call = routes.Application.processSession(sessionId);
 			String baseUrl = play.Play.application().configuration().getString("application.baseUrl");
@@ -25,7 +31,7 @@ public class Secured extends Security.Authenticator {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Result onUnauthorized(Context context) {
 		//invoked when getUsername(Context) == null

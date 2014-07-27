@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import controllers.PasswordHashing;
-
 @Entity
 public class Doctor implements Serializable {
 	private static final long serialVersionUID = 3671519875344263155L;

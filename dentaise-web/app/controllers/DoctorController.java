@@ -13,7 +13,7 @@ import views.html.doctors;
 
 @Security.Authenticated(Secured.class)
 public class DoctorController extends Controller {
-	private static final Paginator<Doctor> paginator = new Paginator<Doctor>(Doctor.class.getName(), null);
+	private static final Paginator<Doctor> paginator = new Paginator<Doctor>(Doctor.class.getName(), null, "surname", "ASC");
 	
 	@Transactional
 	public static Result create() {
