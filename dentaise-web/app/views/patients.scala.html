@@ -3,11 +3,11 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
       $(".clickable").click(function() {
-            window.document.location = $(this).data("url");
+          window.document.location = $(this).data("url");
       });
       $("#search").click(function() {
-    	  window.document.location = '/patients?query=' + document.getElementById("query").value;
-    });
+          window.document.location = '/patients?query=' + document.getElementById("query").value;
+      });
 });
 </script>
 

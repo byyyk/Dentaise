@@ -35,7 +35,8 @@ import com.typesafe.plugin.MailerAPI;
 import com.typesafe.plugin.MailerPlugin;
 
 public class Application extends Controller {
-	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd.MM.yyyy HH:mm");
+	public static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+	public static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
 	private static final long SESSION_TIMEOUT_MILIS = 30 * 60 * 1000;
 	private static final long TOKEN_TIMEOUT_MILIS = 15 * 60 * 1000;
 	private static Random random = new SecureRandom();

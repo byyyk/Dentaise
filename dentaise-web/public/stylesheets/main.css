@@ -19,3 +19,7 @@ tr.clickable {
 #datetimepicker {
     padding-left: 15px;
 }
+
+.form-inline .div {
+    display: block;
+}

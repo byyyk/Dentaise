@@ -26,7 +26,7 @@ GET     /doctors-create                     controllers.DoctorController.create(
 POST    /doctors                            controllers.DoctorController.save()
 GET     /doctors-delete/:id                 controllers.DoctorController.remove(id: Long)
 
-GET     /visits                             controllers.VisitController.list(page: Int ?= 1)
+GET     /visits                             controllers.VisitController.list(page: Int ?= 1, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null)
 GET     /visits/:id                         controllers.VisitController.get(id: Long)
 GET     /patients/:pId/visits-create        controllers.VisitController.create(pId: Long)
 POST    /visits                             controllers.VisitController.save()

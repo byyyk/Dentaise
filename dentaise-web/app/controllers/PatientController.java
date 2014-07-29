@@ -1,6 +1,7 @@
 package controllers;
 
 import static play.data.Form.form;
+import controllers.pagination.Paginator;
 import models.Patient;
 import play.data.Form;
 import play.db.jpa.JPA;

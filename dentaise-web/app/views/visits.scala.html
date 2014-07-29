@@ -5,45 +5,49 @@ jQuery(document).ready(function($) {
     $(".clickable").click(function() {
         window.document.location = $(this).data("url");
     });
-    $("#search").click(function() {
-        window.document.location = '/patients?query=' + document.getElementById("query").value;
-    });
 });
 </script>
 
-<div class="well well-sm row">
-    <div class="col-lg-3">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox">Pokaż tylko moje wizyty
-            </label>
-        </div>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox">Nie pokazuj starych wizyt
-            </label>
-        </div>
+<div class="form-inline well">
+    <div class="col-lg-3 checkbox">
+        <label>
+            <input id="onlyMine" type="checkbox"> Pokaż tylko moje wizyty
+        </label>
     </div>
-    <div class="col-lg-8" style="margin-top: 14px">
-        <label style="font-weight:normal" for="date" class="label-sm col-lg-3 control-label">Pokaż wizyty tylko dla wybranego dnia: </label>
-        <div style="margin-top: 5px" class="col-lg-3 input-group" id="datetimepicker">
-            <input name="date" type="text" class="input-sm form-control" />
+  <div class="col-lg-2 form-group" style="margin-top: -10px">
+        <label style="font-weight:normal" for="date" class="label-sm control-label">od dnia </label>
+        <div class="input-group datetimepicker">
+            <input id="fromDate" name="date" type="text" class="input-sm form-control" />
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
-        <script type="text/javascript">
-            $(function () {
-                $('#datetimepicker').datetimepicker({
-                    language: 'pl',
-                    pickTime: false
-                });
+    </div>
+    <div class="col-lg-2 form-group" style="margin-top: -10px">
+        <label style="font-weight:normal" for="date" class="label-sm control-label">do dnia </label>
+        <div class="input-group datetimepicker">
+            <input id="toDate" name="date" type="text" class="input-sm form-control" />
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('.datetimepicker').datetimepicker({
+                language: 'pl',
+                pickTime: false
             });
-        </script>
+        });
+    </script>
+    <div class="text-right">
+        <button id="filter" type="button" class="btn btn-sm btn-primary">Filtruj</button>
     </div>
-    <div style="margin-top: 18px">
-        <button type="button" onclick='window.open("@routes.VisitController.list(1)","_self");' class="btn btn-sm btn-primary">Filtruj</button>
-    </div>
+    <script type="text/javascript">
+        $("#filter").click(function() {
+            window.document.location = '/visits?page=1&onlyMine=' + $('#onlyMine').is(":checked") + '&fromDate=' + document.getElementById("fromDate").value + '&toDate=' + document.getElementById("toDate").value;
+        });
+    </script>
 </div>
+    
 <br/><br/>
 <table class="table table-hover table-striped">
     <thead>

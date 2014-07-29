@@ -2,8 +2,15 @@ package controllers;
 
 import static play.data.Form.form;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import models.Doctor;
 import models.Patient;
@@ -16,9 +23,12 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.visit;
 import views.html.visits;
+import controllers.pagination.ConditionsApplier;
+import controllers.pagination.CriteriaPaginator;
 
 @Security.Authenticated(Secured.class)
 public class VisitController extends Controller {
+	
 	@Transactional
 	public static Result create(long patientId) {
 		System.out.println("patientId: " + patientId);
@@ -40,8 +50,36 @@ public class VisitController extends Controller {
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)
 	@Transactional
-	public static Result list(int page) {
-		Paginator<Visit> paginator = new Paginator<Visit>(Visit.class.getName(), null, "date", "ASC");
+	public static Result list(int page, final boolean onlyMine, final String fromDate, final String toDate) {
+		ConditionsApplier conditionsApplier = new ConditionsApplier() {
+			@Override
+			public <S, T> void apply(CriteriaBuilder cb,
+					CriteriaQuery<S> criteriaQuery, Root<T> root) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+				if (onlyMine) {
+					predicates.add(cb.equal(root.get("doctor"), Application.getLoggedInDoctor())); //id?
+				}
+				if (toDate != null) {
+					try {
+						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("date"), Application.dateFormatter.parse(toDate)));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+				if (fromDate != null) {
+					try {
+						predicates.add(cb.greaterThanOrEqualTo(root.<Date>get("date"), Application.dateFormatter.parse(fromDate)));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				if (predicates.size() > 0) {
+					criteriaQuery.where(predicates.toArray(new Predicate[0]));
+				}
+			}
+		};
+		CriteriaPaginator<Visit> paginator = new CriteriaPaginator<Visit>(Visit.class, conditionsApplier);
 		return ok(visits.render(page, paginator.get(page), paginator.getPageCount()));
 	}
 	
@@ -53,15 +91,19 @@ public class VisitController extends Controller {
 		visit.setPatient(oldVisit.getPatient());
 		Doctor doctor = Application.getLoggedInDoctor();
 		visit.setDoctor(doctor);
-		JPA.em().merge(visit); 
-		return list(1);
+		JPA.em().merge(visit);
+		return defaultList();
 	}
 	
 	@Transactional
 	public static Result remove(long id) {
 		Visit visit = JPA.em().find(Visit.class, id);
 		JPA.em().remove(visit);
-		return list(1);
+		return defaultList();
+	}
+	
+	public static Result defaultList() {
+		return list(1, false, null, null);
 	}
 
 }
