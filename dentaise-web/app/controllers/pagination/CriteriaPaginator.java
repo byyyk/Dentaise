@@ -15,10 +15,10 @@ public class CriteriaPaginator<T extends Serializable> {
 	private static final int PAGE_SIZE = 10;
 	private final Class<T> table;
 	private static final CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
-	private ConditionsApplier conditionsApplier;
+	private CriteriaApplier conditionsApplier;
 	
 	
-	public CriteriaPaginator(Class<T> table, ConditionsApplier conditionsApplier) {
+	public CriteriaPaginator(Class<T> table, CriteriaApplier conditionsApplier) {
 		this.table = table;
 		this.conditionsApplier = conditionsApplier;
 	}
@@ -28,7 +28,8 @@ public class CriteriaPaginator<T extends Serializable> {
 		Root<T> root = criteriaQuery.from(table);
 		criteriaQuery.select(root);
 		
-		conditionsApplier.apply(builder, criteriaQuery, root);
+		conditionsApplier.applyCondition(builder, criteriaQuery, root);
+		conditionsApplier.applyOrder(builder, criteriaQuery, root);
 		
 		int offset = (page - 1) * PAGE_SIZE;
 		TypedQuery<T> query = JPA.em().createQuery(criteriaQuery).setMaxResults(PAGE_SIZE).setFirstResult(offset);
@@ -40,15 +41,17 @@ public class CriteriaPaginator<T extends Serializable> {
 		Root<T> root = criteriaQuery.from(table);
 		criteriaQuery.select(builder.count(root));
 		
-		conditionsApplier.apply(builder, criteriaQuery, root);
+		conditionsApplier.applyCondition(builder, criteriaQuery, root);
 		
-		long count = JPA.em().createQuery(criteriaQuery).getSingleResult();
-		System.out.println("calculated page count: " + count);
+		double count = JPA.em().createQuery(criteriaQuery).getSingleResult();
+		int pageCount;
 		if (count == 0) {
-			return 1;
+			pageCount = 1;
 		} else {
-			return (int) Math.ceil(count / PAGE_SIZE);
+			pageCount = (int) Math.ceil(count / PAGE_SIZE);
 		}
+		System.out.println("calculated page count: " + pageCount);
+		return pageCount;
 	}
 
 }

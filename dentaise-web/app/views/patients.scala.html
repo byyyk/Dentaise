@@ -11,18 +11,27 @@ jQuery(document).ready(function($) {
 });
 </script>
 
-<div class="well row">
-  <div class="col-lg-2">
-    <button type="button" onclick='window.open("@routes.PatientController.create()","_self");' class="btn btn-sm btn-primary">Dodaj Pacjenta</button>
-  </div>
-  <div class="col-lg-10">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button id="search" class="btn btn-sm btn-primary" type="button">Szukaj</button>
-      </span>
-      <input id="query" type="text" class="input-sm form-control" placeholder="Imię, nazwisko lub PESEL..." value="@query">
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
+<div class="well">
+    <div class="row">
+        <div class="col-lg-2">
+            <button type="button"
+                onclick='window.open("@routes.PatientController.create()","_self");'
+                class="btn btn-sm btn-primary">Dodaj Pacjenta</button>
+        </div>
+        <div class="col-lg-10">
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button id="search" class="btn btn-sm btn-primary"
+                        type="button">Szukaj</button>
+                </span> <input id="query" type="text"
+                    class="input-sm form-control"
+                    placeholder="Imię, nazwisko lub PESEL..."
+                    value="@query">
+            </div>
+            <!-- /input-group -->
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
 </div>
 <br/><br/>
 <table class="table table-hover table-striped">

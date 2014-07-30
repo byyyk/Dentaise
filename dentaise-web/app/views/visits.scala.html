@@ -1,4 +1,4 @@
-@(page: Integer, visits: List[Visit], pageCount: Integer) @main("Wizyty", "visits") {
+@(page: Integer, visits: List[Visit], pageCount: Integer, onlyMine: Boolean, fromDate: String, toDate: String, patient: Patient) @main("Wizyty", "visits") {
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -8,16 +8,22 @@ jQuery(document).ready(function($) {
 });
 </script>
 
-<div class="form-inline well">
+@if(patient == null) {
+<h3>Wszystkie wizyty</h3>
+} else {
+<h3>Wizyty pacjenta @(patient.getForename + " " + patient.getSurname)</h3>
+}
+
+<div class="well">
     <div class="col-lg-3 checkbox">
         <label>
-            <input id="onlyMine" type="checkbox"> Pokaż tylko moje wizyty
+            <input id="onlyMine" type="checkbox" @if(onlyMine){checked}> Pokaż tylko moje wizyty
         </label>
     </div>
-  <div class="col-lg-2 form-group" style="margin-top: -10px">
+    <div class="col-lg-2 form-group" style="margin-top: -10px">
         <label style="font-weight:normal" for="date" class="label-sm control-label">od dnia </label>
         <div class="input-group datetimepicker">
-            <input id="fromDate" name="date" type="text" class="input-sm form-control" />
+            <input id="fromDate" name="date" type="text" class="input-sm form-control" value="@fromDate"/>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -25,7 +31,7 @@ jQuery(document).ready(function($) {
     <div class="col-lg-2 form-group" style="margin-top: -10px">
         <label style="font-weight:normal" for="date" class="label-sm control-label">do dnia </label>
         <div class="input-group datetimepicker">
-            <input id="toDate" name="date" type="text" class="input-sm form-control" />
+            <input id="toDate" name="date" type="text" class="input-sm form-control" value="@toDate"/>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -61,7 +67,7 @@ jQuery(document).ready(function($) {
     <tr class="clickable" data-url="@routes.VisitController.get(visit.getId)">
         <td>@(visit.getPatient.getForename + " " + visit.getPatient.getSurname)</td>
         <td>@if(visit.getDoctor != null) {@(visit.getDoctor.getForename + " " + visit.getDoctor.getSurname)}</td>
-        <td>@visit.getDate.format("dd.MM.yyyy hh:mm")</td>
+        <td>@if(visit.getDate != null) {@visit.getDate.format("dd.MM.yyyy hh:mm")}</td>
     </tr>
     }
 </table>
@@ -69,15 +75,15 @@ jQuery(document).ready(function($) {
     @if(page==1) {
     <li class="disabled"><a href="#">&laquo;</a></li>
     } else {
-    <li><a href="@routes.VisitController.list(page-1)">&laquo;</a></li>
+    <li><a href="@routes.VisitController.list(page-1, onlyMine, fromDate, toDate, patient.getId)">&laquo;</a></li>
     }
     @for(i <- 1 to pageCount) {
-    <li @if(page==i){class="active"}><a href="@routes.PatientController.list(i)">@i</a></li>
+    <li @if(page==i){class="active"}><a href="@routes.VisitController.list(i, onlyMine, fromDate, toDate, patient.getId)">@i</a></li>
     }
     @if(page==pageCount) {
     <li class="disabled"><a href="#">&raquo;</a></li>
     } else {
-    <li><a href="@routes.PatientController.list(page+1)">&raquo;</a></li>
+    <li><a href="@routes.VisitController.list(page+1, onlyMine, fromDate, toDate, patient.getId)">&raquo;</a></li>
     }
 </ul>
 }
