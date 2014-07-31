@@ -3,6 +3,8 @@
 
 @main("Doctor", "doctor") {
 
+<h3>@(form.get.getForename + " " + form.get.getSurname)</h3>
+
 @helper.form(routes.DoctorController.save) {
 <div class="form-horizontal">
     <input type="hidden" name="id" value="@form.get.getId">

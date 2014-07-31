@@ -9,11 +9,12 @@ jQuery(document).ready(function($) {
 </script>
 
 @if(patient == null) {
-<h3>Wszystkie wizyty</h3>
+<h3>Lista wizyt</h3>
 } else {
-<h3>Wizyty pacjenta @(patient.getForename + " " + patient.getSurname)</h3>
+<h3>Lista wizyt pacjenta @(patient.getForename + " " + patient.getSurname)</h3>
 }
 
+@defining(if(patient!=null) {patient.getId} else {-1}) { patientId =>
 <div class="well">
     <div class="col-lg-3 checkbox">
         <label>
@@ -49,7 +50,7 @@ jQuery(document).ready(function($) {
     </div>
     <script type="text/javascript">
         $("#filter").click(function() {
-            window.document.location = '/visits?page=1&onlyMine=' + $('#onlyMine').is(":checked") + '&fromDate=' + document.getElementById("fromDate").value + '&toDate=' + document.getElementById("toDate").value;
+            window.document.location = '/visits?page=1&onlyMine=' + $('#onlyMine').is(":checked") + '&fromDate=' + document.getElementById("fromDate").value + '&toDate=' + document.getElementById("toDate").value + '&pId=' + @patientId;
         });
     </script>
 </div>
@@ -75,15 +76,16 @@ jQuery(document).ready(function($) {
     @if(page==1) {
     <li class="disabled"><a href="#">&laquo;</a></li>
     } else {
-    <li><a href="@routes.VisitController.list(page-1, onlyMine, fromDate, toDate, patient.getId)">&laquo;</a></li>
+    <li><a href='@routes.VisitController.list(page-1, onlyMine, fromDate, toDate, patientId)'>&laquo;</a></li>
     }
     @for(i <- 1 to pageCount) {
-    <li @if(page==i){class="active"}><a href="@routes.VisitController.list(i, onlyMine, fromDate, toDate, patient.getId)">@i</a></li>
+    <li @if(page==i){class="active"}><a href='@routes.VisitController.list(i, onlyMine, fromDate, toDate, patientId)'>@i</a></li>
     }
     @if(page==pageCount) {
     <li class="disabled"><a href="#">&raquo;</a></li>
     } else {
-    <li><a href="@routes.VisitController.list(page+1, onlyMine, fromDate, toDate, patient.getId)">&raquo;</a></li>
+    <li><a href='@routes.VisitController.list(page+1, onlyMine, fromDate, toDate, patientId)'>&raquo;</a></li>
     }
 </ul>
+}
 }

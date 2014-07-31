@@ -50,16 +50,16 @@ public class VisitController extends Controller {
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)
 	@Transactional
-	public static Result list(int page, final boolean onlyMine, final String fromDate, final String toDate, final Long patientId) {
-		return listForPatient(page, onlyMine, fromDate, toDate, null);
+	public static Result listAASFSAF(int page, final boolean onlyMine, final String fromDate, final String toDate, final String patientId) {
+		return list(page, onlyMine, fromDate, toDate, null);
 	}
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)
 	@Transactional
-	public static Result listForPatient(int page, final boolean onlyMine, final String fromDate, final String toDate, final Long patientId) {
+	public static Result list(int page, final boolean onlyMine, final String fromDate, final String toDate, final Long patientId) {
 		Patient patient = null;
-		if (patientId != null) {
-			JPA.em().find(Patient.class, patientId);
+		if (patientId != -1) {
+			patient = JPA.em().find(Patient.class, patientId);
 		}
 		final Patient finalPatient = patient;
 		CriteriaApplier conditionsApplier = new CriteriaApplier() {
@@ -122,7 +122,7 @@ public class VisitController extends Controller {
 	}
 	
 	public static Result defaultList() {
-		return list(1, false, null, null, null);
+		return list(1, false, null, null, -1L);
 	}
 
 }

@@ -1,7 +1,7 @@
 @(form: Form[Visit]) @main("Wizyta", "visit") {
 
 <div class="col-lg-offset-2 col-lg-10">
-<h3>@(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
+<h3>Wizyta pacjenta @(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
 </div>
 
 <br/><br/><br/>
@@ -36,7 +36,8 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="button" onclick='window.open("@routes.VisitController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Wizytę</button>
+            <button type="button" onclick='window.open("@routes.VisitController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń wizytę</button>
+            <button type="button" onclick='window.open("@routes.PatientController.get(form.get.getPatient.getId)","_self");' class="btn btn-sm btn-primary">Pokaż pacjenta</button>
         </div>
     </div>
 

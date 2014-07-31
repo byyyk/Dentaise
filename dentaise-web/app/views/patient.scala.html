@@ -1,4 +1,7 @@
 @(form: Form[Patient]) @main("Pacjent", "patient") {
+
+<h3>@(form.get.getForename + " " + form.get.getSurname)</h3>
+
 @helper.form(routes.PatientController.save) {
 <div class="form-horizontal">
     <input type="hidden" name="id" value="@form.get.getId">
@@ -20,7 +23,7 @@
         <div class="col-lg-offset-2 col-lg-10">
             <button type="button" onclick='window.open("@routes.PatientController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Pacjenta</button>
             <button type="button" onclick='window.open("@routes.VisitController.create(form.get.getId)","_self");' class="btn btn-sm btn-primary">Zaplanuj Wizytę</button>
-            <button type="button" onclick='window.open("@routes.VisitController.list(1, false, null, null, form.get.getId)","_self");' class="btn btn-sm btn-primary">Zaplanuj Wizytę</button>
+            <button type="button" onclick='window.open("@routes.VisitController.list(1, false, null, null, form.get.getId)","_self");' class="btn btn-sm btn-primary">Pokaż wizyty</button>
         </div>
     </div>
 
