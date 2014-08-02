@@ -35,7 +35,7 @@
 \author{Mateusz Kulpa}
 \shortauthor{M. Kulpa}
 
-\titlePL{Projekt i~implementacja aplikacji do wspomagania pracy gabinetu lekarskiego w technologii JavaEE oraz Android}
+\titlePL{TODO Projekt i~implementacja aplikacji do wspomagania pracy gabinetu lekarskiego w technologii JavaEE oraz Android}
 \titleEN{TODO ENGLISH TITLE}
 
 \shorttitlePL{Skrócony tytuł polski} % skrócona wersja tytułu jeśli jest bardzo długi
@@ -45,7 +45,7 @@
 
 \supervisor{dr inż.\ Paweł Skrzyński}
 
-\degreeprogramme{Informatyka Stosowana}
+\degreeprogramme{Informatyka}
 
 
 \date{2014}
@@ -94,16 +94,17 @@
 %----------------------------------------------------------------------------
 
 \chapter{Dobór technologii i narzędzi}
+
 \section{Baza Danych}
-\subsection{rdbms}
-\subsection{orm}
+\subsection{System zarządzania relacyjnymi bazami danych}
+\subsection{Mapowanie obiektowo-relacyjne}
 \section{Web Service}
 \subsection{Protokół}
 \subsubsection{SOAP}
 \subsubsection{REST}
-jersey/jackson
 \subsubsection{Wybór i uzasadnienie}
-\subsection{}
+\subsection{Serializacja}
+jersey/jackson
 \section{Moduł web}
 \subsection{backend}
 playframework
@@ -111,34 +112,79 @@ playframework
 bootstrap, javascript, jquery, html, css
 \section{Moduł mobile}
 \subsection{Platforma}
-\subsection{klient WS}
+Android
+\subsection{Klient WebService}
+ApacheHttpClient
 
 %----------------------------------------------------------------------------
 
 \chapter{Implementacja}
+
+\section{Baza danych}
+\subsection{Encje}
+\subsection{Bezpieczeństwo}
+\subsubsection{SQL Injection}
 \section{Web Service}
 \subsection{API}
+"rozdwojenie" API dla web i mobile
+zalecany interfejs restowy a ograniczenia html: (brak PUT, DELETE), paginacja w url czy header Range?
+\subsection{Bezpieczeństwo}
+\subsubsection{HTTPS}
+\subsubsection{Ochrona wybranych zasobów}
+zwykłe podejście czyli chroniony url vs adnotacje
+@Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
+\section{Autentykacja}
+\subsection{Różne podejścia}
+basic auth, form auth itp...
+\subsection{Bezpieczeństwo}
+\subsubsection{Hashowanie}
+różne algorytmy i ich podatność na ataki
+hashowanie u klienta czy po stronie serwera?
+długość klucza
+salt
+rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
+\subsubsection{HTTPS}
+clear text
+\section{Reset hasła}
+tokeny, mail
+\section{Sesja}
+session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
 
 %----------------------------------------------------------------------------
 
 \chapter{Opis}
+
 \section{Web}
 \subsection{Zakres}
-\subsection{Podstrony}
+\subsection{Prezentacja}
 \section{Mobile}
 \subsection{Zakres}
-\subsection{Widoki}
+\subsection{Prezentacja}
 \section{User Experience}
-
+układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalendarz, wyszukiwarka, paginacja, (walidacja PESEL??)
 %----------------------------------------------------------------------------
 
-\chapter{Konfiguracja}
+\chapter{Konfiguracja i uruchomienie}
+a może jako dodatek zamiast rozdziału?
+
+\subsection{Baza danych}
+\subsection{Play Framework}
+\subsubsection{Instalacja}
+\subsubsection{Plik application.conf}
+baseUrl, smtp.host, database itp...
+\subsection{Android SDK}
+\subsection{Zależności}
+\subsubsection{Sbt}
+\subsubsection{Gradle}
+\subsection{Uruchomienie}
 
 % itd.
 % \appendix
 % \include{dodatekA}
 % \include{dodatekB}
 % itd.
+
+\chapter{Bibliografia} %czy chapter jest potrzebny?
 
 \bibliographystyle{alpha}
 \bibliography{bibliografia}
