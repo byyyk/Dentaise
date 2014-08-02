@@ -1,0 +1,211 @@
+\documentclass[11pt]{aghdpl}
+% \documentclass[en,11pt]{aghdpl}  % praca w języku angielskim
+\usepackage[polish]{babel}
+%\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+% dodatkowe pakiety
+\usepackage{enumerate}
+\usepackage{listings}
+\lstloadlanguages{TeX}
+
+\lstset{
+  literate={ą}{{\k{a}}}1
+           {ć}{{\'c}}1
+           {ę}{{\k{e}}}1
+           {ó}{{\'o}}1
+           {ń}{{\'n}}1
+           {ł}{{\l{}}}1
+           {ś}{{\'s}}1
+           {ź}{{\'z}}1
+           {ż}{{\.z}}1
+           {Ą}{{\k{A}}}1
+           {Ć}{{\'C}}1
+           {Ę}{{\k{E}}}1
+           {Ó}{{\'O}}1
+           {Ń}{{\'N}}1
+           {Ł}{{\L{}}}1
+           {Ś}{{\'S}}1
+           {Ź}{{\'Z}}1
+           {Ż}{{\.Z}}1
+}
+
+%---------------------------------------------------------------------------
+
+\author{Mateusz Kulpa}
+\shortauthor{M. Kulpa}
+
+\titlePL{TODO Projekt i~implementacja aplikacji do wspomagania pracy gabinetu lekarskiego w technologii JavaEE oraz Android}
+\titleEN{TODO ENGLISH TITLE}
+
+\shorttitlePL{Skrócony tytuł polski} % skrócona wersja tytułu jeśli jest bardzo długi
+\shorttitleEN{Skrócony tytuł angielski}
+
+\thesistype{Praca dyplomowa magisterska}
+
+\supervisor{dr inż.\ Paweł Skrzyński}
+
+\degreeprogramme{Informatyka}
+
+
+\date{2014}
+
+\department{Katedra Informatyki Stosowanej}
+%\department{Department of Applied Computer Science}
+
+\faculty{Wydział Elektrotechniki, Automatyki,\protect\\[-1mm] Informatyki i Inżynierii Biomedycznej}
+%\faculty{Faculty of Electrical Engineering, Automatics, Computer Science and Biomedical Engineering}
+
+\acknowledgements{Serdecznie dziękuję \dots tu ciąg dalszych podziękowań np. dla promotora, żony, sąsiada itp.}
+
+
+\setlength{\cftsecnumwidth}{10mm}
+
+%---------------------------------------------------------------------------
+\setcounter{secnumdepth}{4}
+
+\begin{document}
+
+\titlepages
+\setcounter{tocdepth}{3}
+\tableofcontents
+\clearpage
+
+\chapter{Abstrakt}
+
+%----------------------------------------------------------------------------
+
+\chapter{Wstęp}
+\label{cha:wstep}
+
+\section{Cele pracy}
+\label{sec:celePracy}
+
+\section{Zawartość pracy}
+\label{sec:zawartoscPracy}
+
+%----------------------------------------------------------------------------
+
+\chapter{Architektura}
+
+\section{Architektura fizyczna}
+\section{Architektura logiczna}
+
+%----------------------------------------------------------------------------
+
+\chapter{Dobór technologii i narzędzi}
+
+\section{Baza Danych}
+\subsection{System zarządzania relacyjnymi bazami danych}
+\subsection{Mapowanie obiektowo-relacyjne}
+\section{Web Service}
+\subsection{Protokół}
+\subsubsection{SOAP}
+\subsubsection{REST}
+\subsubsection{Wybór i uzasadnienie}
+\subsection{Serializacja}
+jersey/jackson
+\section{Moduł web}
+\subsection{backend}
+playframework
+\subsection{frontend}
+bootstrap, javascript, jquery, html, css
+\section{Moduł mobile}
+\subsection{Platforma}
+Android
+\subsection{Klient WebService}
+ApacheHttpClient
+
+%----------------------------------------------------------------------------
+
+\chapter{Implementacja}
+
+\section{Baza danych}
+\subsection{Encje}
+\subsection{Bezpieczeństwo}
+\subsubsection{SQL Injection}
+\section{Web Service}
+\subsection{API}
+"rozdwojenie" API dla web i mobile
+zalecany interfejs restowy a ograniczenia html: (brak PUT, DELETE), paginacja w url czy header Range?
+\subsection{Bezpieczeństwo}
+\subsubsection{HTTPS}
+\subsubsection{Ochrona wybranych zasobów}
+zwykłe podejście czyli chroniony url vs adnotacje
+@Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
+\section{Autentykacja}
+\subsection{Różne podejścia}
+basic auth, form auth itp...
+\subsection{Bezpieczeństwo}
+\subsubsection{Hashowanie}
+różne algorytmy i ich podatność na ataki
+hashowanie u klienta czy po stronie serwera?
+długość klucza
+salt
+rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
+\subsubsection{HTTPS}
+clear text
+\section{Reset hasła}
+tokeny, mail
+\section{Sesja}
+session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
+
+%----------------------------------------------------------------------------
+
+\chapter{Opis}
+
+\section{Web}
+\subsection{Zakres}
+\subsection{Prezentacja}
+\section{Mobile}
+\subsection{Zakres}
+\subsection{Prezentacja}
+\section{User Experience}
+układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalendarz, wyszukiwarka, paginacja, (walidacja PESEL??)
+%----------------------------------------------------------------------------
+
+\chapter{Konfiguracja i uruchomienie}
+a może jako dodatek zamiast rozdziału?
+
+\subsection{Baza danych}
+\subsection{Play Framework}
+\subsubsection{Instalacja}
+\subsubsection{Plik application.conf}
+baseUrl, smtp.host, database itp...
+\subsection{Android SDK}
+\subsection{Zależności}
+\subsubsection{Sbt}
+\subsubsection{Gradle}
+\subsection{Uruchomienie}
+
+% itd.
+% \appendix
+% \include{dodatekA}
+% \include{dodatekB}
+% itd.
+
+\chapter{Bibliografia} %czy chapter jest potrzebny?
+
+\bibliographystyle{alpha}
+\bibliography{bibliografia}
+%\begin{thebibliography}{1}
+%
+%\bibitem{Dil00}
+%A.~Diller.
+%\newblock {\em LaTeX wiersz po wierszu}.
+%\newblock Wydawnictwo Helion, Gliwice, 2000.
+%
+%\bibitem{Lam92}
+%L.~Lamport.
+%\newblock {\em LaTeX system przygotowywania dokumentów}.
+%\newblock Wydawnictwo Ariel, Krakow, 1992.
+%
+%\bibitem{Alvis2011}
+%M.~Szpyrka.
+%\newblock {\em {On Line Alvis Manual}}.
+%\newblock AGH University of Science and Technology, 2011.cccccc
+%\newblock \\\texttt{http://fm.ia.agh.edu.pl/alvis:manual}.
+%
+%\end{thebibliography}
+
+\end{document}
