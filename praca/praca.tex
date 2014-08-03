@@ -35,10 +35,10 @@
 \author{Mateusz Kulpa}
 \shortauthor{M. Kulpa}
 
-\titlePL{TODO Projekt i~implementacja aplikacji do wspomagania pracy gabinetu lekarskiego w technologii JavaEE oraz Android}
-\titleEN{TODO ENGLISH TITLE}
+\titlePL{Projekt i~implementacja mobilnego systemu wspomagającego prowadzenie gabinetu lekarskiego w technologii JavaEE oraz Android}
+\titleEN{Design and implementation of mobile doctors office management system using JavaEE and Android technologies}
 
-\shorttitlePL{Skrócony tytuł polski} % skrócona wersja tytułu jeśli jest bardzo długi
+\shorttitlePL{Projekt i~implementacja mobilnego systemu wspomagającego prowadzenie gabinetu lekarskiego w technologii JavaEE oraz Android}
 \shorttitleEN{Skrócony tytuł angielski}
 
 \thesistype{Praca dyplomowa magisterska}
@@ -46,7 +46,6 @@
 \supervisor{dr inż.\ Paweł Skrzyński}
 
 \degreeprogramme{Informatyka}
-
 
 \date{2014}
 
@@ -66,34 +65,53 @@
 
 \begin{document}
 
+
 \titlepages
+
+\begin{abstract}
+
+Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~ obowiązującymi normami, a przedstawienie sposobu implementacji systemu składającego się  z~kilku komponentów, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę Android. Ze względu na duże zróżnicowanie potrzeb w zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
+
+W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy SQL Injection.
+
+Pomimo zawężenia problemu do wielkości pozwalającej na skupienie się na szczegółach projektowania i~ implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
+
+\end{abstract}
+
 \setcounter{tocdepth}{3}
 \tableofcontents
 \clearpage
-
-\chapter{Abstrakt}
 
 %----------------------------------------------------------------------------
 
 \chapter{Wstęp}
 \label{cha:wstep}
-
+%problem spójności api
 \section{Cele pracy}
-\label{sec:celePracy}
+\label{sec:cele_pracy}
 
 \section{Zawartość pracy}
-\label{sec:zawartoscPracy}
+\label{sec:zawartosc_pracy}
 
 %----------------------------------------------------------------------------
 
 \chapter{Architektura}
+\label{cha:architektura}
 
 \section{Architektura fizyczna}
+\label{sec:architektura_fizyczna}
+
 \section{Architektura logiczna}
+\label{sec:architektura_logiczna}
 
 %----------------------------------------------------------------------------
 
 \chapter{Dobór technologii i narzędzi}
+\label{cha:dobor_technologii_i_narzedzi}
+
+W rozdziale tym opisane są technologie~i narzędzia użyte do implementacji każdej~z warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a jedynie elementy niezbędne do zrozumienia struktury systemu~i sposobu komunikacji pomiędzy poszczególnymi modułami.
+
+%dopisać coś o Javie
 
 \section{Baza Danych}
 \subsection{System zarządzania relacyjnymi bazami danych}
@@ -104,55 +122,98 @@
 \subsubsection{REST}
 \subsubsection{Wybór i uzasadnienie}
 \subsection{Serializacja}
-jersey/jackson
+jackson
 \section{Moduł web}
-\subsection{backend}
+\subsection{Back-end}
 playframework
-\subsection{frontend}
+\subsection{Front-end}
 bootstrap, javascript, jquery, html, css
 \section{Moduł mobile}
 \subsection{Platforma}
 Android
 \subsection{Klient WebService}
 ApacheHttpClient
+\section{Zarządzanie zależnościami}
+\subsection{Sbt}
+\subsection{Gradle}
 
 %----------------------------------------------------------------------------
 
 \chapter{Implementacja}
+\label{cha:implementacja}
 
-\section{Baza danych}
-\subsection{Encje}
-\subsection{Bezpieczeństwo}
-\subsubsection{SQL Injection}
+\section{MVC}
+
+\subsection{Modele}
+
+\subsection{Widoki}
+
+%jedyne miejsce zmienne dla urządzeń!!
+
+\subsubsection{Web}
+
+\subsubsection{Mobile}
+
+\subsection{Kontrolery}
+
+%CRUD, transakcje, acid?
+
 \section{Web Service}
+
 \subsection{API}
-"rozdwojenie" API dla web i mobile
-zalecany interfejs restowy a ograniczenia html: (brak PUT, DELETE), paginacja w url czy header Range?
-\subsection{Bezpieczeństwo}
-\subsubsection{HTTPS}
-\subsubsection{Ochrona wybranych zasobów}
-zwykłe podejście czyli chroniony url vs adnotacje
-@Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
-\section{Autentykacja}
-\subsection{Różne podejścia}
+
+``rozdwojenie'' API dla web i mobile
+
+zalecany interfejs restowy a ograniczenia html: brak PUT, DELETE; paginacja w url czy header Range?
+
+\section{Bezpieczeństwo}
+
+\subsection{Uwierzytelnianie}
+
+%co prawda jest po stronie web ale dotyczy jednak obydwu modułów
+
+\subsubsection{Różne podejścia}
+
 basic auth, form auth itp...
-\subsection{Bezpieczeństwo}
+
+wysyłanie clear text, hashowanie na serwerze
+
 \subsubsection{Hashowanie}
+
 różne algorytmy i ich podatność na ataki
+
 hashowanie u klienta czy po stronie serwera?
+
 długość klucza
+
 salt
+
 rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
-\subsubsection{HTTPS}
-clear text
-\section{Reset hasła}
-tokeny, mail
-\section{Sesja}
+
+\subsubsection{Sesja}
+
 session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
+
+\subsection{Reset hasła}
+
+tokeny, mail
+
+\subsection{Ochrona wybranych zasobów}
+
+zwykłe podejście czyli chroniony url (trochę o podejściu klasycznym tzn. ochrona url bez wiedzy aplikacji z logowaniem jako osobny niechroniony moduł) vs adnotacje
+@Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
+
+\subsection{HTTPS}
+
+\subsection{SQL Injection}
+
+\subsection{XSS}
+
 
 %----------------------------------------------------------------------------
 
 \chapter{Opis}
+\label{cha:opis}
 
 \section{Web}
 \subsection{Zakres}
@@ -165,10 +226,12 @@ układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalend
 %----------------------------------------------------------------------------
 
 \chapter{Konfiguracja i uruchomienie}
+\label{cha:konfiguracja_i_uruchomienie}
 a może jako dodatek zamiast rozdziału?
 
 \subsection{Baza danych}
 \subsection{Play Framework}
+%pamiętaj o https
 \subsubsection{Instalacja}
 \subsubsection{Plik application.conf}
 baseUrl, smtp.host, database itp...
@@ -185,6 +248,7 @@ baseUrl, smtp.host, database itp...
 % itd.
 
 \chapter{Bibliografia} %czy chapter jest potrzebny?
+\label{cha:bibliografia}
 
 \bibliographystyle{alpha}
 \bibliography{bibliografia}

@@ -83,7 +83,7 @@ Supervisor: & {\itshape \@supervisor}\\
 \newpage \titlepage 
 
 \begin{center}
-\vspace*{1.5cm}
+%\vspace*{1.5cm}
 
 \includegraphics[scale=0.6]{agh}
 
