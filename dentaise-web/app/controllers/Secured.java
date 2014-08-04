@@ -1,5 +1,6 @@
 package controllers;
 
+import play.Logger;
 import play.libs.ws.WS;
 import play.mvc.Call;
 import play.mvc.Http.Context;
@@ -18,6 +19,7 @@ public class Secured extends Security.Authenticator {
 	public static String readUsernameFromSession(Session session) {
 		String result = null;
 		String sessionId = session.get("sessionId");
+		Logger.debug("sessionId is " + sessionId);
 		if (sessionId != null) {
 			Call call = routes.Application.processSession(sessionId);
 			String baseUrl = play.Play.application().configuration().getString("application.baseUrl");

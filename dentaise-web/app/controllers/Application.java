@@ -13,12 +13,10 @@ import java.util.Random;
 
 import javax.persistence.TypedQuery;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import models.Doctor;
 import models.Session;
 import models.Token;
+import play.Logger;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
@@ -133,16 +131,21 @@ public class Application extends Controller {
     
     @Transactional
     public static Result processSession(String sessionId) {
+    	Logger.debug("reading username for session " + sessionId);
     	String username = null;
 		Session session = JPA.em().find(Session.class, sessionId);
 		if (session != null) {
 			if (expired(session.getLastActivity(), SESSION_TIMEOUT_MILIS)) {
+				Logger.debug("session expired");
 				JPA.em().remove(session);
 			} else {
 				session.setLastActivity(new Date());
 				JPA.em().merge(session);
 				username = session.getDoctor().getUsername();
+				Logger.debug("username is " + username);
 			}
+		} else {
+			Logger.debug("session not found");
 		}
 		return ok(username == null ? "" : username);
     }
@@ -172,6 +175,10 @@ public class Application extends Controller {
         }
     }
 
+    public static boolean requestFromMobilePhone() {
+    	return !request().accepts("text/html");
+    }
+    
     public static Doctor getLoggedInDoctor() {
     	String username = Secured.readUsernameFromSession(session());
     	return findDoctorByUsername(username);

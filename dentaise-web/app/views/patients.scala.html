@@ -6,7 +6,7 @@ jQuery(document).ready(function($) {
           window.document.location = $(this).data("url");
       });
       $("#search").click(function() {
-          window.document.location = '/patients?query=' + document.getElementById("query").value;
+          window.document.location = '/patients?page=1&query=' + document.getElementById("query").value;
       });
 });
 </script>

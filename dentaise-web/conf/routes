@@ -14,25 +14,25 @@ GET     /changePassword/:token              controllers.Application.changePasswo
 POST    /changePassword                     controllers.Application.savePassword()
 GET     /processSession/:id                 controllers.Application.processSession(id: String)
 
-GET     /patients                           controllers.PatientController.list(page: Int ?= 1, query: String ?= null)
+GET     /patients                           controllers.PatientController.list(page: Int ?= 0, query: String ?= null)
 GET     /patients/:id                       controllers.PatientController.get(id: Long)
 GET     /patients-create                    controllers.PatientController.create()
-POST    /patient                            controllers.PatientController.save()
-GET     /patient-delete/:id                 controllers.PatientController.remove(id: Long)
+POST    /patients                           controllers.PatientController.save()
+GET     /patients-delete/:id                controllers.PatientController.remove(id: Long)
 
-GET     /doctors                            controllers.DoctorController.list(page: Int ?= 1)
+GET     /doctors                            controllers.DoctorController.list(page: Int ?= 0)
 GET     /doctors/:id                        controllers.DoctorController.get(id: Long)
 GET     /doctors-create                     controllers.DoctorController.create()
 POST    /doctors                            controllers.DoctorController.save()
 GET     /doctors-delete/:id                 controllers.DoctorController.remove(id: Long)
 
-GET     /visits                             controllers.VisitController.list(page: Int ?= 1, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long ?= -1)
+GET     /visits                             controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long ?= -1)
 GET     /visits/:id                         controllers.VisitController.get(id: Long)
 GET     /patients/:pId/visits-create        controllers.VisitController.create(pId: Long)
 POST    /visits                             controllers.VisitController.save()
 GET     /visits-delete/:id                  controllers.VisitController.remove(id: Long)
 
-#GET     /patients/:pId/visits               controllers.VisitController.list(page: Int ?= 1, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long)
+#GET     /patients/:pId/visits               controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long)
 
 GET     /test-init                          controllers.Util.testInit()
 

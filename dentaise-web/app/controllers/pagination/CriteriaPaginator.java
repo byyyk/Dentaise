@@ -31,8 +31,12 @@ public class CriteriaPaginator<T extends Serializable> {
 		conditionsApplier.applyCondition(builder, criteriaQuery, root);
 		conditionsApplier.applyOrder(builder, criteriaQuery, root);
 		
-		int offset = (page - 1) * PAGE_SIZE;
-		TypedQuery<T> query = JPA.em().createQuery(criteriaQuery).setMaxResults(PAGE_SIZE).setFirstResult(offset);
+		TypedQuery<T> query = JPA.em().createQuery(criteriaQuery);
+		
+		if (page > 0) {
+			int offset = (page - 1) * PAGE_SIZE;
+			query = query.setMaxResults(PAGE_SIZE).setFirstResult(offset);
+		}
 		return query.getResultList();
 	}
 

@@ -48,9 +48,9 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li @if(contentName.equals("patients")) {class="active"}><a href="@routes.PatientController.list()">Pacjenci</a></li>
-                    <li @if(contentName.equals("visits")) {class="active"}><a href="@routes.VisitController.list()">Wizyty</a></li>
-                    <li @if(contentName.equals("doctors")) {class="active"}><a href="@routes.DoctorController.list()">Lekarze</a></li>
+                    <li @if(contentName.equals("patients")) {class="active"}><a href="@routes.PatientController.list(1)">Pacjenci</a></li>
+                    <li @if(contentName.equals("visits")) {class="active"}><a href="@routes.VisitController.list(1)">Wizyty</a></li>
+                    <li @if(contentName.equals("doctors")) {class="active"}><a href="@routes.DoctorController.list(1)">Lekarze</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="@routes.Application.logout()">Wyloguj</a></li>

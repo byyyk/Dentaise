@@ -1,7 +1,11 @@
 package controllers;
 
 import static play.data.Form.form;
-import controllers.pagination.Paginator;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import models.Doctor;
 import play.data.Form;
 import play.db.jpa.JPA;
@@ -11,10 +15,24 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.doctor;
 import views.html.doctors;
+import controllers.pagination.CriteriaApplier;
+import controllers.pagination.CriteriaPaginator;
 
 @Security.Authenticated(Secured.class)
 public class DoctorController extends Controller {
-	private static final Paginator<Doctor> paginator = new Paginator<Doctor>(Doctor.class.getName(), null, "surname", "ASC");
+	private static final CriteriaPaginator<Doctor> paginator = new CriteriaPaginator<Doctor>(Doctor.class, new CriteriaApplier() {
+		@Override
+		public <S, T> void applyOrder(CriteriaBuilder builder,
+				CriteriaQuery<S> criteriaQuery, Root<T> root) {
+			criteriaQuery.orderBy(builder.asc(root.get("surname")));
+		}
+		
+		@Override
+		public <S, T> void applyCondition(CriteriaBuilder builder,
+				CriteriaQuery<S> criteriaQuery, Root<T> root) {
+			//no conditions
+		}
+	});
 	
 	@Transactional
 	public static Result create() {

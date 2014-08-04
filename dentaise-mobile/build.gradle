@@ -1,28 +1,16 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
     repositories {
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.0'
+        classpath 'com.android.tools.build:gradle:0.9.+'
     }
 }
 
-apply plugin: 'android'
-apply plugin: 'eclipse'
-
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
 }
-
-dependencies {
-	compile 'com.android.support:support-v4:18.0.+'
-	compile 'com.android.support:appcompat-v7:18.0.+'
-	compile 'commons-configuration:commons-configuration:1.7'
-}
-
-android {
-    compileSdkVersion 16
-    buildToolsVersion "19.0.2"  
-}
-

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Dentaise</string>
+    <string name="search">Szukaj</string>
+    <string name="add">Dodaj</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_add_patient">Edytuj pacjenta</string>
+    <string name="title_activity_add_patient_section1">Pacjent</string>
+    <string name="title_activity_add_patient_section2">Opiekun</string>
+    <string name="title_activity_add_patient_section3">Section 3</string>
+    <string name="title_activity_find_patient">Pacjenci</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="title_activity_exit">Wyjdź</string>
+    <string name="searched_patient_editbox_hint">Nazwisko lub PESEL</string>
+    <string name="forename_label">Imię:</string>
+    <string name="surname_label">Nazwisko:</string>
+    <string name="pesel_label">PESEL:</string>
+    <string name="phone_label">Telefon:</string>
+    <string name="street_label">Ulica:</string>
+    <string name="home_number_label">Numer domu:</string>
+    <string name="flat_number_label">Numer mieszkania:</string>
+    <string name="city_label">Miejscowość:</string>
+    <string name="post_code_label">Kod pocztowy:</string>
+    <string name="save">Zapisz</string>
+</resources>
