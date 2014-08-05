@@ -23,6 +23,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.AuthenticationFailedException;
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.Patient;
@@ -45,7 +46,7 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
      */
     ViewPager mViewPager;
 
-    public Patient patient;
+    public volatile Patient patient;
 
     private PatientDataFragment patientDataFragment = new PatientDataFragment();
     private static final String TAG = EditPatientActivity.class.getSimpleName();
@@ -55,6 +56,7 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_patient_layout);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -90,7 +92,6 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
 
         Intent intent = getIntent();
         final long patientId = intent.getLongExtra(FindPatientActivity.EXTRA_PATIENT_ID, -1);
-
         new RestCallAsyncTask<Patient>(getApplicationContext()) {
             @Override
             protected Patient makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
@@ -98,7 +99,7 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
             }
             @Override
             protected void handleResult(Patient result) {
-                EditPatientActivity.this.patient = patient;
+                EditPatientActivity.this.patient = result;
                 patientDataFragment.updateView();
             }
         }.execute();
@@ -132,6 +133,12 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
                 Repositories.patient.savePatient(patient);
                 return null;
             }
+
+            @Override
+            protected String onSuccessMessage() {
+                return getResources().getString(R.string.toast_saved);
+            }
+
             @Override
             protected void handleResult(Void result) {
             }

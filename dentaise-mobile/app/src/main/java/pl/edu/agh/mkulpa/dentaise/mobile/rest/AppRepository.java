@@ -52,9 +52,8 @@ public class AppRepository {
         return baseUrl;
     }
 
-    public void print(String prefix, HttpResponse response) {
+    public void print(HttpResponse response) {
         StringBuilder builder = new StringBuilder();
-        builder.append(prefix + " ");
         builder.append("Status: " + response.getStatusLine().getStatusCode() + " " + response.getStatusLine().getReasonPhrase() + "\n");
         Header[] headers = response.getAllHeaders();
         for (Header header : headers) {
@@ -77,7 +76,7 @@ public class AppRepository {
         httpPost.setEntity(new UrlEncodedFormEntity(entity, "UTF-8"));
 
         HttpResponse response = httpClient.execute(httpPost, context);
-        print("LOGIN", response);
+        print(response);
         if (unauthorized(response)) {
             throw new AuthenticationFailedException("Could not login, probably wrong user or password");
         }
@@ -103,9 +102,10 @@ public class AppRepository {
             loggedInBeforehand = true;
         }
 
-        Log.i(TAG, "Trying...");
+        Log.i(TAG, "Trying to call " + request.getMethod() + " " + request.getURI() + " ...");
         request.setHeader("Accept", "application/json");
         response = httpClient.execute(request, context);
+        print(response);
 
         boolean definitelyUnauthorized = false;
         if (unauthorized(response)) {
@@ -115,6 +115,7 @@ public class AppRepository {
                 login();
                 Log.i(TAG, "Retrying...");
                 response = httpClient.execute(request, context);
+                print(response);
                 if (unauthorized(response)) {
                     definitelyUnauthorized = true;
                 }

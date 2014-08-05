@@ -29,5 +29,6 @@
     <string name="title_activity_edit_visit">Edytuj Wizytę</string>
     <string name="toast_connection_fault">Nie udało się nawiązać połączenia z serwerem</string>
     <string name="toast_authentication_fault">Błąd logowania, niepoprawna nazwa użytkownika lub hasło</string>
+    <string name="toast_saved">Zapisano</string>
 
 </resources>
