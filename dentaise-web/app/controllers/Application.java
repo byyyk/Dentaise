@@ -160,7 +160,11 @@ public class Application extends Controller {
     public static Result authenticate() {
         Form<Login> loginForm = form(Login.class).bindFromRequest();
         if (loginForm.hasErrors()) {
-        	return badRequest(login.render(loginForm));
+        	if (requestFromMobilePhone()) {
+        		return unauthorized();
+        	} else {
+        		return badRequest(login.render(loginForm));
+        	}
         } else {
         	session().clear();
         	String username = loginForm.get().username;

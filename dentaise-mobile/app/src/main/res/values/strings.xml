@@ -10,6 +10,7 @@
     <string name="title_activity_add_patient_section2">Opiekun</string>
     <string name="title_activity_add_patient_section3">Section 3</string>
     <string name="title_activity_find_patient">Pacjenci</string>
+    <string name="title_activity_find_visit">Wizyty</string>
     <string name="title_activity_settings">Ustawienia</string>
     <string name="title_activity_exit">Wyjdź</string>
     <string name="searched_patient_editbox_hint">Nazwisko lub PESEL</string>
@@ -23,4 +24,10 @@
     <string name="city_label">Miejscowość:</string>
     <string name="post_code_label">Kod pocztowy:</string>
     <string name="save">Zapisz</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_edit_visit">Edytuj Wizytę</string>
+    <string name="toast_connection_fault">Nie udało się nawiązać połączenia z serwerem</string>
+    <string name="toast_authentication_fault">Błąd logowania, niepoprawna nazwa użytkownika lub hasło</string>
+
 </resources>

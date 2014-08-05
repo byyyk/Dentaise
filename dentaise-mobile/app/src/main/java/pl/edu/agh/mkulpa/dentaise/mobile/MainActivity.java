@@ -21,10 +21,11 @@ public class MainActivity extends Activity implements OnItemClickListener {
     private String[] menuItemLabels;
     private Integer[] menuItemIcons = {
     		R.drawable.ic_menu_allfriends,
+    		R.drawable.ic_menu_today,
     		R.drawable.ic_menu_preferences,
     		R.drawable.ic_menu_close_clear_cancel,
     };
-    
+
     /**
      * Called when the activity is first created.
      * @param savedInstanceState If the activity is being re-initialized after 
@@ -39,6 +40,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
         menuItemLabels = new String[] {
                 getString(R.string.title_activity_find_patient),
+                getString(R.string.title_activity_find_visit),
                 getString(R.string.title_activity_settings),
                 getString(R.string.title_activity_exit),
         };
@@ -59,8 +61,11 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		if (menuItemLabels[0].equals(label)) {
 			intent = new Intent(this, FindPatientActivity.class);
 			startActivity(intent);
-		}
-		
+		} else if (menuItemLabels[1].equals(label)) {
+            intent = new Intent(this, FindVisitActivity.class);
+            startActivity(intent);
+        }
+
 	}
 
     private class MainMenuAdapter extends ArrayAdapter<String> {

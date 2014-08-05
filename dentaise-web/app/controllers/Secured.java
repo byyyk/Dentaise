@@ -37,7 +37,11 @@ public class Secured extends Security.Authenticator {
 	@Override
 	public Result onUnauthorized(Context context) {
 		//invoked when getUsername(Context) == null
-		return redirect(routes.Application.login());
+		if (Application.requestFromMobilePhone()) {
+			return unauthorized();
+		} else {
+			return redirect(routes.Application.login());
+		}
 	}
 	
 }

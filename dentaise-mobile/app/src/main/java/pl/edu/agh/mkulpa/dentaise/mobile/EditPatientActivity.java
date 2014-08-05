@@ -24,8 +24,11 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.AuthenticationFailedException;
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.Patient;
-import pl.edu.agh.mkulpa.dentaise.mobile.rest.RestClient;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.PatientRepository;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.Repositories;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.RestCallAsyncTask;
 
 public class EditPatientActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -87,26 +90,18 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
 
         Intent intent = getIntent();
         final long patientId = intent.getLongExtra(FindPatientActivity.EXTRA_PATIENT_ID, -1);
-        new AsyncTask<String, Void, Patient>() {
-            @Override
-            protected Patient doInBackground(String... urls) {
-                try {
-                    return RestClient.getPatient(patientId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
 
+        new RestCallAsyncTask<Patient>(getApplicationContext()) {
             @Override
-            protected void onPostExecute(Patient patient) {
+            protected Patient makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
+                return Repositories.patient.getPatient(patientId);
+            }
+            @Override
+            protected void handleResult(Patient result) {
                 EditPatientActivity.this.patient = patient;
                 patientDataFragment.updateView();
             }
         }.execute();
-
     }
 
     @Override
@@ -131,18 +126,14 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
 
     private void savePatient() {
         patientDataFragment.savePatientData();
-        new AsyncTask<String, Void, Void>() {
+        new RestCallAsyncTask<Void>(getApplicationContext()) {
             @Override
-            protected Void doInBackground(String... urls) {
-                try {
-                    Log.i(TAG, "saving patient");
-                    RestClient.savePatient(patient);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            protected Void makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
+                Repositories.patient.savePatient(patient);
                 return null;
+            }
+            @Override
+            protected void handleResult(Void result) {
             }
         }.execute();
     }

@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.AuthenticationFailedException;
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.Patient;
-import pl.edu.agh.mkulpa.dentaise.mobile.rest.RestClient;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.Repositories;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.RestCallAsyncTask;
 
 public class FindPatientActivity extends Activity {
     private static final String TAG = FindPatientActivity.class.getName();
@@ -38,30 +38,10 @@ public class FindPatientActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_patient);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+
         patientListAdapter = new PatientListAdapter(new ArrayList<Patient>());
-
         final ListView patientList = (ListView) findViewById(R.id.patients_list);
-
-        new AsyncTask<String, Void, List<Patient>>() {
-            @Override
-            protected List<Patient> doInBackground(String... urls) {
-                try {
-                    Log.i(TAG, "retrieving patient list");
-                    return RestClient.listPatients(null);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(List<Patient> patients) {
-                Log.i(TAG, "updating patients");
-                patientListAdapter.updateData(patients);
-            }
-        }.execute();
+        updatePatientsList(null);
         patientList.setAdapter(patientListAdapter);
         patientList.setOnItemClickListener(patientListAdapter);
     }
@@ -84,31 +64,27 @@ public class FindPatientActivity extends Activity {
         handleIntent(intent);
     }
 
+    //For search
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             final String query = intent.getStringExtra(SearchManager.QUERY);
-
-            new AsyncTask<String, Void, List<Patient>>() {
-                @Override
-                protected List<Patient> doInBackground(String... urls) {
-                    try {
-                        return RestClient.listPatients(query);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(List<Patient> patients) {
-                    patientListAdapter.updateData(patients);
-                }
-            }.execute();
+            updatePatientsList(query);
         }
     }
-    
+
+    public void updatePatientsList(final String query){
+        new RestCallAsyncTask<List<Patient>>(getApplicationContext()) {
+            @Override
+            protected List<Patient> makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
+                return Repositories.patient.listPatients(query);
+            }
+            @Override
+            protected void handleResult(List<Patient> result) {
+                patientListAdapter.updateData(result);
+            }
+        }.execute();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
