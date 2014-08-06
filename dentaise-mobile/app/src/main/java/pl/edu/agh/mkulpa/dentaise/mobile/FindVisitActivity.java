@@ -15,10 +15,17 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.AuthenticationFailedException;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.Patient;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.Repositories;
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.RestCallAsyncTask;
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.Visit;
 
 
@@ -42,17 +49,20 @@ public class FindVisitActivity extends Activity {
     }
 
     private void updateVisitList() {
-        List<Visit> mock = new ArrayList<Visit>();
-        Visit visit = new Visit();
-        visit.setDate(new Date());
-        visit.setId(1);
-        visit.setNotes("jakieś notatki...");
-        mock.add(visit);
-        mock.add(visit);
-        mock.add(visit);
-        mock.add(visit);
-        mock.add(visit);
-        visitListAdapter.updateData(mock);
+        new RestCallAsyncTask<List<Visit>>(FindVisitActivity.this) {
+            @Override
+            protected String onSuccessMessage() {
+                return null;
+            }
+            @Override
+            protected List<Visit> makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
+                return Repositories.visit.listVisits();
+            }
+            @Override
+            protected void handleResult(List<Visit> result) {
+                visitListAdapter.updateData(result);
+            }
+        }.execute();
     }
 
     @Override
@@ -106,7 +116,9 @@ public class FindVisitActivity extends Activity {
             LayoutInflater inflater = getLayoutInflater();
             View view = inflater.inflate(R.layout.patient_list_item, parent, false);
             TextView textView = (TextView) view.findViewById(R.id.patient_list_item);
-            textView.setText(visit.getDate().toString());
+            Patient patient = visit.getPatient();
+            String patientFullName = patient == null ? "" : ", " + patient.getForename() + " " + patient.getSurname();
+            textView.setText(visit.getDate().toString() + patientFullName);
             return textView;
         }
 

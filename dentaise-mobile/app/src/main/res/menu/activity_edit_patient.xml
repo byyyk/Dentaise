@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
-    <item android:id="@+id/save"
+    <item android:id="@+id/save_patient_action"
         android:icon="@drawable/ic_action_save"
         android:title="@string/save"
         android:showAsAction="ifRoom"/>

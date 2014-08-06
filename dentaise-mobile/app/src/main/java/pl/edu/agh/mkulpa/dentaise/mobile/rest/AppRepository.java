@@ -32,24 +32,42 @@ public class AppRepository {
     private BasicCookieStore cookieStore;
     private String username;
     private String password;
+    private String serverAddress;
 
-    public AppRepository(String baseUrl, String username, String password) {
+    public AppRepository(String serverAddress, String username, String password) {
         httpClient = AndroidHttpClient.newInstance("dentaiseHttpClient");
         cookieStore = new BasicCookieStore();
         context = new BasicHttpContext();
         context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-        reconfigure(baseUrl, username, password);
+        setServerAddress(serverAddress);
+        setUsername(username);
+        setPassword(password);
     }
 
-    public void reconfigure(String baseUrl, String username, String password) {
-        this.baseUrl = baseUrl;
-        this.username = username;
-        this.password = password;
+    public void reconfigure() {
+        Log.i(TAG, "reconfiguring for " + username + ":" + password + "@" + serverAddress);
         cookieStore.clear();
     }
 
-    public String getBaseUrl() {
+    String getBaseUrl() {
         return baseUrl;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+        if (!serverAddress.startsWith("http://")) {
+            this.baseUrl = "http://" + serverAddress;
+        } else {
+            this.baseUrl = serverAddress;
+        }
     }
 
     public void print(HttpResponse response) {
@@ -94,6 +112,16 @@ public class AppRepository {
     }
 
     public HttpResponse execute(HttpUriRequest request) throws IOException, AuthenticationFailedException {
+        if (serverAddress == null || serverAddress.isEmpty()) {
+            throw new IOException("serverAddress not specified!");
+        }
+        if (username == null || username.isEmpty()) {
+            throw new IOException("username not specified!");
+        }
+        if (password == null || password.isEmpty()) {
+            throw new IOException("password not specified!");
+        }
+
         HttpResponse response;
         boolean loggedInBeforehand = false;
         if (notLoggedIn()) {

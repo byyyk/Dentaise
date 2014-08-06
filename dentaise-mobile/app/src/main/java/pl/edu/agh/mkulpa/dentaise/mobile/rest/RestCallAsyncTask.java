@@ -1,5 +1,6 @@
 package pl.edu.agh.mkulpa.dentaise.mobile.rest;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,9 +21,17 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
     private boolean connectionFault;
     private boolean authenticationFault;
     private final Context context;
+    private ProgressDialog progress;
 
     public RestCallAsyncTask(Context context) {
         this.context = context;
+        progress = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        progress.setMessage(getResourceString(R.string.progress_wait));
+        progress.show();
     }
 
     @Override
@@ -51,13 +60,18 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
 
     @Override
     protected void onPostExecute(T result) {
+        progress.dismiss();
+
         if (result != null) {
             handleResult(result);
-            toast(onSuccessMessage());
-        } else if(connectionFault) {
+        }
+
+        if(connectionFault) {
             toast(getResourceString(R.string.toast_connection_fault));
         } else if (authenticationFault) {
             toast(getResourceString(R.string.toast_authentication_fault));
+        } else {
+            toast(onSuccessMessage());
         }
     }
 
@@ -66,6 +80,7 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
     }
 
     private void toast(String message) {
+        Log.d(TAG, "Displaying toast: " + message);
         if (message != null) {
             Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
             toast.show();

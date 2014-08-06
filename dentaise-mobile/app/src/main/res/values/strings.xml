@@ -30,5 +30,12 @@
     <string name="toast_connection_fault">Nie udało się nawiązać połączenia z serwerem</string>
     <string name="toast_authentication_fault">Błąd logowania, niepoprawna nazwa użytkownika lub hasło</string>
     <string name="toast_saved">Zapisano</string>
+    <string name="progress_wait">Proszę czekać</string>
+    <string name="username">Użytkownik</string>
+    <string name="password">Hasło</string>
+    <string name="server_address">Adres serwera</string>
+    <string name="dentaise_server_label">Serwer Dentaise</string>
+    <string name="login_data_label">Dane logowania</string>
+    <string name="server_address_hint">np. 192.168.1.50:9000</string>
 
 </resources>

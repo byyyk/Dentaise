@@ -1,5 +1,6 @@
 package controllers;
 
+import static controllers.Application.requestFromMobilePhone;
 import static play.data.Form.form;
 
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import models.Visit;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
@@ -43,9 +45,14 @@ public class VisitController extends Controller {
 	@Transactional
 	public static Result get(long id) {
 		Visit visitEntity = JPA.em().find(Visit.class, id);
-		Form<Visit> form = form(Visit.class);
-		form = form.fill(visitEntity);
-		return ok(visit.render(form));
+		
+		if (requestFromMobilePhone()) {
+			return ok(Json.toJson(visitEntity));
+		} else {
+			Form<Visit> form = form(Visit.class);
+			form = form.fill(visitEntity);
+			return ok(visit.render(form));
+		}
 	}
 	
 	//TODO: return all if page=0 (for mobile client which won't have pagination)
@@ -99,7 +106,17 @@ public class VisitController extends Controller {
 			}
 		};
 		CriteriaPaginator<Visit> paginator = new CriteriaPaginator<Visit>(Visit.class, conditionsApplier);
-		return ok(visits.render(page, paginator.get(page), paginator.getPageCount(), onlyMine, fromDate, toDate, finalPatient));
+		List<Visit> visitsList = paginator.get(page);
+		if (requestFromMobilePhone()) {
+			/* this may come in handy if it will be necessary to un-jsonignore doctor
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+			Json.setObjectMapper(mapper);
+			 */
+			return ok(Json.toJson(visitsList));
+		} else {
+			return ok(visits.render(page, visitsList, paginator.getPageCount(), onlyMine, fromDate, toDate, finalPatient));
+		}
 	}
 	
 	@Transactional

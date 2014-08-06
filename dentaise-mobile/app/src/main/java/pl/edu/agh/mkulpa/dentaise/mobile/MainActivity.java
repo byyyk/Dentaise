@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
+
+import pl.edu.agh.mkulpa.dentaise.mobile.rest.Repositories;
 
 public class MainActivity extends Activity implements OnItemClickListener {
 
@@ -38,6 +41,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		Log.i(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
+        initializeApp();
+
         menuItemLabels = new String[] {
                 getString(R.string.title_activity_find_patient),
                 getString(R.string.title_activity_find_visit),
@@ -50,8 +55,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
         menu.setOnItemClickListener(this);
         menu.setAdapter(mainMenuAdapter);
     }
-    
-	@Override
+
+    private void initializeApp() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        Repositories.setup(this);
+    }
+
+    @Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		TextView textView = (TextView) view;
 		String label = (String) textView.getText();
@@ -63,6 +73,9 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			startActivity(intent);
 		} else if (menuItemLabels[1].equals(label)) {
             intent = new Intent(this, FindVisitActivity.class);
+            startActivity(intent);
+        } else if (menuItemLabels[2].equals(label)) {
+            intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
 

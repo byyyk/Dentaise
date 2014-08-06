@@ -73,7 +73,11 @@ public class FindPatientActivity extends Activity {
     }
 
     public void updatePatientsList(final String query){
-        new RestCallAsyncTask<List<Patient>>(getApplicationContext()) {
+        new RestCallAsyncTask<List<Patient>>(FindPatientActivity.this) {
+            @Override
+            protected String onSuccessMessage() {
+                return null;
+            }
             @Override
             protected List<Patient> makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
                 return Repositories.patient.listPatients(query);
