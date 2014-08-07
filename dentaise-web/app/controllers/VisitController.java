@@ -5,6 +5,7 @@ import static play.data.Form.form;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -13,9 +14,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import models.Area;
+import models.Diagnosis;
 import models.Doctor;
 import models.Patient;
+import models.Treatment;
 import models.Visit;
+import models.Work;
+import play.Logger;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
@@ -51,17 +57,10 @@ public class VisitController extends Controller {
 		} else {
 			Form<Visit> form = form(Visit.class);
 			form = form.fill(visitEntity);
-			return ok(visit.render(form));
+			return ok(visit.render(form, Util.findAll(Area.class), Util.findAll(Diagnosis.class), Util.findAll(Treatment.class)));
 		}
 	}
 	
-	//TODO: return all if page=0 (for mobile client which won't have pagination)
-	@Transactional
-	public static Result listAASFSAF(int page, final boolean onlyMine, final String fromDate, final String toDate, final String patientId) {
-		return list(page, onlyMine, fromDate, toDate, null);
-	}
-	
-	//TODO: return all if page=0 (for mobile client which won't have pagination)
 	@Transactional
 	public static Result list(int page, final boolean onlyMine, final String fromDate, final String toDate, final Long patientId) {
 		Patient patient = null;
@@ -79,7 +78,12 @@ public class VisitController extends Controller {
 				}
 				if (toDate != null && !toDate.isEmpty()) {
 					try {
-						predicates.add(cb.lessThanOrEqualTo(root.<Date>get("date"), Application.dateFormatter.parse(toDate)));
+						Calendar calendar = Calendar.getInstance();
+						Date date = Application.dateFormatter.parse(toDate);
+						calendar.setTime(date);
+						calendar.add(Calendar.DATE, 1);
+						date = calendar.getTime();
+						predicates.add(cb.lessThan(root.<Date>get("date"), date));
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
@@ -127,6 +131,10 @@ public class VisitController extends Controller {
 		visit.setPatient(oldVisit.getPatient());
 		Doctor doctor = Application.getLoggedInDoctor();
 		visit.setDoctor(doctor);
+		for (Work work : visit.getWorkList()) {
+			Logger.info("-------------------------------------UPDATING-----------------------------------------------------------------------------------");
+			work.setVisit(visit);
+		}
 		JPA.em().merge(visit);
 		return defaultList();
 	}

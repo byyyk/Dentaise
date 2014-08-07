@@ -1,4 +1,4 @@
-@(form: Form[Visit]) @main("Wizyta", "visit") {
+@(form: Form[Visit], areas: List[Area], diagnoses: List[Diagnosis], treatments: List[Treatment]) @main("Wizyta", "visit") {
 
 <div class="col-lg-offset-2 col-lg-10">
 <h3>Wizyta pacjenta @(form.get.getPatient.getForename + " " + form.get.getPatient.getSurname)</h3>
@@ -23,6 +23,42 @@
             });
         </script>
     </div>
+    
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <table id="workTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Obszar</th>
+                    <th>Rozpoznanie</th>
+                    <th>Leczenie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(form.get.getWorkList != null) {
+                @for(work <- form.get.getWorkList) {
+                <tr>
+                    <td>@if(work.getArea != null) {@work.getArea.getName}</td>
+                    <td>@if(work.getDiagnosis != null) {@work.getDiagnosis.getName}</td>
+                    <td>@if(work.getTreatment != null) {@work.getTreatment.getName}</td>
+                </tr>
+            </tbody>
+            }
+            }
+            </table>
+            <button type="button" id="addWorkButton" class="btn btn-sm btn-primary">Dodaj pracę</button>
+            <script type="text/javascript">
+                $('#addWorkButton').click(function() {
+                	$('#workTable > tbody:last').append('<tr>' +
+                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].area.id" class="form-control">@for(area <- areas){<option value="@area.getId">@area.getName</option>}</select></td>' +
+                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].diagnosis.id" class="form-control">@for(diagnosis <- diagnoses){<option value="@diagnosis.getId">@diagnosis.getName</option>}</select></td>' +
+                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].treatment.id" class="form-control">@for(treatment <- treatments){<option value="@treatment.getId">@treatment.getName</option>}</select></td>' +
+                		    '</tr>');
+                });
+            </script>
+        </div>
+    </div>
+    
     <div class="form-group">
         <label for="notes" class="col-lg-2 control-label">Notatki</label>
         <div class="col-lg-10">

@@ -136,7 +136,7 @@ public class FindPatientActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
             Patient patient = patients.get(position);
 			LayoutInflater inflater = getLayoutInflater();
-			View view = inflater.inflate(R.layout.patient_list_item, parent, false);
+			View view = inflater.inflate(R.layout.list_item, parent, false);
 			TextView textView = (TextView) view.findViewById(R.id.patient_list_item);
 			textView.setText(patient.getForename() + " " + patient.getSurname() + ", " + patient.getPesel());
 			return textView;

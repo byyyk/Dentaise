@@ -18,8 +18,8 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import pl.edu.agh.mkulpa.dentaise.mobile.rest.AuthenticationFailedException;
@@ -114,11 +114,13 @@ public class FindVisitActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             Visit visit = visits.get(position);
             LayoutInflater inflater = getLayoutInflater();
-            View view = inflater.inflate(R.layout.patient_list_item, parent, false);
+            View view = inflater.inflate(R.layout.list_item, parent, false);
             TextView textView = (TextView) view.findViewById(R.id.patient_list_item);
             Patient patient = visit.getPatient();
             String patientFullName = patient == null ? "" : ", " + patient.getForename() + " " + patient.getSurname();
-            textView.setText(visit.getDate().toString() + patientFullName);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            String hour = dateFormat.format(visit.getDate());
+            textView.setText(hour + patientFullName);
             return textView;
         }
 

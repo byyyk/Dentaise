@@ -10,7 +10,8 @@ import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class VisitRepository {
@@ -39,7 +40,9 @@ public class VisitRepository {
     }
 
     public List<Visit> listVisits() throws IOException, JSONException, AuthenticationFailedException {
-        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/visits");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        String today = dateFormat.format(new Date());
+        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/visits?onlyMine=true&fromDate=" + today + "&toDate=" + today);
         HttpResponse response = appRepository.execute(httpGet);
         ObjectMapper mapper = new ObjectMapper();
         List<Visit> visits = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<Visit>>() {});

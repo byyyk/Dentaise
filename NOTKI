@@ -1,6 +1,10 @@
 PROBLEMY:
+
 Lekarze teoretycznie mogą zmieniać sobie dane przez API
+
 http://stackoverflow.com/questions/9253256/playframework-need-a-good-create-update-delete-example-using-same-html-page
+
+Illegal State No value http://stackoverflow.com/questions/11802566/binding-form-request-with-manytoone-field-on-play-framework-2 - brakło mi .id w '<td><select name="workList[' + $('#workTable tbody tr').length + '].area.id" class="form-control">@for(area <- areas){<option value="@area.getId">@area.getName</option>}</select></td>' +
 
 plugin gradle do eclipse uzywa gradle 1.5 - pewnie nie zadziala z android, uzyc plugina eclipe do gradle
 

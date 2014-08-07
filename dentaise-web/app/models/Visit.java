@@ -1,14 +1,18 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,7 +25,8 @@ public class Visit implements Serializable {
 	private Doctor doctor;
 	private Patient patient;
 	private String notes;
-
+	private List<Work> workList;
+	
 	@Id
 	@GeneratedValue
 	public long getId() {
@@ -47,11 +52,11 @@ public class Visit implements Serializable {
 		return doctor;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
 	public void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Patient getPatient() {
 		return patient;
 	}
@@ -60,6 +65,7 @@ public class Visit implements Serializable {
 		this.patient = patient;
 	}
 
+	@Column
 	public String getNotes() {
 		return notes;
 	}
@@ -68,4 +74,30 @@ public class Visit implements Serializable {
 		this.notes = notes;
 	}
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "visit", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	public List<Work> getWorkList() {
+		if (workList != null) {
+			return new ArrayList<Work>(workList);
+		} else {
+			return new ArrayList<Work>();
+		}
+	}
+
+	public void addWork(Work work) {
+		if (!workList.contains(work)) {
+			workList.add(work);
+			work.setVisit(this);			
+		}
+	}
+	
+	public void removeWork(Work work) {
+		if (workList.contains(work)) {
+			workList.remove(work);
+			work.setVisit(null);
+		}
+	}
+	
+	public void setWorkList(List<Work> workList) {
+		this.workList = workList;
+	}
 }

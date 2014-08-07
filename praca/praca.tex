@@ -64,7 +64,9 @@
 
 %TODO Content Negotiation
 %TODO StringEntity entity = new StringEntity(mapper.writeValueAsString(patient), HTTP.UTF_8);
-
+%TODO Maintenece - spójność api - latwiejsze w utrzymaniu, klient ma tylko widok i pobiera dane z ws łącznie ze zdefiniowanymi leczeniami/rozpoznaniami. Dzięki temu nie trzeba będzie aktualizować obydwu aplikacji, a jedynie zdefiniować nowe leczenie/rozpoznanie po stronie serwera. Gdyby api było zewnętrzne to warto by się pokusić o oddzielny interjefs, skoro jest tylko wew. wygodniej będzie utrzymywać jeden
+%TODO ajax, jquery?
+%TODO play - formularze z zagnieżdżonymi obiektami oraz listami
 
 \setcounter{secnumdepth}{4}
 
@@ -92,6 +94,7 @@ Pomimo zawężenia problemu do wielkości pozwalającej na skupienie się na szc
 \chapter{Wstęp}
 \label{cha:wstep}
 %TODO problem spójności api
+%TODO praca odnosi się do konkretnych frameworków i niektóre rozwiązania są do zastosowania tylko w ich obrębie, ale niektóre zagadnienia mają charakter ogólny
 \section{Cele pracy}
 \label{sec:cele_pracy}
 
