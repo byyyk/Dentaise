@@ -23,3 +23,7 @@ tr.clickable {
 .form-inline .div {
     display: block;
 }
+
+.white {
+    color: #fff;
+}

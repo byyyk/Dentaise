@@ -33,7 +33,7 @@ public class Util extends Controller {
 				JPA.em().persist(area);
 			}
 		}
-		return ok(index.render("Baza zainicjowana"));
+		return ok("Baza zainicjowana");
 	}
 	
 	public static void initWorkTypes() {

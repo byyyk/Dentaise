@@ -76,11 +76,7 @@ public class Visit implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "visit", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	public List<Work> getWorkList() {
-		if (workList != null) {
-			return new ArrayList<Work>(workList);
-		} else {
-			return new ArrayList<Work>();
-		}
+		return workList;
 	}
 
 	public void addWork(Work work) {

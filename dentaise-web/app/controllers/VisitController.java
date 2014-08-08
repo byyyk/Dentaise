@@ -21,7 +21,6 @@ import models.Patient;
 import models.Treatment;
 import models.Visit;
 import models.Work;
-import play.Logger;
 import play.data.Form;
 import play.db.jpa.JPA;
 import play.db.jpa.Transactional;
@@ -131,12 +130,23 @@ public class VisitController extends Controller {
 		visit.setPatient(oldVisit.getPatient());
 		Doctor doctor = Application.getLoggedInDoctor();
 		visit.setDoctor(doctor);
-		for (Work work : visit.getWorkList()) {
-			Logger.info("-------------------------------------UPDATING-----------------------------------------------------------------------------------");
-			work.setVisit(visit);
-		}
+		updateWorkList(oldVisit, visit);
 		JPA.em().merge(visit);
 		return defaultList();
+	}
+
+	private static void updateWorkList(Visit oldVisit, Visit visit) {
+		if (oldVisit.getWorkList() != null) {
+		ArrayList<Work> oldWorkList = new ArrayList<Work>(oldVisit.getWorkList());
+			for (Work work : oldWorkList) {
+				work.setVisit(null);
+			}
+		}
+		if (visit.getWorkList() != null) {
+			for (Work work : visit.getWorkList()) {
+				work.setVisit(visit);
+			}
+		}
 	}
 	
 	@Transactional

@@ -40,8 +40,10 @@ public class Application extends Controller {
 	private static Random random = new SecureRandom();
 	
 	@Security.Authenticated(Secured.class)
+	
+	@Transactional
     public static Result index() {
-        return ok(index.render("For the swarm."));
+        return ok(index.render(getLoggedInDoctor()));
     }
 	
     public static Result login() {

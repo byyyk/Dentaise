@@ -21,9 +21,9 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="button" onclick='window.open("@routes.PatientController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Pacjenta</button>
-            <button type="button" onclick='window.open("@routes.VisitController.create(form.get.getId)","_self");' class="btn btn-sm btn-primary">Zaplanuj Wizytę</button>
-            <button type="button" onclick='window.open("@routes.VisitController.list(1, false, null, null, form.get.getId)","_self");' class="btn btn-sm btn-primary">Pokaż wizyty</button>
+            <button type="button" onclick='window.open("@routes.PatientController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-trash"></span> Usuń Pacjenta</button>
+            <button type="button" onclick='window.open("@routes.VisitController.create(form.get.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-time"></span> Zaplanuj Wizytę</button>
+            <button type="button" onclick='window.open("@routes.VisitController.list(1, false, null, null, form.get.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-list-alt"></span> Pokaż wizyty</button>
         </div>
     </div>
 

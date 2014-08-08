@@ -32,29 +32,51 @@
                     <th>Obszar</th>
                     <th>Rozpoznanie</th>
                     <th>Leczenie</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @if(form.get.getWorkList != null) {
-                @for(work <- form.get.getWorkList) {
-                <tr>
-                    <td>@if(work.getArea != null) {@work.getArea.getName}</td>
-                    <td>@if(work.getDiagnosis != null) {@work.getDiagnosis.getName}</td>
-                    <td>@if(work.getTreatment != null) {@work.getTreatment.getName}</td>
+                @for((work, index) <- form.get.getWorkList.zipWithIndex) {
+                <tr id="work@index">
+                    <td >@if(work.getArea != null) {@work.getArea.getName<input type="hidden" name="workList[@index].area.id" value="@work.getArea.getId"/>}</td>
+                    <td>@if(work.getDiagnosis != null) {@work.getDiagnosis.getName<input type="hidden" name="workList[@index].diagnosis.id" value="@work.getDiagnosis.getId"/>}</td>
+                    <td>@if(work.getTreatment != null) {@work.getTreatment.getName<input type="hidden" name="workList[@index].treatment.id" value="@work.getTreatment.getId"/>}</td>
+                    <td class="col-lg-1"><span style="cursor:pointer" class="removeWorkButton pull-right glyphicon glyphicon-trash" onclick="removeWork('work@index')"></span></td>
                 </tr>
+                }
+                }
             </tbody>
-            }
-            }
             </table>
-            <button type="button" id="addWorkButton" class="btn btn-sm btn-primary">Dodaj pracę</button>
+            <button type="button" id="addWorkButton" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Dodaj pracę</button>
             <script type="text/javascript">
                 $('#addWorkButton').click(function() {
-                	$('#workTable > tbody:last').append('<tr>' +
-                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].area.id" class="form-control">@for(area <- areas){<option value="@area.getId">@area.getName</option>}</select></td>' +
-                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].diagnosis.id" class="form-control">@for(diagnosis <- diagnoses){<option value="@diagnosis.getId">@diagnosis.getName</option>}</select></td>' +
-                		    '<td><select name="workList[' + $('#workTable tbody tr').length + '].treatment.id" class="form-control">@for(treatment <- treatments){<option value="@treatment.getId">@treatment.getName</option>}</select></td>' +
+                	var id = $('#workTable tbody tr').length;
+                	$('#workTable > tbody:last').append('<tr id="work' + id + '">' +
+                		    '<td><select name="workList[' + id + '].area.id" class="form-control">@for(area <- areas){<option value="@area.getId">@area.getName</option>}</select></td>' +
+                		    '<td><select name="workList[' + id + '].diagnosis.id" class="form-control">@for(diagnosis <- diagnoses){<option value="@diagnosis.getId">@diagnosis.getName</option>}</select></td>' +
+                		    '<td><select name="workList[' + id + '].treatment.id" class="form-control">@for(treatment <- treatments){<option value="@treatment.getId">@treatment.getName</option>}</select></td>' +
+                		    '<td class="col-lg-1"><span style="cursor:pointer" class="removeWorkButton pull-right glyphicon glyphicon-trash" onclick="removeWork(\'work' + id + '\')"></span></td>' +
                 		    '</tr>');
                 });
+                function removeWork(trId){
+                    $('#workTable > tbody > #' + trId).remove();
+
+                    var id = 0;
+                    $('#workTable > tbody > tr').each(function() {
+                    	$(this).attr("id", "work" + id);
+                    	$(this).find("td")
+                            .slice(0, 3)
+                                .find("input, select").attr("name", function(index, oldValue) {
+                                    var suffix = oldValue.slice(oldValue.indexOf('.'), oldValue.length);
+                                    return 'workList[' + id + ']' + suffix;
+                                })
+                                .end().end()
+                            .eq(3)
+                                .find(".removeWorkButton").attr("onclick", "removeWork('work" + id + "')");
+                    	id = id + 1;
+                    });
+                }
             </script>
         </div>
     </div>
@@ -72,8 +94,8 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="button" onclick='window.open("@routes.VisitController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń wizytę</button>
-            <button type="button" onclick='window.open("@routes.PatientController.get(form.get.getPatient.getId)","_self");' class="btn btn-sm btn-primary">Pokaż pacjenta</button>
+            <button type="button" onclick='window.open("@routes.VisitController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-trash"></span> Usuń wizytę</button>
+            <button type="button" onclick='window.open("@routes.PatientController.get(form.get.getPatient.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-user"></span> Pokaż pacjenta</button>
         </div>
     </div>
 

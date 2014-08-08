@@ -19,8 +19,8 @@
 
     <div class="form-group">
         <div class="col-lg-offset-2 col-lg-10">
-            <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary">Usuń Lekarza</button>
-            <button type="button" onclick='window.open("@if(form.get.getEmail != null) {@routes.Application.sendPasswordChangeLinkGet(form.get.getEmail)} else {@routes.Application.sendPasswordChangeLink}","_self");' class="btn btn-sm btn-primary">Zmień hasło</button>
+            <button type="button" onclick='window.open("@routes.DoctorController.remove(form.get.getId)","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-trash"></span> Usuń Lekarza</button>
+            <button type="button" onclick='window.open("@if(form.get.getEmail != null) {@routes.Application.sendPasswordChangeLinkGet(form.get.getEmail)} else {@routes.Application.sendPasswordChangeLink}","_self");' class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-lock"></span> Zmień hasło</button>
         </div>
     </div>
 
