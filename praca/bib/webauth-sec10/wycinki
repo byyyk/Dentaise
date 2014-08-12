@@ -1,0 +1,34 @@
+Web authentication protocols differ from traditional
+authentication protocols in part because of the limited in-
+terface offered by the Web. The goal is to develop an au-
+thentication system by using the protocols and technolo-
+gies commonly available in today’s Web browsers and
+servers.
+
+Many schemes do involve setting a random session
+identifier for each user. This session identifier is used
+to access the user’s session information, which is stored
+This scheme does not provide a mechanism for se-
+cure revocation; that is, ending the user’s session before
+10in a database on the server. While such a scheme al-
+lows for a client to make customizations (i.e. it is func-
+tionally equivalent to the scheme we have presented), it
+is potentially subject to guessing attacks on the session
+identifier space. If an adversary can successfully guess a
+session identifier, the system is broken (see Section 3.3).
+Our scheme provides a means for authenticating clients
+that is resistant to guessing attacks on session identifiers.
+
+Client state allows the client’s browser to store and
+reuse authenticators. However, storage space may be
+very limited. In the most limited case, the browser
+can only store passwords associated with realms (as in
+HTTP Basic authentication [16]). A more flexible form
+of storage which is commonly available in browsers is
+the cookie [25, 32]. Cookies allow a server store a value
+on a client. In subsequent HTTP requests, the client
+automatically includes the cookie value. A number of
+attributes can control how long cookies are kept and to
+which servers they are sent.
+
+3, 4 warto całość przeczytać, dalej nie wiem

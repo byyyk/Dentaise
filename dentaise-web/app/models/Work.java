@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Work implements Serializable {
 	private static final long serialVersionUID = 7641751046131195216L;
@@ -55,6 +57,7 @@ public class Work implements Serializable {
 		this.treatment = treatment;
 	}
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	public Visit getVisit() {
 		return visit;

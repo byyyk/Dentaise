@@ -20,5 +20,6 @@ libraryDependencies ++= Seq(
     "org.hibernate" % "hibernate-annotations" % "3.5.6-Final",
     "com.typesafe.play.plugins" %% "play-plugins-mailer" % "2.3.0",
     "joda-time" % "joda-time-hibernate" % "1.3",
-    "org.jadira.usertype" % "usertype.core" % "3.1.0.CR1"
+    "org.jadira.usertype" % "usertype.core" % "3.1.0.CR1",
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-hibernate4" % "2.4.0"
 )

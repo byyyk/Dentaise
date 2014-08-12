@@ -1,6 +1,7 @@
 package pl.edu.agh.mkulpa.dentaise.mobile.rest;
 
 import java.util.Date;
+import java.util.List;
 
 public class Visit {
 	private static final long serialVersionUID = 6496243611914464953L;
@@ -9,6 +10,7 @@ public class Visit {
 	private Date date;
 	private Patient patient;
 	private String notes;
+    private List<Work> workList;
 
 	public long getId() {
 		return id;
@@ -42,4 +44,11 @@ public class Visit {
 		this.notes = notes;
 	}
 
+    public List<Work> getWorkList() {
+        return workList;
+    }
+
+    public void setWorkList(List<Work> workList) {
+        this.workList = workList;
+    }
 }

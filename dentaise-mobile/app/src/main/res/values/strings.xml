@@ -37,5 +37,9 @@
     <string name="dentaise_server_label">Serwer Dentaise</string>
     <string name="login_data_label">Dane logowania</string>
     <string name="server_address_hint">np. 192.168.1.50:9000</string>
+    <string name="visit_date_label">Termin</string>
+    <string name="add_work_button">Dodaj pracę</string>
+    <string name="remove_work_button">Usuń powyższą pracę</string>
+    <string name="visit_notes_label">Notatki</string>
 
 </resources>

@@ -1,12 +1,27 @@
+http://dokumenty.rcl.gov.pl/DU/rok/2013/pozycja/1462
+icd9
+
 PROBLEMY:
 
+Sprawdzić usuwanie jeśli coś zależy od czegoś
+
 Lekarze teoretycznie mogą zmieniać sobie dane przez API
+
+
+
+
+
 
 http://stackoverflow.com/questions/9253256/playframework-need-a-good-create-update-delete-example-using-same-html-page
 
 Illegal State No value http://stackoverflow.com/questions/11802566/binding-form-request-with-manytoone-field-on-play-framework-2 - brakło mi .id w '<td><select name="workList[' + $('#workTable tbody tr').length + '].area.id" class="form-control">@for(area <- areas){<option value="@area.getId">@area.getName</option>}</select></td>' +
 
 plugin gradle do eclipse uzywa gradle 1.5 - pewnie nie zadziala z android, uzyc plugina eclipe do gradle
+
+json zawiera dziwne rzeczy hibernate'a (np. handler): https://github.com/FasterXML/jackson-datatype-hibernate
+
+
+
 
 O CZYM PISAĆ?
 - konfiguracja (application.conf - baseUrl, smtp.host), uruchomienie, sbt

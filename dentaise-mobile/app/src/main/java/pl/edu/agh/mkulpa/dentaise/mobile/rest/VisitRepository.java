@@ -49,6 +49,28 @@ public class VisitRepository {
         return visits;
     }
 
+    public List<Area> listAreas() throws IOException, JSONException, AuthenticationFailedException {
+        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/areas");
+        HttpResponse response = appRepository.execute(httpGet);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Area> result = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<Area>>() {});
+        return result;
+    }
+
+    public List<Diagnosis> listDiagnoses() throws IOException, JSONException, AuthenticationFailedException {
+        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/diagnoses");
+        HttpResponse response = appRepository.execute(httpGet);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Diagnosis> result = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<Diagnosis>>() {});
+        return result;
+    }
 
 
+    public List<Treatment> listTreatments() throws IOException, JSONException, AuthenticationFailedException {
+        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/treatments");
+        HttpResponse response = appRepository.execute(httpGet);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Treatment> result = mapper.readValue(response.getEntity().getContent(), new TypeReference<List<Treatment>>() {});
+        return result;
+    }
 }

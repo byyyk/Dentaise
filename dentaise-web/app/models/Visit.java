@@ -74,7 +74,7 @@ public class Visit implements Serializable {
 		this.notes = notes;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "visit", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "visit", cascade = {CascadeType.ALL})
 	public List<Work> getWorkList() {
 		return workList;
 	}

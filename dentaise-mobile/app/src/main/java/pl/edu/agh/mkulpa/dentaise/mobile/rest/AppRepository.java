@@ -151,11 +151,17 @@ public class AppRepository {
                 definitelyUnauthorized = true;
             }
         }
-
+        if (notOk(response)) {
+            throw new IOException("Server did not respond with 200 OK");
+        }
         if (definitelyUnauthorized) {
             throw new AuthenticationFailedException("Could not access requested resource, authentication error");
         }
         return response;
+    }
+
+    private boolean notOk(HttpResponse response) {
+        return response.getStatusLine().getStatusCode() != 200;
     }
 
     private boolean unauthorized(HttpResponse response) {

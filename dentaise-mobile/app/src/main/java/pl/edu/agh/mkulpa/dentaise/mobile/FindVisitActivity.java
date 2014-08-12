@@ -30,10 +30,10 @@ import pl.edu.agh.mkulpa.dentaise.mobile.rest.Visit;
 
 
 public class FindVisitActivity extends Activity {
+    public static String EXTRA_VISIT_ID = "visit_id";
 
     private static final String TAG = FindVisitActivity.class.getSimpleName();
-    private static String EXTRA_VISIT_ID = "visit_id";
-    private PatientListAdapter visitListAdapter;
+    private VisitListAdapter visitListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class FindVisitActivity extends Activity {
         setContentView(R.layout.activity_find_visit);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        visitListAdapter = new PatientListAdapter(new ArrayList<Visit>());
+        visitListAdapter = new VisitListAdapter(new ArrayList<Visit>());
         final ListView visitsList = (ListView) findViewById(R.id.visits_list);
         updateVisitList();
         visitsList.setAdapter(visitListAdapter);
@@ -82,10 +82,10 @@ public class FindVisitActivity extends Activity {
         }
     }
 
-    private class PatientListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    private class VisitListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
         private List<Visit> visits;
 
-        public PatientListAdapter(List<Visit> visits) {
+        public VisitListAdapter(List<Visit> visits) {
             this.visits = visits;
         }
 

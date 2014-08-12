@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -119,7 +118,7 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.save_patient_action:
+            case R.id.save_action:
                 savePatient();
                 return true;
         }
@@ -131,18 +130,15 @@ public class EditPatientActivity extends FragmentActivity implements ActionBar.T
         new RestCallAsyncTask<Void>(EditPatientActivity.this) {
             @Override
             protected Void makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
-                Log.i(TAG, "WTF?! makeRestCall");
                 Repositories.patient.savePatient(patient);
                 return null;
             }
             @Override
             protected String onSuccessMessage() {
-                Log.i(TAG, "WTF?! onSuccessMessage");
                 return getApplicationContext().getResources().getString(R.string.toast_saved);
             }
             @Override
             protected void handleResult(Void result) {
-                Log.i(TAG, "WTF?! handleResult");
             }
         }.execute();
     }

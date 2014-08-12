@@ -10,6 +10,9 @@
 \lstloadlanguages{TeX}
 
 \lstset{
+  frame=single,
+  breaklines=true,
+  postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
   literate={ą}{{\k{a}}}1
            {ć}{{\'c}}1
            {ę}{{\k{e}}}1
@@ -67,8 +70,9 @@
 %TODO Maintenece - spójność api - latwiejsze w utrzymaniu, klient ma tylko widok i pobiera dane z ws łącznie ze zdefiniowanymi leczeniami/rozpoznaniami. Dzięki temu nie trzeba będzie aktualizować obydwu aplikacji, a jedynie zdefiniować nowe leczenie/rozpoznanie po stronie serwera. Gdyby api było zewnętrzne to warto by się pokusić o oddzielny interjefs, skoro jest tylko wew. wygodniej będzie utrzymywać jeden
 %TODO ajax, jquery?
 %TODO play - formularze z zagnieżdżonymi obiektami oraz listami
+%TODO? hibernate, jackson, lazy-load (VisitController.list)
 
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{3}
 
 \begin{document}
 
@@ -117,7 +121,7 @@ Pomimo zawężenia problemu do wielkości pozwalającej na skupienie się na szc
 \chapter{Dobór technologii i narzędzi}
 \label{cha:dobor_technologii_i_narzedzi}
 
-W rozdziale tym opisane są technologie~i narzędzia użyte do implementacji każdej~z warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a jedynie elementy niezbędne do zrozumienia struktury systemu~i sposobu komunikacji pomiędzy poszczególnymi modułami.
+W rozdziale tym opisane zostały technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami.
 
 %TODO dopisać coś o Javie
 
@@ -178,15 +182,99 @@ zalecany interfejs restowy a ograniczenia html: brak PUT, DELETE; paginacja w ur
 
 \subsection{Uwierzytelnianie}
 
-%co prawda jest po stronie web ale dotyczy jednak obydwu modułów
+Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwienie dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane przeznaczone dla każdego użytkownika z~osobna.
+
+W wypadku aplikacji tworzonej w~ramach pracy, proces uwierzytelniania musi zostać zaimplementowany po stronie serwera Dentaise i~być jednakowo stosowany przez strony klienckie - webową oraz mobilną. Należy więc tak dobrać metodę, aby była możliwa do realizacji na tych dwóch różnych platformach.
 
 \subsubsection{Różne podejścia}
+
+Istnieją różne podejścia pozwalające potwierdzić autentyczność podmiotu, najpopularniejsze z~których zostaną zaprezentowane w~dalszej części tego podrozdziału. Każde z~nich będzie opierać się na podobnym schemacie. 
+
+Pierwszym krokiem jest podanie przez użytkownika pary danych - jego nazwy oraz hasła - a~następnie przesłanie ich i~potwierdzenie zgodności z~danymi przetrzymywanymi w~bazie po stronie serwera. Należy przy tym pamiętać, aby dane te były przechowywane w~sposób nie narażający użytkownika na wyciek ich czytelnej postaci, w~przypadku uzyskania nieautoryzowanego dostępu do bazy przez osoby trzecie. Więcej informacji na ten temat można przeczytać w~podrozdziale \ref{sec:hashowanie}. 
+
+Następnie na podstawie dostarczonych danych, w~wypadku ich pozytywnego rozpatrzenia, nawiązywana jest sesja (podrozdział \ref{sec:sesja}), którą użytkownik identyfikuje się  podczas wysyłania kolejnych żądań do serwera. Identyfikacja przy pomocy sesji jest zautomatyzowana i~ niewidoczna dla użytkownika. Czas trwania sesji zwykle jest ograniczony i~wygasa ona po dłuższym okresie nieaktywności, zmuszając do powtórzenia procesu uwierzytelnienia aby ponownie pozyskać dostęp do treści.
+
+\paragraph{Basic Access Authentication}
+%TODO wyzwanie?
+Jest to podstawowa metoda uwierzytelniania, gdzie wymagane dane uzupełniane są w specjalnych nagłówkach protokołu HTTP, a więc może być wykorzystywany między innymi przez strony internetowe oraz WebService'y. Uwierzytelnianie tą metodą  przebiega w sposób przedstawiony poniżej. Do lepszego zobrazowania wymiany komunikatów pomiędzy serwerem a klientem (przeglądarką) posłuży przechwycona sesja próby dostępu do menadżera aplikacji na kontenerze Tomcat.
+
+%Użytkownik wysyła żądanie HTTP, przykładowo celem wyświetlenia zawartości strony internetowej, które jak się okazuje podczas jego analizy po stronie serwera dotyczy chronionego zasobu. Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z \cite{BDA99} nazwa strefy może być dowolna i jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
+
+Celem wyświetlenia zawartości strony internetowej, a w tym wypadku menedżera aplikacji znajdującego się na lokalnym kontenerze tomcat użytkownik wprowadza w przeglądarce internetowej adres \emph{http://localhost:8080/manager/html}. Przeglądarka wysyła następujące żądanie.
+\begin{lstlisting}
+GET /manager/html HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/33.0.1750.152 Chrome/33.0.1750.152 Safari/537.36
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4
+Cookie: JSESSIONID=589E30C58F80986353A1C6A6B9BC02ED
+\end{lstlisting}
+
+Jak się okazuje podczas analizy żądania po stronie serwera, dotyczy ono chronionego zasobu. Sposób w jaki określa się, które zasoby są chronione przybliżony został w podrozdziale \ref{sec:ochronaWybranychZasobow}. W tym momencie wystarczy wiedzieć, że w wypadku \emph{Basic Access Authentication}, dzięki temu że należy do standardu HTTP większość serwerów WWW i kontenerów aplikacji pozwala na wygodną konfigurację poprzez wpisanie adresów URL mających być pokrytymi ochroną, oraz sprecyzowanie listy użytkowników wraz z hasłami dostępu. Ewidentną wadą tego podejścia jest jednak statyczna baza użytkowników, nic jednak nie stoi na przeszkodzie, aby zaimplementować obsługę opisywanego schematu po stronie własnej aplikacji webowej.
+
+Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z \cite{BDA99} nazwa strefy może być dowolna i jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
+\begin{lstlisting}
+HTTP/1.1 401 Unauthorized
+Server: Apache-Coyote/1.1
+Cache-Control: private
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+WWW-Authenticate: Basic realm="Tomcat Manager Application"
+Content-Type: text/html;charset=ISO-8859-1
+Transfer-Encoding: chunked
+Date: Tue, 12 Aug 2014 15:58:57 GMT
+
+(... zawartość)
+\end{lstlisting}
+
+W odpowiedzi na otrzymany komunikat przeglądarka reaguje wyświetlając okno logowania. Nie jest ono częścią strony do której dostęp chce uzyskać użytkownik, jego obsługa zaimplementowana jest w całości przeglądarce. Kolejną zaletą tej metody jest więc brak konieczności implementacji formularza logowania.
+
+Po wypełnieniu danych użytkownik ponawia próbę żądania, tym razem jednak załączone zostaną dane potwierdzające jego tożsamość w nagłówku \emph{Authenticate}. Wartość nagłówka również zawiera wykorzystywany schemat (\emph{Basic}), ale oprócz tego zakodowaną w~Base64 nazwę użytkownika oraz jego hasło, oddzielone przez dwukropek (\emph{:}). Aby umożliwić stronie serwerowej poprawne oddzielenie danych po ich zdekodowaniu, nazwa użytkownika nie może zawierać tego znaku.
+\begin{lstlisting}
+GET /manager/html HTTP/1.1
+Host: localhost:8080
+Connection: keep-alive
+Cache-Control: max-age=0
+Authorization: Basic dG9tY2F0OnRvbWNhdA==
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/33.0.1750.152 Chrome/33.0.1750.152 Safari/537.36
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4
+Cookie: JSESSIONID=589E30C58F80986353A1C6A6B9BC02ED
+\end{lstlisting}
+
+Tym razem klient otrzymuje pozytywną odpowiedź wraz z kodem HTML w~zawartości odpowiedzi, który wyświetli przeglądarka (zawartość została wycięta, gdyż nie jest istotna w~rozpatrywaniu niniejszego procesu).
+\begin{lstlisting}
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Cache-Control: private
+Expires: Thu, 01 Jan 1970 01:00:00 CET
+Set-Cookie: JSESSIONID=3EE8A15F1F9714D7E390F9F1E36FC8F7; Path=/manager/; HttpOnly
+Content-Type: text/html;charset=utf-8
+Transfer-Encoding: chunked
+Date: Tue, 12 Aug 2014 15:59:02 GMT
+
+(... zawartość)
+\end{lstlisting}
+
+Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formularza, ponieważ dane zostają zapamiętane w przeglądarce i są załączane automatycznie.
+
+Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy, jaką podaje w oknie logowania użytkownik, po zdekodowaniu zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z wysyłanym żądaniem. Zwykle w tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
 
 basic auth, form auth itp...
 
 wysyłanie clear text, hashowanie na serwerze
 
+\paragraph{Wybór metody}
+Basic: Brak konieczności implementacji okna formularza jest wadą bo nie można samemu dopasować wyglądu
+brak wylogowywania
+
 \subsubsection{Hashowanie}
+\label{sec:hashowanie}
+
+wyciek jest groźny bo użytkownicy zwykle korzystają z tych samych haseł
 
 różne algorytmy i ich podatność na ataki
 
@@ -199,6 +287,8 @@ salt
 rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
 
 \subsubsection{Sesja}
+\label{sec:sesja}
+
 
 session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
 
@@ -255,29 +345,10 @@ baseUrl, smtp.host, database itp...
 % \include{dodatekB}
 % itd.
 
-\chapter{Bibliografia} %czy chapter jest potrzebny?
+\chapter{Bibliografia}
 \label{cha:bibliografia}
 
 \bibliographystyle{alpha}
 \bibliography{bibliografia}
-%\begin{thebibliography}{1}
-%
-%\bibitem{Dil00}
-%A.~Diller.
-%\newblock {\em LaTeX wiersz po wierszu}.
-%\newblock Wydawnictwo Helion, Gliwice, 2000.
-%
-%\bibitem{Lam92}
-%L.~Lamport.
-%\newblock {\em LaTeX system przygotowywania dokumentów}.
-%\newblock Wydawnictwo Ariel, Krakow, 1992.
-%
-%\bibitem{Alvis2011}
-%M.~Szpyrka.
-%\newblock {\em {On Line Alvis Manual}}.
-%\newblock AGH University of Science and Technology, 2011.cccccc
-%\newblock \\\texttt{http://fm.ia.agh.edu.pl/alvis:manual}.
-%
-%\end{thebibliography}
 
 \end{document}

@@ -30,6 +30,12 @@ import play.mvc.Result;
 import play.mvc.Security;
 import views.html.visit;
 import views.html.visits;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+
 import controllers.pagination.CriteriaApplier;
 import controllers.pagination.CriteriaPaginator;
 
@@ -111,11 +117,12 @@ public class VisitController extends Controller {
 		CriteriaPaginator<Visit> paginator = new CriteriaPaginator<Visit>(Visit.class, conditionsApplier);
 		List<Visit> visitsList = paginator.get(page);
 		if (requestFromMobilePhone()) {
-			/* this may come in handy if it will be necessary to un-jsonignore doctor
 			ObjectMapper mapper = new ObjectMapper();
+			Hibernate4Module hibernateModule = new Hibernate4Module();
+			hibernateModule.enable(Hibernate4Module.Feature.FORCE_LAZY_LOADING);
+			mapper.registerModule(hibernateModule);
 			mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 			Json.setObjectMapper(mapper);
-			 */
 			return ok(Json.toJson(visitsList));
 		} else {
 			return ok(visits.render(page, visitsList, paginator.getPageCount(), onlyMine, fromDate, toDate, finalPatient));
@@ -124,8 +131,14 @@ public class VisitController extends Controller {
 	
 	@Transactional
 	public static Result save() {
-		Form<Visit> visitForm = Form.form(Visit.class);
-		Visit visit = visitForm.bindFromRequest().get();
+		Visit visit;
+		if (requestFromMobilePhone()) {
+			JsonNode node = request().body().asJson();
+			visit = Json.fromJson(node, Visit.class);
+		} else {
+			Form<Visit> visitForm = Form.form(Visit.class);
+			visit = visitForm.bindFromRequest().get();
+		}
 		Visit oldVisit = JPA.em().find(Visit.class, visit.getId());
 		visit.setPatient(oldVisit.getPatient());
 		Doctor doctor = Application.getLoggedInDoctor();

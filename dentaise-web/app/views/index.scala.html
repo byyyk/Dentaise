@@ -4,7 +4,7 @@
     
     <h3>Witaj @doctor.getForename!</h3>
     
-    @defining(new Date().format("dd-MM-yyyy")) { today =>
+    @defining(new Date().format("dd.MM.yyyy")) { today =>
     <a href="@routes.VisitController.list(1, true, today, today)">Zobacz swoje dzisiejsze wizyty.</a>
     }
 }
