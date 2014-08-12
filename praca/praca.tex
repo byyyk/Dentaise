@@ -229,7 +229,7 @@ Date: Tue, 12 Aug 2014 15:58:57 GMT
 (... zawartość)
 \end{lstlisting}
 
-W odpowiedzi na otrzymany komunikat przeglądarka reaguje wyświetlając okno logowania. Nie jest ono częścią strony do której dostęp chce uzyskać użytkownik, jego obsługa zaimplementowana jest w całości przeglądarce. Kolejną zaletą tej metody jest więc brak konieczności implementacji formularza logowania.
+W odpowiedzi na otrzymany komunikat przeglądarka reaguje wyświetlając okno logowania. Nie jest ono częścią strony do której dostęp chce uzyskać użytkownik, jego obsługa zaimplementowana jest w~całości w~przeglądarce. Kolejną zaletą tej metody jest więc brak konieczności implementacji formularza logowania.
 
 Po wypełnieniu danych użytkownik ponawia próbę żądania, tym razem jednak załączone zostaną dane potwierdzające jego tożsamość w nagłówku \emph{Authenticate}. Wartość nagłówka również zawiera wykorzystywany schemat (\emph{Basic}), ale oprócz tego zakodowaną w~Base64 nazwę użytkownika oraz jego hasło, oddzielone przez dwukropek (\emph{:}). Aby umożliwić stronie serwerowej poprawne oddzielenie danych po ich zdekodowaniu, nazwa użytkownika nie może zawierać tego znaku.
 \begin{lstlisting}
@@ -263,13 +263,42 @@ Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formu
 
 Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy, jaką podaje w oknie logowania użytkownik, po zdekodowaniu zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z wysyłanym żądaniem. Zwykle w tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
 
-basic auth, form auth itp...
+\paragraph{Digest Access Authentication}
+%TODO w razie potrzeby będzie można uzupełnić o sposób tworzenia skrótu
 
-wysyłanie clear text, hashowanie na serwerze
+Ze względu na to, że w schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych.
+
+Schemat komunikacji wygląda podobnie jak w poprzednim wypadku. Tym razem w prześledzeniu wymiany komunikatów pomocny będzie przykład z \cite{BDA99}.
+
+Pierwsze żądanie nie różni się niczym od zawartego w przykładzie z \emph{Basic Access Authentication} poza zmianą zasobu, który chcemy uzyskać. W tym wypadku serwer również odsyła odpowiedź \emph{401 Unauthorized}, jednak zawiera ona znacznie więcej danych.
+
+Oprócz parametru \emph{realm} omówionego wcześniej otrzymywane są następujące informacje:
+\begin{description} %TODO new line after betweet item and descr
+\item[domain] Lista adresów przypadających pod strefę określoną w \emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w tym polu zasobów.
+\item[nonce] Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Zwykle jest ciągiem znaków zakodowanym w Base64 lub zapisanym w systemie heksadecymalnym, który zawiera w sobie między innymi aktualny czas, aby umożlić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
+\item[opaque] Ciąg znaków ustalany przez serwer, który powinien być zwrócony w niezmienionej postaci przez klienta.
+%TODO wyjaśnić skrót? w stopce czy jak to się nazywa?
+\item[stale] Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające wraz z nim tworzą poprawny skrót. Umożliwia to powtórzenie żądania z nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w podawanie loginu i hasła.
+\item[algorithm] Wybrany algorytm funkcji skrótu (domyślnie \emph{MD5}).
+\item[qop-options] Pole opcjonalne w celu zapewnienia kompatybilności wstecznej (\emph{quality of protection}). W zależności od wyboru skrót będzie komponowany na podstawie innego zestawu danych. Możliwe wartości to \emph{auth} i \emph{auth-int}. 
+
+\end{description}
+
+\item[uri]asdf
+\item[qop] asdf
+\item[nc]
+\item[cnonce]
+\item[response]]
+
+%TODO wyjaśnić dlaczego jest bezpieczny, co daje nonce w środku itd
+
+%TODO FORM AUTH
 
 \paragraph{Wybór metody}
 Basic: Brak konieczności implementacji okna formularza jest wadą bo nie można samemu dopasować wyglądu
 brak wylogowywania
+
+replay attack http://stackoverflow.com/questions/2769992/replay-attacks-for-https-requests
 
 \subsubsection{Hashowanie}
 \label{sec:hashowanie}
