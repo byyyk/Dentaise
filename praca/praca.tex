@@ -83,9 +83,9 @@
 
 Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~ obowiązującymi normami, a przedstawienie sposobu implementacji systemu składającego się  z~kilku komponentów, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę Android. Ze względu na duże zróżnicowanie potrzeb w zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
 
-W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy SQL Injection.
+W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki Replay oraz SQL Injection.
 
-Pomimo zawężenia problemu do wielkości pozwalającej na skupienie się na szczegółach projektowania i~ implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
+Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~ implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
 
 \end{abstract}
 
@@ -195,7 +195,7 @@ Pierwszym krokiem jest podanie przez użytkownika pary danych - jego nazwy oraz 
 Następnie na podstawie dostarczonych danych, w~wypadku ich pozytywnego rozpatrzenia, nawiązywana jest sesja (podrozdział \ref{sec:sesja}), którą użytkownik identyfikuje się  podczas wysyłania kolejnych żądań do serwera. Identyfikacja przy pomocy sesji jest zautomatyzowana i~ niewidoczna dla użytkownika. Czas trwania sesji zwykle jest ograniczony i~wygasa ona po dłuższym okresie nieaktywności, zmuszając do powtórzenia procesu uwierzytelnienia aby ponownie pozyskać dostęp do treści.
 
 \paragraph{Basic Access Authentication}
-%TODO wyzwanie?
+
 Jest to podstawowa metoda uwierzytelniania, gdzie wymagane dane uzupełniane są w specjalnych nagłówkach protokołu HTTP, a więc może być wykorzystywany między innymi przez strony internetowe oraz WebService'y. Uwierzytelnianie tą metodą  przebiega w sposób przedstawiony poniżej. Do lepszego zobrazowania wymiany komunikatów pomiędzy serwerem a klientem (przeglądarką) posłuży przechwycona sesja próby dostępu do menadżera aplikacji na kontenerze Tomcat.
 
 %Użytkownik wysyła żądanie HTTP, przykładowo celem wyświetlenia zawartości strony internetowej, które jak się okazuje podczas jego analizy po stronie serwera dotyczy chronionego zasobu. Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z \cite{BDA99} nazwa strefy może być dowolna i jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
@@ -259,7 +259,7 @@ Date: Tue, 12 Aug 2014 15:59:02 GMT
 (... zawartość)
 \end{lstlisting}
 
-Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formularza, ponieważ dane zostają zapamiętane w przeglądarce i są załączane automatycznie.
+Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formularza, ponieważ dane zostają zapamiętane w przeglądarce i są załączane automatycznie. Użytkownik nie musi dbać o ponowne podawanie swoich danych na czas trwania sesji. Niestety standard ten nie pozwala w prosty sposób obsłużyć opcji wylogowania się (zakończenia sesji przed czasem).
 
 Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy, jaką podaje w oknie logowania użytkownik, po zdekodowaniu zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z wysyłanym żądaniem. Zwykle w tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
 
@@ -268,37 +268,107 @@ Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{cle
 
 Ze względu na to, że w schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych.
 
-Schemat komunikacji wygląda podobnie jak w poprzednim wypadku. Tym razem w prześledzeniu wymiany komunikatów pomocny będzie przykład z \cite{BDA99}.
+Schemat komunikacji wygląda podobnie jak w poprzednim wypadku. Do prześledzenia wymiany komunikatów pomocny będzie przykład z \cite{BDA99}.
 
 Pierwsze żądanie nie różni się niczym od zawartego w przykładzie z \emph{Basic Access Authentication} poza zmianą zasobu, który chcemy uzyskać. W tym wypadku serwer również odsyła odpowiedź \emph{401 Unauthorized}, jednak zawiera ona znacznie więcej danych.
 
-Oprócz parametru \emph{realm} omówionego wcześniej otrzymywane są następujące informacje:
-\begin{description} %TODO new line after betweet item and descr
-\item[domain] Lista adresów przypadających pod strefę określoną w \emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w tym polu zasobów.
-\item[nonce] Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Zwykle jest ciągiem znaków zakodowanym w Base64 lub zapisanym w systemie heksadecymalnym, który zawiera w sobie między innymi aktualny czas, aby umożlić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
-\item[opaque] Ciąg znaków ustalany przez serwer, który powinien być zwrócony w niezmienionej postaci przez klienta.
-%TODO wyjaśnić skrót? w stopce czy jak to się nazywa?
-\item[stale] Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające wraz z nim tworzą poprawny skrót. Umożliwia to powtórzenie żądania z nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w podawanie loginu i hasła.
-\item[algorithm] Wybrany algorytm funkcji skrótu (domyślnie \emph{MD5}).
-\item[qop-options] Pole opcjonalne w celu zapewnienia kompatybilności wstecznej (\emph{quality of protection}). W zależności od wyboru skrót będzie komponowany na podstawie innego zestawu danych. Możliwe wartości to \emph{auth} i \emph{auth-int}. 
-
+Oprócz parametru \emph{realm} omówionego wcześniej, w odpowiedzi zwrotnej mogą znaleźć się następujące pola:
+\begin{description} %TODO new line after between item and descr
+\item[domain] \hfill \\
+Lista adresów przypadających pod strefę określoną w \emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w tym polu zasobów.
+\item[nonce] \hfill \\
+%TODO nonce jest ogólnym pojęciem, można o nim coś więcej napisać...
+Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Zwykle jest ciągiem znaków zakodowanym w Base64 lub zapisanym w systemie heksadecymalnym, który zawiera w sobie między innymi aktualny czas, aby umożlić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
+\item[opaque] \hfill \\
+Ciąg znaków ustalany przez serwer, który powinien być zwrócony w niezmienionej postaci przez klienta. Może zostać użyty do przesyłania dodatkowych informacji, na przykład kiedy za uwierzytelnianie odpowiada serwer inny niż hostujący zasób, do którego klient chce uzyskać dostęp. W tym celu można jednak również wykorzystać pole \emph{nonce}.
+%TODO wyjaśnić "skrót"? w stopce czy jak to się nazywa?
+\item[stale] \hfill \\
+Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające wraz z nim tworzą poprawny skrót. Umożliwia to powtórzenie żądania z nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w podawanie loginu i hasła.
+\item[algorithm] 
+\hfill \\Wybrany algorytm funkcji skrótu (domyślnie \emph{MD5}).
+\item[qop] \hfill \\
+Pole opcjonalne (\emph{quality of protection}). W celu zapewnienia kompatybilności wstecznej może zostać pominięte. W zależności od wyboru skrót będzie komponowany na podstawie innego zestawu danych. Dozwolone wartości to \emph{auth} i \emph{auth-int}, spośród których serwer może wysłać dowolną kombinację. Na podstawie zwróconych możliwości strona kliencka będzie mogła dokonać wyboru odsyłając jedną z nich lub całkowicie je pomijając. Jeżeli jednak odpowiedź serwera zawiera to pole, zaleca się, aby klient również je uwzględnił.
+\item[auth-param] \hfill \\
+Pole służące do przyszłych rozszerzeń.
 \end{description}
 
-\item[uri]asdf
-\item[qop] asdf
-\item[nc]
-\item[cnonce]
-\item[response]]
+Przykładowa odpowiedź serwera będzie wyglądać następująco.
+\begin{lstlisting}
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Digest
+	realm="testrealm@host.com",
+	qop="auth,auth-int",
+	nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
+	opaque="5ccc069c403ebaf9f0171e9517f40e41"
+\end{lstlisting}
 
-%TODO wyjaśnić dlaczego jest bezpieczny, co daje nonce w środku itd
+Podobnie jak w przykładzie dotyczącym \emph{Basic Access Authentication} klient musi na nie odpowiedzieć, umieszczając dane uwierzytelniające w nagłówku \emph{Authenticate}. Użytkownikowi wyświetli się okno logowania obsługiwane przez przeglądarkę, gdzie może podać swój login i hasło, a następnie dane te zostaną przetworzone, dając w wyniku nagłówek, który zostanie przesłany w powtórzonym żądaniu do serwera.
+\begin{lstlisting}
+Authorization: Digest username="Mufasa",
+	realm="testrealm@host.com",
+	nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
+	uri="/dir/index.html",
+	qop=auth,
+	nc=00000001,
+	cnonce="0a4f113b",
+	response="6629fae49393a05397450978507c4ef1",
+	opaque="5ccc069c403ebaf9f0171e9517f40e41"
+\end{lstlisting}
 
-%TODO FORM AUTH
+\begin{description}
+\item[username] \hfill \\
+Nazwa użytkownika w czystej postaci.
+\item[realm] \hfill \\
+Nazwa strefy przesłana przez serwer wraz z odpowiedzią \emph{401 Unauthorized}.
+\item[nonce] \hfill \\
+Unikalna wartość przesłana przez serwer wraz z odpowiedzią \emph{401 Unauthorized}.
+\item[uri] \hfill \\
+URI zasobu, który chce uzyskać klient. Ta sama wartość (\emph{Request-URI})znajduje się w pierwszej linijce żądania (\emph{Request-Line}), ale jest duplikowana ponieważ może zostać zmieniona przez serwery pośredniczące.
+\item[qop] \hfill \\
+Wartość pola jest wybierana na podstawie możliwości oferowanych przez serwer w tym samym polu. Tym razem jednak odsyłana jest pojedyncza wartość, na którą ostatecznie zdecydowała się strona kliencka. Pole jest opcjonalne, ale powinno zostać załączone do żądania jeśli serwer również zwrócił je w odpowiedzi.
+\item[nc] \hfill \\
+Liczba żądań (łącznie z tym), które zostały dotychczas wysłane z załączoną wartością \emph{nonce} (\emph{nonce count}). Umożliwia to sprawdzenie powtórzeń żądań poprzez trzymanie ich własnego licznika po stronie serwera i porównywanie go z tą wartością.
+\item[cnonce] \hfill \\
+Wartość ustalana przez stronę kliencką, która również może być wykorzystywana do obliczenia finalnego skrótu. Ma to zapobiec atakom typu \emph{Man In The Middle}, który mógłby mieć miejsce jeśli osoba przechwytująca transmisję miała by pełną kontrolę nad sposobem tworzenia skrótów. Atakujący mógłby preparować wartość \emph{nonce} w taki sposób, aby za każdym razem była taka sama. Dzięki temu będzie można zebrać duży zbiór skrótów od użytkowników gdzie niewiadoma jest zawsze tylko jedna - ich hasła. Wykorzystując ten fakt atakujący może przygotować tablice tęczowe ze skrótami zbudowanymi na spreparowanej wartości \emph{nonce}, co znacznie ułatwi zadanie znalezienia hasła użytkownika. Dodanie dodatkowej niewiadomej, która tym razem pochodzi od użytkownika zabezpiecza przed opisaną sytuacją, znacznie zwiększając nakład obliczeń potrzebny do odgadnięcia wielu haseł z bazy użytkowników atakowanej usługi.
+\item[response] \hfill \\
+Finalny skrót, będący dowodem autentyczności użytkownika. W zależności od wybranego \emph{qop} oraz algorytmu może zawierać w sobie pola \emph{nonce}, \emph{nc}, \emph{cnonce}, \emph{qop}, \emph{username}, \emph{realm} oraz hasło użytkownika. Zawarcie tych pól w ciągu znaków poddanemu operacji funkcji skrótu uniemożliwia prostą podmianę tych wartości w ich oryginalnych polach przez atakującego.
+\item[opaque] \hfill \\
+Ciąg znaków zwrócony przez serwer wraz z odpowiedzią \emph{401 Unauthorized}.
+\end{description}
 
-\paragraph{Wybór metody}
-Basic: Brak konieczności implementacji okna formularza jest wadą bo nie można samemu dopasować wyglądu
-brak wylogowywania
+Serwer otrzymując ponowne żądanie, tym razem zawierające dane uwierzytelniające próbuje samodzielnie utworzyć skrót korzystając z tych samych algorytmów i zasad, na jakich powstawała wartość przekazywana w polu \emph{response}. Do obliczeń wykorzystuje się pola przesłane z powrotem od klienta, oraz jego hasło odczytane z zewnętrznego źródła (np. bazy danych), więc nie jest wymagane trzymanie stanu tego procesu po stronie serwerowej.
 
-replay attack http://stackoverflow.com/questions/2769992/replay-attacks-for-https-requests
+Ponieważ większość informacji jest pozyskiwanych od klienta konieczne jest zabezpieczenie się przed ewentualną podmianą tych wartości, zamieszczając je również w skrócie. W przeciwnym wypadku atakujący mógłby podsłuchać wymianę komunikatów między prawdziwym użytkownikiem, a serwerem oraz wyciągnąć z niego skrót znajdujący się w polu \emph{response}, a następnie podmieniając inne pola komponować własne zapytania. Zmieniając wartość URI żądania mógłby uzyskiwać dostęp do innych zasobów należących do oryginalnego właściciela przechwyconej sesji. Wynik porównania przesłanego i uzyskanego wyniku jest ostatecznym dowodem autentyczności użytkownika.
+
+Należy podkreślić, że schemat \emph{Digest Access Authentication} utajnia jedynie przesyłane hasło użytkownika. Komunikacja nie jest szyfrowana, więc zawsze istnieje ryzyko przechwycenia pakietów oraz przeglądanie zawartości odpowiedzi HTTP zawierającej treść, która ma zostać wyświetlona uwierzytelnionemu użytkownikowi. W razie chęci zabezpieczenia się przed tym, należy skorzystać z szyfrowanego protokołu \emph{HTTPS}.
+
+Niestety podobnie jak jego poprzednik, \emph{Digest Access Authentication} nie pozwala na obsłużenie akcji wylogowania.
+
+\paragraph{Form-based authentication}
+
+Ostatnim omawianym spośród najpopularniejszych schematów uwierzytelniania jest \emph{Form-based authentication}. Protokół \emph{HTTP} w tym wypadku nie bierze bezpośredniego udziału w uwierzytelnianiu użytkownika. Dane autoryzacji nie są przesyłane za pomocą nagłówków, a w treści jego żądania. Z tego wynika, że samodzielnie należy obsłużyć całość procesu.
+
+Kolejnym założeniem jest to, że całość danych przesyłanych jest w czystej postaci. Hasła nie są przetwarzane przez funkcje skrótu na etapie komunikacji, a więc konieczne jest skorzystanie z innego sposobu zabezpieczenia tych danych przed dostępem osób trzecich. Najczęściej oczywiście wykorzystuje się w tym celu protokół \emph{HTTPS}.
+
+Przez zastosowanie szyfrowania komunikacji mamy zapewnioną ochronę nie tylko wrażliwych danych klienta, to znaczy jego prywatnego hasła, ale również innych treści takich jak dane pacjenta, które byłyby przesyłane np. podczas edycji, lub pobieraniu listy pacjentów. Wśród tych danych znajdują się zwykle numery PESEL, adresy e-mail, czy telefon kontaktowy i niedopuszczalne jest umożliwienie dostępu do nich osobom niepowołanym.
+
+Ze względu na to, że metoda \emph{Form-based authentication} nie korzysta z żadnych standardów, przeglądarka nie ma możliwości automatycznie obsłużyć procesu logowania, wobec czego konieczna jest samodzielna implementacja widoku dla tego procesu. Zwykle używa się w tym celu formularzy \emph{<FORM>} języka \emph{HTML}, których zawartość przesyłana jest do serwera metodą \emph{POST} protokołu \emph{HTTP}. W tym wypadku konieczność utworzenia własnego widoku logowania nie jest przeszkodą, ponieważ warto zapewnić spójny interfejs graficzny, z którym użytkownik powinien mieć styczność już na etapie logowania. W przypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} użytkownikowi zaprezentowane zostanie zaimplementowane w przeglądarce okno dialogowe na tle pustej strony. Przejmując kontrolę nad tym procesem, już na etapie pobierania danych mamy możliwość wyświetlić logo i nazwę produktu oraz obsłużyć błędy logowania wyświetlając przydatne informacje.
+
+W implementacji obsługi logowania metodą \emph{Form-based authentication}, podobnie jak w innych omawianych schematach należy zadbać o to, aby chronione były nie tylko zasoby odpowiadające wyświetlanym treściom (tzn. adresy URL stron i podstron, po których porusza się użytkownik), ale również cała komunikacja mająca miejsce w tle, na przykład wywołania metod \emph{WebService'u} przy pomocy zapytań \emph{AJAX}. Odpowiedzialność tą najlepiej jest przerzucić na instancje znajdujące się na wyższym poziomie abstrakcji, tak jak w wypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} mógł zajmować się tym serwer WWW lub kontener aplikacji, poprzez zdefiniowanie chronionych adresów URL w pliku konfiguracyjnym. Pozwoli to na uniknięcie konieczności pamiętania o ręcznym wywołaniu procesu sprawdzenia czy użytkownik został uwierzytelniony dla każdej operacji z osobna, przed zwróceniem potencjalnie wrażliwych danych. O tym jak tego dokonać, przeczytać można w podrozdziale \ref{sec:ochronaWybranychZasobow}.
+
+Scenariusz użytkowania usługi zaczyna się operacją logowania niezależnie od tego czy użytkownik wprowadza URL prowadzący bezpośrednio do formularza pozwalającego na uwierzytelnienie się, czy próbuje wejść w zasób chroniony. Należy przy tym podkreślić, że ekran logowania nie jest z oczywistych względów w żaden sposób chroniony - musi być dostępny dla każdego użytkownika chcącego zalogować się w usłudze. W przypadku gdy niezalogowany użytkownik próbuje dostać się do chronionego zasobu, zostaje on automatycznie przekierowany do ekranu logowania. W przeciwieństwie do poprzednio omawianych metod uwierzytelniania, w takim wypadku nie trzeba zwracać komunikatu \emph{401 Unauthorized}, a wystarczy wysłać przekierowanie w postaci odpowiedzi \emph{303 See Other}, który zostanie automatycznie obsłużony przez przeglądarkę kierując użytkownika do podstrony logowania.
+
+Po wypełnieniu danych w formularzu wysyłane jest zapytanie \emph{POST} pod adres operacji uwierzytelniania. Jeśli dane przekazane przez użytkownika są poprawne, rozpoczynana jest sesja, której identyfikatorem od tej pory posługuje się użytkownik jako jedyną wartością potrzebną do udowodnienia swojej tożsamości. Klucz sesji przechowywany jest w plikach \emph{Cookies} po stronie klienta oraz załączany jest do każdego kolejnego żądania.
+
+Sesja ma ograniczony czas trwania, ale może również zostać przedwcześnie przeterminowana poprzez wylogowanie. W przeciwieństwie do metod \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} mając pełną kontrolę nad procesem uwierzytelniania, można tego łatwo dokonać udostępniając operację unieważniającą klucz sesji wywołującego ją użytkownika.
+
+Więcej o sposobach tworzenia i zarządzania sesją można przeczytać w podrozdziale \ref{sec:sesja}.
+
+\subsection{Wybór metody}
+
+Niezmiernie ważnym aspektem dla wyboru odpowiedniego schematu uwierzytelniania jest uchronienie nie tylko wrażliwych danych użytkownika ale i~pacjenta. \emph{Basic Access Authentication} oraz \emph{Form-based Authentication} nie zapewniają same w sobie ochrony dla żadnego z~nich, podczas gdy \emph{Digest Access Authentication} chroni hasło użytkownika, pozostawiając jednak inne treści w czystej postaci. Konieczne jest zatem, niezależnie od wyboru, wprowadzenie szyfrowania całej komunikacji pomiędzy klientem a~serwerem przy pomocy protokołu \emph{HTTPS}. W takim wypadku korzyść zastosowania \emph{Digest Access Authentication} w miejsce \emph{Basic Access Authentication} jest niewielka, ponieważ dane użytkownika będą bezpieczne niezależnie od wyboru. Prostota \emph{Basic Access Authentication} przemawia na jej korzyść, jednak niesie ze sobą wiele ograniczeń takich jak brak możliwości wylogowania oraz implementacji własnego interfejsu logowania.
+
+\emph{Form-based Authentication} wymaga więcej pracy ze względu na konieczność implementacji obsługi sesji, jednak w aplikacjach tego typu jest najlepszym wyborem dla osiągnięcia pełnej kontroli nad procesem uwierzytelniania.
 
 \subsubsection{Hashowanie}
 \label{sec:hashowanie}
@@ -318,19 +388,27 @@ rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
 \subsubsection{Sesja}
 \label{sec:sesja}
 
+Sesja służy do identyfikacji użytkownika łączącego się z usługą po etapie logowania oraz pozwala na wymuszenie ponownego uwierzytelnienia się po upłynięciu zbyt długiego czasu od ostatniego otrzymanego żądania. Dodatkową zaletą jest wzrost wydajności, poprzez brak konieczności wywoływania kosztownej operacji funkcji skrótu na haśle użytkownika, które w przeciwnym wypadku dołączane by było do każdego żądania.
+
+Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny klucz może uzyskać dostęp do chronionych zasobów, więc jej poprawne użycie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
+
+Jednym z najważniejszych sposobów zminimalizowania prawdopodobieństwa odgadnięcia klucza jest ustalenie jego poprawnej długości. %TODO 
 
 session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
-
+stateless=problem z wylogowaniem?
 \subsection{Reset hasła}
 
 tokeny, mail
 
 \subsection{Ochrona wybranych zasobów}
+\label{sec:ochronaWybranychZasobow}
 
 zwykłe podejście czyli chroniony url (trochę o podejściu klasycznym tzn. ochrona url bez wiedzy aplikacji z logowaniem jako osobny niechroniony moduł) vs adnotacje
 @Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
 
 \subsection{HTTPS}
+
+używane cały czas, nie tylko przy logowaniu (sessionId jest hasłem!)
 
 \subsection{SQL Injection}
 
