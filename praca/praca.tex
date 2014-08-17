@@ -1,11 +1,14 @@
 \documentclass[11pt]{aghdpl}
 % \documentclass[en,11pt]{aghdpl}  % praca w języku angielskim
+\renewcommand{\labelitemi}{$\bullet$}
+
 \usepackage[polish]{babel}
 %\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 
 % dodatkowe pakiety
 \usepackage{enumerate}
+\usepackage{mathtools}
 \usepackage{listings}
 \lstloadlanguages{TeX}
 
@@ -406,7 +409,7 @@ Zgodnie z \cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dw�
 	\item[Expires] \hfill \\
 	Określa maksymalną żywotność ciasteczka. Klient nie ma obowiązku przetrzymywania go, aż do określonej w wartości daty i czasu - ciasteczko może zostać usunięte wcześniej.
 	\item[Max-Age] \hfill \\
-	Podobnie jak \emph{Expires} określa maksymalny czas życia ciasteczka, ale definiowany jest jako liczba sekund. Jeśli obydwa atrybuty (\emph{Expires} i \emph{Max-Age}) występują w jednej odpowiedzi \emph{HTTP}, priorytet ma \emph{Max-Age}.
+	Podobnie jak \emph{Expires} określa maksymalny czas życia ciasteczka, ale definiowany jest jako liczba sekund do czasu wygaśnięcia. Jeśli obydwa atrybuty \emph{Expires} i \emph{Max-Age} występują w jednej odpowiedzi \emph{HTTP}, priorytet ma \emph{Max-Age}.
 	\item[Domain] \hfill \\
 	Atrybut służący do określenia zakresu nazw domen, do których wysyłane może być ciasteczko. W przypadku jego pominięcia ciasteczka będą kierowane tylko do serwera, z którego pochodzi odpowiedź.
 	\end{description}
@@ -420,7 +423,6 @@ Zgodnie z \cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dw�
 	\begin{lstlisting}
 	Cookie: SID=31d4d96e407aad42; lang=en-US
 	\end{lstlisting}
-	
 \end{description}
 
 Użycie atrybutu \emph{Expires} nagłówka \emph{Set-Cookie} dodatkowo definiuje sposób w jaki ciasteczka będą przechowywane na maszynie klienta. \cite{MsC} specyfikuje dwa rodzaje \emph{Cookies}:
@@ -455,27 +457,46 @@ Wartość parametru \emph{data}, który przechowuje wszelkie dane związane z kl
 Wartość parametru \emph{digest}, będącego potwierdzeniem autentyczności danych przesyłanych od klienta. Dane te muszą zostać zabezpieczone przed ewentualną podmianą przez atakującego, więc dołączane są w postaci kodu \emph{MAC}\footnote{Message Authentication Code; Kod uwierzytelniania wiadomości}, który jest wynikiem funkcji skrótu, wykorzystującej tajny klucz, na danych mających być objętymi ochroną przed sfałszowaniem. Podmiana wartości parametrów \emph{exp} oraz \emph{data} zostanie z łatwością wykryta poprzez porównanie załączonego skrótu ze skrótem wyliczonym w momencie otrzymania żądania, na podstawie tychże danych. Ze względu na wykorzystanie tajnego klucza w fazie liczenia skrótu, klient nie jest w stanie sam wygenerować poprawnej jego wartości na podstawie sfałszowanych parametrów.
 \end{description}
 
+\cite{SeMa08} wymienia następujące zalety tego podejścia:
+\begin{itemize}
+	\item Łatwiejsze w realizacji równoważenie obciążenia pomiędzy serwerami, oraz wysoka dostępność.
+	\item Mniejsze zużycie pamięci na serwerze.
+	\item Szybsze odpowiedzi i mniejszy koszt serwera, jako skutek braku potrzeby dedykowanego systemu równoważenia obciążenia.
+	\item Mniejsza złożoność wdrożenia.
+\end{itemize}
 
+%To wciąż cytat... dodać odnośnik?
+W przechowywaniu sesji po stronie klienta istnieją również jednak pewne wady:
+\begin{itemize}
+	\item Jeśli ciasteczko nie jest szyfrowane, stan sesji może zostać podsłuchany.
+	\item Stan przechowywany w ciasteczku może zostać zmieniony, jeśli nie jest się przed tym odpowiednio zabezpieczonym (na przykład jak w zaprezentowanym powyżej przykładzie z \emph{MAC}).
+	\item Rozmiar ciasteczek jest ograniczony, co zmniejsza również możliwości przechowywania sesji zawierających duże ilości danych.
+	\item Konieczne jest przesłanie większej ilości danych reprezentujących stan (w odróżnieniu do tylko jednej wartości - identyfikatora sesji - dla stanu trzymanego po stronie serwera).
+	\item Istnieje większa podatność na atak Replay.
+	\item Unieważnianie sesji jest utrudnionym zadaniem, ponieważ serwer nie ma możliwości sprawdzić, które sesje zostały już zakończone.
+\end{itemize}
 
+Podejście, w którym przechowuje się stan sesji po stronie klienta może być również bardzo korzystne dla aplikacji, które nie wymagają bazy danych do realizacji pozostałych funkcjonalności. Nie pasuje to jednak do profilu tworzonego systemu, wobec czego utworzenie dodatkowej tabeli dla sesji użytkowników nie jest problematyczne. Nie oczekuje się również, że system kiedykolwiek będzie wymagał równoważenia obciążenia, ze względu na wąskie grono jego użytkowników. Zgadnięcie identyfikatorów przez atakujących można znacznie zminimalizować poprzez zastosowanie wskazówek z podrozdziału \ref{sec:identyfikator}. Ostatecznie jednak przetrzymywanie sesji po stronie serwera wydaje się być bardziej trafionym podejściem dla tworzonego systemu.
 
+%TODO persistent cookies - nono!
 
+\paragraph{Identyfikator}
+\label{sec:identyfikator}
 
+Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny identyfikator może uzyskać dostęp do chronionych zasobów, więc jej poprawne użycie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
 
+Jednym z najważniejszych sposobów zminimalizowania prawdopodobieństwa odgadnięcia identyfikatora sesji jest ustalenie jego odpowiedniej długości. Zarówno \cite{SId} jak i \cite{SeMa08} zalecają minimum 128-bitowy identyfikator.
 
+Kolejnym, niemniej ważnym warunkiem jest korzystanie z kryptograficznie bezpiecznego generatora liczb pseudolosowych (CSPRNG\footnote{Cryptographically Secure Pseudo-Random Number Generator}). Klasa \emph{Random} języka Java nie spełnia tego warunku. Każda kolejna losowana liczba, liczona jest na podstawie poprzedniej, co sprawia, że zastosowany algorytm bazujący na LCF\footnote{Linear Congruential Formula} jest przewidywalny. Jego zaletą jest szybkość, ale nie może być stosowany do generowania losowych wartości, na których opiera się bezpieczeństwo aplikacji. W języku \emph{Java} istnieje kryptograficznie bezpieczna alternatywa pod postacią klasy \emph{SecureRandom}. Źródłem jej entropii są nieprzewidywalne procesy systemowe czy sterowniki urządzeń \cite{RND}. Więcej na temat generatorów liczb pseudolosowych na platformie \emph{Java} można przeczytać w \cite{SRNGiJ}.
 
+Dla lepszego zobrazowania bezpieczeństwa identyfikatora respektującego przedstawione wytyczne, warto przyjrzeć się wzorowi określającemu liczbę sekund potrzebną do zgadnięcia identyfikatora sesji, przedstawionemu w \cite{SId}:
 
+$\frac{2^{B} + 1}{2A \cdot S}$
 
+gdzie \emph{A} jest liczbą prób zgadnięć identyfikatora, które atakujący jest w stanie przeprowadzić w ciągu sekundy, \emph{B} jest liczbą bitów entropii w identyfikatorze, a \emph{S} to liczba identyfikatorów sesji, które są aktualnie akceptowalne do użycia, czyli w poprawnie funkcjonującym systemie jest to liczba aktualnie zalogowanych użytkowników.
 
+Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacuje się że liczba bitów entropii w CSPRNG to połowa \cite{SId}; $128/2=64$), a pod S $2000$ otrzymujemy $4,611686018\cdot10^{12}$ sekund, czyli $146235,604338768$ lat. Warto dodać, że podstawione wartości były znacznie zawyżone. Tak duża ilość zapytań z pewnością zostałaby zablokowana przez firewall, a liczbę użytkowników zalogowanych na raz w przypadku tworzonego systemu szacuje się na maksymalnie kilku.
 
-
-
-
-Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny klucz może uzyskać dostęp do chronionych zasobów, więc jej poprawne użycie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
-
-Jednym z najważniejszych sposobów zminimalizowania prawdopodobieństwa odgadnięcia klucza jest ustalenie jego poprawnej długości. %TODO 
-
-session key (dlugosc, bezpieczenstwo, SecureRandom CSPRNG) w bazie czy encryption? encryption = zysk na perf i stateless.. baza może być minusem ale tu i tak jest konieczna do przechowywania innych danych
-stateless=problem z wylogowaniem?
 \subsection{Reset hasła}
 
 tokeny, mail

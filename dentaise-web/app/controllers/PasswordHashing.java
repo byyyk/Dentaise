@@ -10,7 +10,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 public class PasswordHashing {
-	private static final int SALT_LENGTH = 16;
+	private static final int SALT_LENGTH = 16; //16 bytes = 128 bits
 	private static final int ITERATIONS = 1000;
 	private static final int KEYLENGTH = 128;
 
@@ -42,8 +42,8 @@ public class PasswordHashing {
 	}
 	
 	private static String toHex(byte[] array) {
-		BigInteger bi = new BigInteger(1, array);
-		return bi.toString(16);
+		BigInteger bigInteger = new BigInteger(1, array);
+		return bigInteger.toString(16);
 	}
 	
 	public static void main(String[] args) {
