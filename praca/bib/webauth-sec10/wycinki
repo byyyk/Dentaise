@@ -31,4 +31,44 @@ automatically includes the cookie value. A number of
 attributes can control how long cookies are kept and to
 which servers they are sent.
 
+Avoid using persistent cookies
+A persistent cookie is written to a file on the user’s sys-
+tem; an ephemeral or temporary cookie is only stored in
+the browser’s memory and disappears when the user exits
+the browser. An error in the way the browser or user han-
+dles the cookie file may make it accessible over the In-
+ternet, exposing the user’s cookies to anyone who knows
+where to look. For instance, certain queries to search en-
+gines can produce many cookie files accidentally placed
+on the Web [18]. If a persistent cookie in a leaked file
+contains an authenticator, an adversary can simply copy
+the cookie and break into the user’s account. In addition,
+if the user accesses the account from a public system (say
+at a library or Internet caf ́e) and receives a persistent au-
+thentication cookie on that system, any subsequent user
+of that system can access the account. For these reasons,
+persistent cookies should not be considered private. Do
+not store authenticators in persistent cookies.
+
+Limit the lifetime of authenticators
+A good design must also gracefully handle the com-
+promise of tokens which are designed to be secret. To
+limit the amount of damage a leaked authenticator can
+cause, limit its lifetime.
+For authenticators that are stored in user cookies, do
+not rely on the cookie expiration field for secure expira-
+tion. Since the client is responsible for enforcing that ex-
+piration, a malicious client can set the lifetime arbitrarily.
+Netscape users can manually extend these expirations by
+simply editing a text file. We were able to indefinitely
+extend the lifetime of our WSJ.com cookie authentica-
+tor even though WSJ.com set the cookie to expire in
+11 hours. This was not extremely alarming, but if an
+adversary stole a cookie (as described in Section 3.3),
+there would be no way to revoke the adversary’s access.
+The problem was compounded because the cookie au-
+thenticator remained the same even if a user’s password
+changed. This prevented the WSJ.com site from easily
+revoking access to a compromised account.
+
 3, 4 warto całość przeczytać, dalej nie wiem

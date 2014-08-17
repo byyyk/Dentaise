@@ -64,7 +64,7 @@
 \setlength{\cftsecnumwidth}{10mm}
 
 %---------------------------------------------------------------------------
-
+%TODO Cytaty ``''
 %TODO Content Negotiation
 %TODO StringEntity entity = new StringEntity(mapper.writeValueAsString(patient), HTTP.UTF_8);
 %TODO Maintenece - spójność api - latwiejsze w utrzymaniu, klient ma tylko widok i pobiera dane z ws łącznie ze zdefiniowanymi leczeniami/rozpoznaniami. Dzięki temu nie trzeba będzie aktualizować obydwu aplikacji, a jedynie zdefiniować nowe leczenie/rozpoznanie po stronie serwera. Gdyby api było zewnętrzne to warto by się pokusić o oddzielny interjefs, skoro jest tylko wew. wygodniej będzie utrzymywać jeden
@@ -389,6 +389,86 @@ rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
 \label{sec:sesja}
 
 Sesja służy do identyfikacji użytkownika łączącego się z usługą po etapie logowania oraz pozwala na wymuszenie ponownego uwierzytelnienia się po upłynięciu zbyt długiego czasu od ostatniego otrzymanego żądania. Dodatkową zaletą jest wzrost wydajności, poprzez brak konieczności wywoływania kosztownej operacji funkcji skrótu na haśle użytkownika, które w przeciwnym wypadku dołączane by było do każdego żądania.
+
+%TODO zastosowania Cookies?
+\paragraph{Cookies}
+Po zalogowaniu klient musi automatycznie wysyłać wszystkie żądania wraz z przydzielonym mu identyfikatorem sesji. Ze względu na to iż protokół \emph{HTTP} jest bezstanowy, wykorzystuje się w tym celu \emph{Cookies} (ciasteczka). Jak można przeczytać w \cite{MsC} służą one do przechowywania ogólnego zbioru  informacji dotyczących klienta, takich jak zawartość jego koszyka (w wypadku serwisu realizującego funkcjonalność sklepu internetowego), ustawień dotyczących odwiedzanej witryny, czy jego stanu. Dla przykładu klient może zmienić preferencje widoku strony internetowej, takie jak ustawienie koloru tła. Dane te są początkowo przesyłane w zapytaniu \emph{HTTP} do serwera, na przykład przy pomocy formularza \emph{HTML} i metody \emph{POST}. Po stronie serwera następuje ich analiza i tłumaczenie na polecenia ustawiające je jako ciasteczka na maszynie klienta. W kolejnych zapytaniach ustawienia te są dołączane do wszystkich żądań, dzięki czemu strona wyświetla się zawsze w kolorze wybranym przez użytkownika.
+
+Zgodnie z \cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dwóch nagłówków protokołu \emph{HTTP}:
+\begin{description}
+\item[Nagłówek Set-Cookie] \hfill \\
+	Nagłówek używany do przesyłania ustawień ciasteczek od serwera do klienta w odpowiedzi na jego zapytanie. Przykładowy format widoczny jest poniżej.
+	\begin{lstlisting}
+	Set-Cookie: SID=31d4d96e407aad42
+	\end{lstlisting}
+	Tak przygotowany nagłówek \emph{Set-Cookie} spowoduje ustawienie ciasteczka o nazwie \emph{SID} (\emph{Session ID}, czyli identyfikator sesji) i wartości \emph{31d4d96e407aad42}. Dodatkowo istnieje możliwość definiowania różnorodnych atrybutów oddzielając je znakiem średnika:
+	\begin{description}
+	\item[Expires] \hfill \\
+	Określa maksymalną żywotność ciasteczka. Klient nie ma obowiązku przetrzymywania go, aż do określonej w wartości daty i czasu - ciasteczko może zostać usunięte wcześniej.
+	\item[Max-Age] \hfill \\
+	Podobnie jak \emph{Expires} określa maksymalny czas życia ciasteczka, ale definiowany jest jako liczba sekund. Jeśli obydwa atrybuty (\emph{Expires} i \emph{Max-Age}) występują w jednej odpowiedzi \emph{HTTP}, priorytet ma \emph{Max-Age}.
+	\item[Domain] \hfill \\
+	Atrybut służący do określenia zakresu nazw domen, do których wysyłane może być ciasteczko. W przypadku jego pominięcia ciasteczka będą kierowane tylko do serwera, z którego pochodzi odpowiedź.
+	\end{description}
+	Odpowiedź \emph{HTTP} może konfigurować wiele takich ciasteczek, zawierając je w osobnych nagłówkach, na przykład:
+	\begin{lstlisting}
+	Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
+	Set-Cookie: lang=en-US; Path=/; Domain=example.com
+	\end{lstlisting}
+\item[Nagłówek Cookie] \hfill \\
+	Wszystkie ciasteczka, które mogą zostać wysłane do serwera, z którym komunikuje się klient zostaną zamieszczone w tym nagłówku. Poszczególne pary nazw i wartości oddzielone są średnikami. Żądanie \emph{HTTP} może zawierać tylko jeden nagłówek \emph{Cookie}. Poniższy listing zawiera przykład nagłówka zawierającego dwa ciasteczka, z przykładu zamieszczonego w omówieniu nagłówka \emph{Set-Cookie}: \emph{SID} oraz \emph{lang}.
+	\begin{lstlisting}
+	Cookie: SID=31d4d96e407aad42; lang=en-US
+	\end{lstlisting}
+	
+\end{description}
+
+Użycie atrybutu \emph{Expires} nagłówka \emph{Set-Cookie} dodatkowo definiuje sposób w jaki ciasteczka będą przechowywane na maszynie klienta. \cite{MsC} specyfikuje dwa rodzaje \emph{Cookies}:
+
+\begin{description}
+\item[Trwałe] \hfill \\
+Ten typ ciasteczek zostanie zastosowany jeśli w nagłówku \emph{Set-Cookie} zdefiniowany jest atrybut \emph{Expires}. W takim wypadku ciasteczka przechowywane są w plikach na dysku maszyny klienta, maksymalnie do określonego w nim czasu. Stan jest zachowany pomiędzy różnymi sesjami klienta (czyli po zrestartowaniu przeglądarki internetowej).
+\item[Przechowywane w pamięci] \hfill \\
+Ciasteczka są przechowywane w pamięci jedynie na czas trwania sesji klienta. Po wyłączeniu przeglądarki znikną.
+\end{description}
+
+Warto zauważyć, że w powyższym opisie ``sesja klienta'' nie odnosi się do sesji nawiązywanej pomiędzy klientem a serwerem, która jest głównym tematem tego podrozdziału. W tym szczególnym wypadku jest to sesja użytkowania klienta \emph{HTTP} jakim jest przeglądarka internetowa.
+
+\paragraph{Sesja po stronie klienta lub serwera} Pierwszym problemem z jakim należy się zmierzyć, jest wybór miejsca przechowywania stanu sesji. 
+
+Jednym z podejść jest trzymanie wszelkich informacji związanych z sesją użytkownika w bazie danych po stronie serwera. Identyfikatorem sesji jest wtedy losowy ciąg znaków o określonej długości, który może posłużyć również jako klucz główny tablicy. Wszelkie inne informacje takie jak czas wygaśnięcia, czy nazwa zalogowanego użytkownika mogą być dodatkowymi kolumnami tablicy. Jedyną wartością jaką przechowuje u siebie klient jest wspomniany identyfikator zapisany w ciasteczkach. Jak sugeruje \cite{ClAu}, zastosowanie tego podejścia umożliwia przeprowadzanie ataku poprzez zgadnięcie identyfikatora, gdzie szansa na powodzenie rośnie wraz ze wzrostem liczby aktualnie zalogowanych użytkowników.
+
+W zamian \cite{ClAu} proponuje rozwiązanie przetrzymywania stanu sesji po stronie klienta. Sesja nie potrzebuje wtedy identyfikatora, gdyż całość informacji przechowywana jest w wartości ciasteczka. Należy przy tym pamiętać, że skoro dane te znajdują się po stronie klienta, mogą zostać przez niego podmienione celem przeprowadzenia ataku. Do dobrych praktyk ochrony przed takim wydarzeniem należy dołączenie skrótu zawartości, sporządzonego przy użyciu tajnego klucza.
+
+Proponowany przykład ma postać przedstawioną poniżej.
+\begin{lstlisting}
+exp=<EXPIRATION>&data=<DATA>&digest=MAC(exp=<EXPIRATION>&data=<DATA>)
+\end{lstlisting}
+
+Poniższy spis objaśnia wartości użyte w ciasteczku.
+\begin{description}
+\item[<EXPIRATION>] \hfill \\
+Wartość parametru \emph{exp}, określającego żywotność sesji, na przykład jako liczba sekund, które upłynęły od 00:00, 1 stycznia 1970 r.
+\item[<DATA>] \hfill \\
+Wartość parametru \emph{data}, który przechowuje wszelkie dane związane z klientem, charakterystyczne dla implementowanej usługi.
+\item[MAC(exp=<EXPIRATION>\&data=<DATA>)] \hfill \\
+Wartość parametru \emph{digest}, będącego potwierdzeniem autentyczności danych przesyłanych od klienta. Dane te muszą zostać zabezpieczone przed ewentualną podmianą przez atakującego, więc dołączane są w postaci kodu \emph{MAC}\footnote{Message Authentication Code; Kod uwierzytelniania wiadomości}, który jest wynikiem funkcji skrótu, wykorzystującej tajny klucz, na danych mających być objętymi ochroną przed sfałszowaniem. Podmiana wartości parametrów \emph{exp} oraz \emph{data} zostanie z łatwością wykryta poprzez porównanie załączonego skrótu ze skrótem wyliczonym w momencie otrzymania żądania, na podstawie tychże danych. Ze względu na wykorzystanie tajnego klucza w fazie liczenia skrótu, klient nie jest w stanie sam wygenerować poprawnej jego wartości na podstawie sfałszowanych parametrów.
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny klucz może uzyskać dostęp do chronionych zasobów, więc jej poprawne użycie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
 
