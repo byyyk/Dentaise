@@ -13,27 +13,27 @@
 \lstloadlanguages{TeX}
 
 \lstset{
-  frame=single,
-  breaklines=true,
-  postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
-  literate={ą}{{\k{a}}}1
-           {ć}{{\'c}}1
-           {ę}{{\k{e}}}1
-           {ó}{{\'o}}1
-           {ń}{{\'n}}1
-           {ł}{{\l{}}}1
-           {ś}{{\'s}}1
-           {ź}{{\'z}}1
-           {ż}{{\.z}}1
-           {Ą}{{\k{A}}}1
-           {Ć}{{\'C}}1
-           {Ę}{{\k{E}}}1
-           {Ó}{{\'O}}1
-           {Ń}{{\'N}}1
-           {Ł}{{\L{}}}1
-           {Ś}{{\'S}}1
-           {Ź}{{\'Z}}1
-           {Ż}{{\.Z}}1
+frame=single,
+breaklines=true,
+postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
+literate={ą}{{\k{a}}}1
+{ć}{{\'c}}1
+{ę}{{\k{e}}}1
+{ó}{{\'o}}1
+{ń}{{\'n}}1
+{ł}{{\l{}}}1
+{ś}{{\'s}}1
+{ź}{{\'z}}1
+{ż}{{\.z}}1
+{Ą}{{\k{A}}}1
+{Ć}{{\'C}}1
+{Ę}{{\k{E}}}1
+{Ó}{{\'O}}1
+{Ń}{{\'N}}1
+{Ł}{{\L{}}}1
+{Ś}{{\'S}}1
+{Ź}{{\'Z}}1
+{Ż}{{\.Z}}1
 }
 
 %---------------------------------------------------------------------------
@@ -104,21 +104,21 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 %TODO praca odnosi się do konkretnych frameworków i niektóre rozwiązania są do zastosowania tylko w ich obrębie, ale niektóre zagadnienia mają charakter ogólny
 \section{Cele pracy}
 \label{sec:cele_pracy}
-
+%TODO
 \section{Zawartość pracy}
 \label{sec:zawartosc_pracy}
-
+%TODO
 %----------------------------------------------------------------------------
 
 \chapter{Architektura}
 \label{cha:architektura}
-
+%TODO
 \section{Architektura fizyczna}
 \label{sec:architektura_fizyczna}
-
+%TODO
 \section{Architektura logiczna}
 \label{sec:architektura_logiczna}
-
+%TODO
 %----------------------------------------------------------------------------
 
 \chapter{Dobór technologii i narzędzi}
@@ -185,7 +185,7 @@ zalecany interfejs restowy a ograniczenia html: brak PUT, DELETE; paginacja w ur
 
 \subsection{Uwierzytelnianie}
 
-Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwienie dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane przeznaczone dla każdego użytkownika z~osobna.
+Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwieniu dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane przeznaczone dla każdego użytkownika z~osobna.
 
 W wypadku aplikacji tworzonej w~ramach pracy, proces uwierzytelniania musi zostać zaimplementowany po stronie serwera Dentaise i~być jednakowo stosowany przez strony klienckie - webową oraz mobilną. Należy więc tak dobrać metodę, aby była możliwa do realizacji na tych dwóch różnych platformach.
 
@@ -267,7 +267,7 @@ Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formu
 Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy, jaką podaje w oknie logowania użytkownik, po zdekodowaniu zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z wysyłanym żądaniem. Zwykle w tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
 
 \paragraph{Digest Access Authentication}
-%TODO w razie potrzeby będzie można uzupełnić o sposób tworzenia skrótu
+%TODO? w razie potrzeby będzie można uzupełnić o dokładny sposób tworzenia skrótu
 
 Ze względu na to, że w schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych.
 
@@ -276,17 +276,17 @@ Schemat komunikacji wygląda podobnie jak w poprzednim wypadku. Do prześledzeni
 Pierwsze żądanie nie różni się niczym od zawartego w przykładzie z \emph{Basic Access Authentication} poza zmianą zasobu, który chcemy uzyskać. W tym wypadku serwer również odsyła odpowiedź \emph{401 Unauthorized}, jednak zawiera ona znacznie więcej danych.
 
 Oprócz parametru \emph{realm} omówionego wcześniej, w odpowiedzi zwrotnej mogą znaleźć się następujące pola:
-\begin{description} %TODO new line after between item and descr
+\begin{description}
 \item[domain] \hfill \\
 Lista adresów przypadających pod strefę określoną w \emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w tym polu zasobów.
 \item[nonce] \hfill \\
-%TODO nonce jest ogólnym pojęciem, można o nim coś więcej napisać...
+%TODO? nonce jest ogólnym pojęciem, można o nim coś więcej napisać...
 Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Zwykle jest ciągiem znaków zakodowanym w Base64 lub zapisanym w systemie heksadecymalnym, który zawiera w sobie między innymi aktualny czas, aby umożlić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
 \item[opaque] \hfill \\
 Ciąg znaków ustalany przez serwer, który powinien być zwrócony w niezmienionej postaci przez klienta. Może zostać użyty do przesyłania dodatkowych informacji, na przykład kiedy za uwierzytelnianie odpowiada serwer inny niż hostujący zasób, do którego klient chce uzyskać dostęp. W tym celu można jednak również wykorzystać pole \emph{nonce}.
-%TODO wyjaśnić "skrót"? w stopce czy jak to się nazywa?
+%TODO? hash? z ang. hash?
 \item[stale] \hfill \\
-Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające wraz z nim tworzą poprawny skrót. Umożliwia to powtórzenie żądania z nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w podawanie loginu i hasła.
+Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające wraz z nim tworzą poprawny skrót\footnote{Wynik funkcji skrótu (hash)}. Umożliwia to powtórzenie żądania z nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w podawanie loginu i hasła.
 \item[algorithm] 
 \hfill \\Wybrany algorytm funkcji skrótu (domyślnie \emph{MD5}).
 \item[qop] \hfill \\
@@ -299,23 +299,23 @@ Przykładowa odpowiedź serwera będzie wyglądać następująco.
 \begin{lstlisting}
 HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Digest
-	realm="testrealm@host.com",
-	qop="auth,auth-int",
-	nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
-	opaque="5ccc069c403ebaf9f0171e9517f40e41"
+realm="testrealm@host.com",
+qop="auth,auth-int",
+nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
+opaque="5ccc069c403ebaf9f0171e9517f40e41"
 \end{lstlisting}
 
 Podobnie jak w przykładzie dotyczącym \emph{Basic Access Authentication} klient musi na nie odpowiedzieć, umieszczając dane uwierzytelniające w nagłówku \emph{Authenticate}. Użytkownikowi wyświetli się okno logowania obsługiwane przez przeglądarkę, gdzie może podać swój login i hasło, a następnie dane te zostaną przetworzone, dając w wyniku nagłówek, który zostanie przesłany w powtórzonym żądaniu do serwera.
 \begin{lstlisting}
 Authorization: Digest username="Mufasa",
-	realm="testrealm@host.com",
-	nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
-	uri="/dir/index.html",
-	qop=auth,
-	nc=00000001,
-	cnonce="0a4f113b",
-	response="6629fae49393a05397450978507c4ef1",
-	opaque="5ccc069c403ebaf9f0171e9517f40e41"
+realm="testrealm@host.com",
+nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
+uri="/dir/index.html",
+qop=auth,
+nc=00000001,
+cnonce="0a4f113b",
+response="6629fae49393a05397450978507c4ef1",
+opaque="5ccc069c403ebaf9f0171e9517f40e41"
 \end{lstlisting}
 
 \begin{description}
@@ -376,17 +376,132 @@ Niezmiernie ważnym aspektem dla wyboru odpowiedniego schematu uwierzytelniania 
 \subsubsection{Hashowanie}
 \label{sec:hashowanie}
 
-wyciek jest groźny bo użytkownicy zwykle korzystają z tych samych haseł
+W przypadku wycieku bazy zawierającej hasła użytkownika, ich bezpieczeństwo jest zagrożone nie tylko w obrębie usługi, na której przeprowadzono atak, ale też innych serwisów, w których są oni zarejestrowani. Jest to spowodowane bardzo częstą, ale błędną praktyką stosowania tych samych haseł dostępu dla różnych usług przez jedną osobę. Atakujący w przedstawionym przypadku ma zwykle dostęp do haseł oraz innych danych użytkownika, na przykład adresów e-mail, z których może skorzystać, aby odnaleźć inne serwisy, gdzie zarejestrowana dana osoba i dokonać próby włamania. Atak na mało znaczącą dla użytkownika usługę, gdzie bezpieczeństwo może być znacznie obniżone, taką jak forum dyskusyjne czy portal informacyjny, może doprowadzić do przejęcia kontroli nad najistotniejszymi systemami, na przykład pocztą elektroniczną. Niezmiernie ważne jest więc, aby bez względu na wrażliwość przechowywanych danych zapewnić swoim użytkownikom odpowiednie bezpieczeństwo.
 
-różne algorytmy i ich podatność na ataki
+Podstawową metodą obrony przed wyciekiem haseł jest przechowywanie ich postaci innej niż dostarczają użytkownicy, do czego służą funkcje skrótu. Ich wynikiem jest skrót, zwany również hashem, który ze względu na jednokierunkowość tej operacji nie pozwala na odzyskanie argumentu wejściowego, jakim jest oryginalne hasło.
 
-hashowanie u klienta czy po stronie serwera?
+Istnieją różne rodzaje funkcji skrótu i nie wszystkie z nich nadają się do bezpiecznego przechowywania haseł. Niezależnie od długości argumentu, przy tej samej konfiguracji wynik będzie miał jednakową długość, a każda najmniejsza zmiana w parametrze wejściowym skutkuje w całkowicie innej przyporządkowanej wartości wynikowej, co obrazuje przykład z wykorzystaniem algorytmu md5.
 
-długość klucza
+\begin{lstlisting}
+md5("dentaise to aplikacja wspomagająca zarządzanie gabinetem dentystycznym") = 0e100aacf0fe1b20d5cb152bef556626
+md5("dentaisf to aplikacja wspomagająca zarządzanie gabinetem dentystycznym") = a572a0958932537c0aa42c5599021491
+\end{lstlisting}
 
-salt
+Ze względu na ten charakter funkcje skrótu często wykorzystywane są również do sprawdzania integralności danych. W takim wypadku kluczowe jest nie bezpieczeństwo, a szybkość operacji.
 
-rodzaje, bezpieczeństwo, haslo przesylane clear text vs md5 robione u klienta
+W \cite{CSH} wyróżnione zostały następujące ataki mające na celu złamanie skrótu:
+\begin{description}
+\item[Dictionary] \hfill \\
+Atak słownikowy polegający na generowaniu skrótów bazując na zbiorze popularnych haseł stosowanych przez użytkowników, do momentu znalezienia zgodności ze sprawdzanym skrótem.
+\item[Brute Force] \hfill \\
+Atak polegający na sprawdzaniu wszystkich możliwości, na przykład: aaaaaa, aaaaab, aaaaac...
+\item[Lookup Tables] \hfill \\
+Metoda umożliwiająca łamanie wielu hashy równolegle poprzez wcześniejsze przygotowanie dużego zbioru skrótów i haseł, na podstawie których zostały wygenerowane. W odróżnieniu od ataku słownikowego metoda ta nie wymaga już obliczania skrótu dla każdego sprawdzanego hasła, co sprawia że jest znacznie szybsza.
+\item[Reverse Lookup Tables] \hfill \\
+Połączenie podejść \emph{Lookup Table} i ataku słownikowego lub metody \emph{Brute Force}, gdzie najpierw dla wszystkich skrótów znajdujących się w wykradzionej bazie danych przyporządkowuje się użytkowników, którym był przypisany. Następnie oblicza się skrót dla każdego zgadywanego hasła metodą słownikową lub sprawdzając wszystkie kolejne możliwości i sprawdza się którzy użytkownicy mieli uzyskany hash. Metoda ta wykorzystuje fakt, że często wielu użytkowników korzysta z tego samego hasła.
+%TODO doczytać http://kestas.kuliukas.com/RainbowTables/
+\item[Rainbow Tables] \hfill \\
+Usprawnienie metody \emph{Lookup Table}, która ze względu na konieczność przechowywania wszystkich skrótów zajmuje bardzo dużą część przestrzeni dyskowej. Zastosowanie tablic tęczowych pozwala na przechowywanie większej bazy, kosztem czasu potrzebnego na złamanie hasła. Modyfikacja polega na wprowadzeniu funkcji redukującej, która przyporządkowuje skrótom ciągi znaków kwalifikujące się jako hasła. Należy podkreślić, że nie jest to operacja odwracająca operację funkcji skrótu, tzn. wynik redukcji nie jest hasłem na podstawie którego otrzymano skrót, będący wejściem dla tej funkcji. Metoda polega na tworzeniu łańcuchów $plaintext \rightarrow hash \rightarrow plaintext \rightarrow hash \rightarrow \ldots \rightarrow plaintext \rightarrow hash$, gdzie przetrzymywane są jedynie początkowe i końcowe wartości oraz przechodzeniu po nich celem odnalezienia skrótu wejściowego. Szukane hasło jest wartością poprzedzającą. Dokładniejsze wyjaśnienie działania tablic tęczowych można przeczytać w \cite{RT}.
+\end{description}
+
+Ataki słownikowe oraz metodą \emph{Brute Force} są najprostszymi sposobami łamania skrótów, ale zarazem bardzo mało wydajnymi czasowo. Wszelkie działania im zapobiegające, jedynie przedłużają czas potrzebny na złamanie skrótu, który jednak jest i tak na tyle długi, że w przypadku kombinacji bezpiecznej funkcji i silnego hasła zagrożenie płynące z zastosowania tych technik jest nikłe.
+
+Kuszące może być podejście obliczania skrótu już po stronie klienta i przesyłanie tej gotowej postaci do sprawdzenia z bazą danych po stronie serwera, dzięki czemu hasło nie jest przekazywane w czystej postaci, co może zostać wykorzystane poprzez podsłuchanie transmisji. Nie jest to zalecane, ponieważ w przypadku wycieku listy skrótów istnieje możliwość włamania się na konto danego użytkownika bez znajomości jego hasła. Z tego względu operacja ta powinna być wykonywana bezwzględnie po stronie serwera, a opisany schemat może być jedynie dodatkowym zabezpieczeniem.
+
+W odróżnieniu od innych zastosowań funkcji skrótów, w bezpieczeństwie szybkość operacji nie jest cechą pożądaną. Wydłużając czas potrzebny do policzenia skrótu, znacznie utrudnia się przeprowadzanie ataku, zwłaszcza przy wykorzystaniu tych dwóch prostych technik. Ze względu na to iż dokonuje się w nich obliczeń na bieżąco dla każdego zgadywanego hasła, potrzeba znacznie więcej czasu na odnalezienie pasującego ciągu znaków, nawet przy minimalnym zmniejszeniu szybkości pojedynczej operacji.
+
+Funkcje skrótu przyporządkowują dane o dowolnej długości do wartości wynikowej o stałym rozmiarze, więc może się zdarzyć, że dwa różne ciągi znaków odpowiadają temu samemu skrótowi. Zdarzenie to nazywa się kolizją i jest niepożądane, kiedy stosuje się je w celach bezpieczeństwa. Funkcje skrótu znacznie minimalizujące tę cechę nazywa się kryptograficznymi funkcjami skrótu. W \cite{CSH} zaleca się stosowanie następujących algorytmów:
+
+\begin{itemize}
+\item SHA256
+\item SHA512
+\item RipeMD
+\item WHIRLPOOL
+\item SHA3
+\item PBKDF2
+\item bcrypt
+\item scrypt		
+\end{itemize}
+
+Według \cite{RIG} największe zagrożenie płynie z zastosowania tanich układów GPU\footnote{Graphics Processing Unit}, FPGA\footnote{Field Programmable Gate Array} lub ASIC\footnote{Application-specific Integrated Circuit}. Wykorzystując ich równoległość atakujący może próbować łamać wiele haseł jednocześnie. Algorytm wymagający dużo zasobów w postaci stosunkowo kosztownej pamięci oraz uniemożliwiający znaczny wzrost szybkości poprzez wykorzystanie wielu rdzeni pozwala na obniżenie ich skuteczności. 
+
+\paragraph{Sól}
+
+Metody \emph{Lookup Table} oraz \emph{Rainbow Table} wykorzystują przygotowane tablice skrótów dla zdefiniowanego zbioru haseł, więc mogą dokonywać wyszukiwania w niezwykle szybki sposób. Zastosowanie silnego algorytmu funkcji skrótu nie będzie w tym wypadku wystarczające, ponieważ w czasie ataku wykona się stosunkowo mało (lub wcale) operacji tego typu.
+
+Najlepszym zabezpieczeniem przed tego typu metodami jest uniemożliwienie przygotowania tablic skrótów dla znanych algorytmów i haseł poprzez wprowadzenie losowego elementu do przetrzymywanych w bazie danych wartości. Aby atak był skuteczny, przygotowane tablice musiałyby uwzględniać ten element, który dla każdego hasła jest inny, co sprawia że przygotowanie tak dużej bazy staje się niemożliwe. Element ten nazywany jest solą.
+
+Sól (\emph{salt}) jest losowym ciągiem znaków o określonej długości, dołączany przed, lub za hasłem (\emph{password}) zanim dokona się operacji skrótu (\emph{hash()}). Dzięki temu podejściu nawet użytkownicy korzystający z tego samego hasła, niezależnie od tego czy zarejestrowani są w tej samej czy innej usłudze, mają przypisany zupełnie inny skrót (\emph{H}). Operację obrazuje poniższy wzór.
+
+$H = hash(salt + password)$
+
+Częstym błędem jest stosowanie tej samej soli dla w obrębie jednej implementowanej usługi. Takie podejście jest mało skutecznie, ponieważ naraża na przygotowanie tablic tęczowych lub \emph{Lookup Tables} specjalnie pod tą wartość. Trzeba również pamiętać o tym, aby wygenerować nową wartość soli za każdym razem, gdy użytkownik zmienia swoje hasło.
+
+Ważną cechą zarówno funkcji skrótu jak i soli jest ich nieprzewidywalność. Należy zatem pamiętać, aby wygenerowane wartości wynikały z użycia kryptograficznie bezpiecznych generatorów liczb pseudolosowych (\emph{CSPRNG}), o których wspomniano również w podrozdziale \ref{sec:identyfikator}.
+
+\paragraph{Przykład}
+
+W implementowanej aplikacji do bezpiecznego przechowywania skrótów haseł zdecydowano się na wykorzystanie algorytmu \emph{PBKDF2}. Poniższy listing przestawia klasę realizującą zadanie przekształcania haseł do skrótów z wykorzystaniem soli.
+
+\begin{lstlisting}[language=Java]
+package controllers;
+
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+public class PasswordHashing {
+	private static final int SALT_LENGTH = 16; //16 bytes = 128 bits
+	private static final int ITERATIONS = 1000;
+	private static final int KEYLENGTH = 128;
+
+	public static String hash(String password, String salt) {
+		try {
+			PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt.getBytes("UTF-8"), ITERATIONS, KEYLENGTH);
+			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			byte hash[] = factory.generateSecret(keySpec).getEncoded();
+			return toHex(hash);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		} catch (InvalidKeySpecException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static String generateSalt() {
+		try {
+			SecureRandom secureRandom;
+			secureRandom = SecureRandom.getInstance("SHA1PRNG");
+			byte[] salt = new byte[SALT_LENGTH];
+			secureRandom.nextBytes(salt);
+			return toHex(salt);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static String toHex(byte[] array) {
+		BigInteger bigInteger = new BigInteger(1, array);
+		return bigInteger.toString(16);
+	}
+	
+	public static void main(String[] args) {
+		String salt = generateSalt();
+		String hash = hash("s3cret", salt);
+		System.out.println(salt + " " + hash);
+	}
+	
+}
+\end{lstlisting}
+
+%TODO: długość klucza
 
 \subsubsection{Sesja}
 \label{sec:sesja}
@@ -400,29 +515,35 @@ Po zalogowaniu klient musi automatycznie wysyłać wszystkie żądania wraz z pr
 Zgodnie z \cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dwóch nagłówków protokołu \emph{HTTP}:
 \begin{description}
 \item[Nagłówek Set-Cookie] \hfill \\
-	Nagłówek używany do przesyłania ustawień ciasteczek od serwera do klienta w odpowiedzi na jego zapytanie. Przykładowy format widoczny jest poniżej.
-	\begin{lstlisting}
-	Set-Cookie: SID=31d4d96e407aad42
-	\end{lstlisting}
-	Tak przygotowany nagłówek \emph{Set-Cookie} spowoduje ustawienie ciasteczka o nazwie \emph{SID} (\emph{Session ID}, czyli identyfikator sesji) i wartości \emph{31d4d96e407aad42}. Dodatkowo istnieje możliwość definiowania różnorodnych atrybutów oddzielając je znakiem średnika:
-	\begin{description}
-	\item[Expires] \hfill \\
-	Określa maksymalną żywotność ciasteczka. Klient nie ma obowiązku przetrzymywania go, aż do określonej w wartości daty i czasu - ciasteczko może zostać usunięte wcześniej.
-	\item[Max-Age] \hfill \\
-	Podobnie jak \emph{Expires} określa maksymalny czas życia ciasteczka, ale definiowany jest jako liczba sekund do czasu wygaśnięcia. Jeśli obydwa atrybuty \emph{Expires} i \emph{Max-Age} występują w jednej odpowiedzi \emph{HTTP}, priorytet ma \emph{Max-Age}.
-	\item[Domain] \hfill \\
-	Atrybut służący do określenia zakresu nazw domen, do których wysyłane może być ciasteczko. W przypadku jego pominięcia ciasteczka będą kierowane tylko do serwera, z którego pochodzi odpowiedź.
-	\end{description}
-	Odpowiedź \emph{HTTP} może konfigurować wiele takich ciasteczek, zawierając je w osobnych nagłówkach, na przykład:
-	\begin{lstlisting}
-	Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
-	Set-Cookie: lang=en-US; Path=/; Domain=example.com
-	\end{lstlisting}
+Nagłówek używany do przesyłania ustawień ciasteczek od serwera do klienta w odpowiedzi na jego zapytanie. Przykładowy format widoczny jest poniżej.
+\begin{lstlisting}
+Set-Cookie: SID=31d4d96e407aad42
+\end{lstlisting}
+Tak przygotowany nagłówek \emph{Set-Cookie} spowoduje ustawienie ciasteczka o nazwie \emph{SID} (\emph{Session ID}, czyli identyfikator sesji) i wartości \emph{31d4d96e407aad42}. Dodatkowo istnieje możliwość definiowania różnorodnych atrybutów oddzielając je znakiem średnika:
+\begin{description}
+\item[Path] \hfill \\
+Atrybut, który definiuje pulę zasobów, do których może zostać wysłane ciasteczko. Pod uwagę brane są również zasoby zagnieżdżone.
+\item[Expires] \hfill \\
+Określa maksymalną żywotność ciasteczka. Klient nie ma obowiązku przetrzymywania go, aż do określonej w wartości daty i czasu - ciasteczko może zostać usunięte wcześniej.
+\item[Max-Age] \hfill \\
+Podobnie jak \emph{Expires} określa maksymalny czas życia ciasteczka, ale definiowany jest jako liczba sekund do czasu wygaśnięcia. Jeśli obydwa atrybuty \emph{Expires} i \emph{Max-Age} występują w jednej odpowiedzi \emph{HTTP}, priorytet ma \emph{Max-Age}.
+\item[Domain] \hfill \\
+Atrybut służący do określenia zakresu nazw domen, do których wysyłane może być ciasteczko. W przypadku jego pominięcia ciasteczka będą kierowane tylko do serwera, z którego pochodzi odpowiedź.
+\item[Secure] \hfill \\
+Flaga oznaczająca, że ciasteczko może zostać wysłane tylko przez bezpieczny kanał komunikacji (\emph{HTTPS}). W przypadku transmisji HTTP przy pomocy przeglądarki wspierającej flagę \emph{Secure} zostanie ono pominięte. Więcej na temat konfiguracji tej flagi na różnych serwerach można przeczytać w \cite{SecF}.
+\item[HttpOnly] \hfill \\
+Flaga, zawężająca dostęp do ciasteczka. W szczególności uniemożliwia jego odczyt z poziomu skryptów znajdujących się po stronie klienta, na przykład JavaScript, co mogłoby doprowadzić do wykradnięcia identyfikatora sesji przy pomocy ataku \emph{Cross-site Scripting}. Jak można przeczytać w \cite{HtOn} funkcjonalność ta jest implementowana po stronie przeglądarek internetowych. Jeżeli zostanie wykryta próba dostępu do ciasteczka oznaczonego flagą \emph{HttpOnly}, zamiast poprawnej wartości zwrócony zostanie pusty ciąg znaków. 
+\end{description}
+Odpowiedź \emph{HTTP} może konfigurować wiele takich ciasteczek, zawierając je w osobnych nagłówkach, na przykład:
+\begin{lstlisting}
+Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
+Set-Cookie: lang=en-US; Path=/; Domain=example.com
+\end{lstlisting}
 \item[Nagłówek Cookie] \hfill \\
-	Wszystkie ciasteczka, które mogą zostać wysłane do serwera, z którym komunikuje się klient zostaną zamieszczone w tym nagłówku. Poszczególne pary nazw i wartości oddzielone są średnikami. Żądanie \emph{HTTP} może zawierać tylko jeden nagłówek \emph{Cookie}. Poniższy listing zawiera przykład nagłówka zawierającego dwa ciasteczka, z przykładu zamieszczonego w omówieniu nagłówka \emph{Set-Cookie}: \emph{SID} oraz \emph{lang}.
-	\begin{lstlisting}
-	Cookie: SID=31d4d96e407aad42; lang=en-US
-	\end{lstlisting}
+Wszystkie ciasteczka, które mogą zostać wysłane do serwera, z którym komunikuje się klient zostaną zamieszczone w tym nagłówku. Poszczególne pary nazw i wartości oddzielone są średnikami. Żądanie \emph{HTTP} może zawierać tylko jeden nagłówek \emph{Cookie}. Poniższy listing zawiera przykład nagłówka zawierającego dwa ciasteczka, z przykładu zamieszczonego w omówieniu nagłówka \emph{Set-Cookie}: \emph{SID} oraz \emph{lang}.
+\begin{lstlisting}
+Cookie: SID=31d4d96e407aad42; lang=en-US
+\end{lstlisting}
 \end{description}
 
 Użycie atrybutu \emph{Expires} nagłówka \emph{Set-Cookie} dodatkowo definiuje sposób w jaki ciasteczka będą przechowywane na maszynie klienta. \cite{MsC} specyfikuje dwa rodzaje \emph{Cookies}:
@@ -436,7 +557,9 @@ Ciasteczka są przechowywane w pamięci jedynie na czas trwania sesji klienta. P
 
 Warto zauważyć, że w powyższym opisie ``sesja klienta'' nie odnosi się do sesji nawiązywanej pomiędzy klientem a serwerem, która jest głównym tematem tego podrozdziału. W tym szczególnym wypadku jest to sesja użytkowania klienta \emph{HTTP} jakim jest przeglądarka internetowa.
 
-\paragraph{Sesja po stronie klienta lub serwera} Pierwszym problemem z jakim należy się zmierzyć, jest wybór miejsca przechowywania stanu sesji. 
+\paragraph{Sesja po stronie klienta lub serwera}
+
+Pierwszym problemem z jakim należy się zmierzyć, jest wybór miejsca przechowywania stanu sesji. 
 
 Jednym z podejść jest trzymanie wszelkich informacji związanych z sesją użytkownika w bazie danych po stronie serwera. Identyfikatorem sesji jest wtedy losowy ciąg znaków o określonej długości, który może posłużyć również jako klucz główny tablicy. Wszelkie inne informacje takie jak czas wygaśnięcia, czy nazwa zalogowanego użytkownika mogą być dodatkowymi kolumnami tablicy. Jedyną wartością jaką przechowuje u siebie klient jest wspomniany identyfikator zapisany w ciasteczkach. Jak sugeruje \cite{ClAu}, zastosowanie tego podejścia umożliwia przeprowadzanie ataku poprzez zgadnięcie identyfikatora, gdzie szansa na powodzenie rośnie wraz ze wzrostem liczby aktualnie zalogowanych użytkowników.
 
@@ -459,26 +582,28 @@ Wartość parametru \emph{digest}, będącego potwierdzeniem autentyczności dan
 
 \cite{SeMa08} wymienia następujące zalety tego podejścia:
 \begin{itemize}
-	\item Łatwiejsze w realizacji równoważenie obciążenia pomiędzy serwerami, oraz wysoka dostępność.
-	\item Mniejsze zużycie pamięci na serwerze.
-	\item Szybsze odpowiedzi i mniejszy koszt serwera, jako skutek braku potrzeby dedykowanego systemu równoważenia obciążenia.
-	\item Mniejsza złożoność wdrożenia.
+\item Łatwiejsze w realizacji równoważenie obciążenia pomiędzy serwerami, oraz wysoka dostępność.
+\item Mniejsze zużycie pamięci na serwerze.
+\item Szybsze odpowiedzi i mniejszy koszt serwera, jako skutek braku potrzeby dedykowanego systemu równoważenia obciążenia.
+\item Mniejsza złożoność wdrożenia.
 \end{itemize}
 
 %To wciąż cytat... dodać odnośnik?
 W przechowywaniu sesji po stronie klienta istnieją również jednak pewne wady:
 \begin{itemize}
-	\item Jeśli ciasteczko nie jest szyfrowane, stan sesji może zostać podsłuchany.
-	\item Stan przechowywany w ciasteczku może zostać zmieniony, jeśli nie jest się przed tym odpowiednio zabezpieczonym (na przykład jak w zaprezentowanym powyżej przykładzie z \emph{MAC}).
-	\item Rozmiar ciasteczek jest ograniczony, co zmniejsza również możliwości przechowywania sesji zawierających duże ilości danych.
-	\item Konieczne jest przesłanie większej ilości danych reprezentujących stan (w odróżnieniu do tylko jednej wartości - identyfikatora sesji - dla stanu trzymanego po stronie serwera).
-	\item Istnieje większa podatność na atak Replay.
-	\item Unieważnianie sesji jest utrudnionym zadaniem, ponieważ serwer nie ma możliwości sprawdzić, które sesje zostały już zakończone.
+\item Jeśli ciasteczko nie jest szyfrowane, stan sesji może zostać podsłuchany.
+\item Stan przechowywany w ciasteczku może zostać zmieniony, jeśli nie jest się przed tym odpowiednio zabezpieczonym (na przykład jak w zaprezentowanym powyżej przykładzie z \emph{MAC}).
+\item Rozmiar ciasteczek jest ograniczony, co zmniejsza również możliwości przechowywania sesji zawierających duże ilości danych.
+\item Konieczne jest przesłanie większej ilości danych reprezentujących stan (w odróżnieniu do tylko jednej wartości - identyfikatora sesji - dla stanu trzymanego po stronie serwera).
+\item Istnieje większa podatność na atak Replay.
+\item Unieważnianie sesji jest utrudnionym zadaniem, ponieważ serwer nie ma możliwości sprawdzić, które sesje zostały już zakończone.
 \end{itemize}
 
 Podejście, w którym przechowuje się stan sesji po stronie klienta może być również bardzo korzystne dla aplikacji, które nie wymagają bazy danych do realizacji pozostałych funkcjonalności. Nie pasuje to jednak do profilu tworzonego systemu, wobec czego utworzenie dodatkowej tabeli dla sesji użytkowników nie jest problematyczne. Nie oczekuje się również, że system kiedykolwiek będzie wymagał równoważenia obciążenia, ze względu na wąskie grono jego użytkowników. Zgadnięcie identyfikatorów przez atakujących można znacznie zminimalizować poprzez zastosowanie wskazówek z podrozdziału \ref{sec:identyfikator}. Ostatecznie jednak przetrzymywanie sesji po stronie serwera wydaje się być bardziej trafionym podejściem dla tworzonego systemu.
 
-%TODO persistent cookies - nono!
+Jak sugeruje \cite{ClAu} ciasteczka zawierające identyfikator sesji nie powinny być trwałe\footnote{tzn. nie powinno się deklarować atrybutu \emph{Expires} w nagłówku \emph{Set-Cookie}}, ponieważ zwiększa to ryzyko wykradnięcia poufnych danych. Jeśli dane te przetrzymywane są w pamięci, dostęp do nich jest znacznie bardziej utrudniony. Dodatkowo jeżeli użytkownik loguje się do usługi z publicznego urządzenia, kolejne osoby korzystające z niego będą miały dostęp do konta poprzednika.
+
+Z punktu widzenie bezpieczeństwa najważniejsze jest, aby ciasteczko przechowujące identyfikator sesji spośród dostępnych atrybutów zawierało flagi \emph{Secure} oraz \emph{HttpOnly}.
 
 \paragraph{Identyfikator}
 \label{sec:identyfikator}
@@ -496,6 +621,8 @@ $\frac{2^{B} + 1}{2A \cdot S}$
 gdzie \emph{A} jest liczbą prób zgadnięć identyfikatora, które atakujący jest w stanie przeprowadzić w ciągu sekundy, \emph{B} jest liczbą bitów entropii w identyfikatorze, a \emph{S} to liczba identyfikatorów sesji, które są aktualnie akceptowalne do użycia, czyli w poprawnie funkcjonującym systemie jest to liczba aktualnie zalogowanych użytkowników.
 
 Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacuje się że liczba bitów entropii w CSPRNG to połowa \cite{SId}; $128/2=64$), a pod S $2000$ otrzymujemy $4,611686018\cdot10^{12}$ sekund, czyli $146235,604338768$ lat. Warto dodać, że podstawione wartości były znacznie zawyżone. Tak duża ilość zapytań z pewnością zostałaby zablokowana przez firewall, a liczbę użytkowników zalogowanych na raz w przypadku tworzonego systemu szacuje się na maksymalnie kilku.
+
+%TODO wireshark, przykład
 
 \subsection{Reset hasła}
 
@@ -553,7 +680,6 @@ baseUrl, smtp.host, database itp...
 % \include{dodatekB}
 % itd.
 
-\chapter{Bibliografia}
 \label{cha:bibliografia}
 
 \bibliographystyle{alpha}
