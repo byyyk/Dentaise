@@ -10,9 +10,13 @@
 \usepackage{enumerate}
 \usepackage{mathtools}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+
 \lstloadlanguages{TeX}
 
 \lstset{
+captionpos=b,
 frame=single,
 breaklines=true,
 postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},
@@ -35,6 +39,8 @@ literate={ą}{{\k{a}}}1
 {Ź}{{\'Z}}1
 {Ż}{{\.Z}}1
 }
+
+\graphicspath{ {./gfx/} }
 
 %---------------------------------------------------------------------------
 
@@ -74,6 +80,8 @@ literate={ą}{{\k{a}}}1
 %TODO ajax, jquery?
 %TODO play - formularze z zagnieżdżonymi obiektami oraz listami
 %TODO? hibernate, jackson, lazy-load (VisitController.list)
+%TODO? paginator w sql injection albo rozdziale o paginacji? jeśli w rozdziale o paginacji to wspomnieć w sql injection że jest tam przykład JPA Criteria API
+%TODO wypełnienie danymi
 
 \setcounter{secnumdepth}{3}
 
@@ -104,21 +112,21 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 %TODO praca odnosi się do konkretnych frameworków i niektóre rozwiązania są do zastosowania tylko w ich obrębie, ale niektóre zagadnienia mają charakter ogólny
 \section{Cele pracy}
 \label{sec:cele_pracy}
-%TODO
+
 \section{Zawartość pracy}
 \label{sec:zawartosc_pracy}
-%TODO
+
 %----------------------------------------------------------------------------
 
 \chapter{Architektura}
 \label{cha:architektura}
-%TODO
+
 \section{Architektura fizyczna}
 \label{sec:architektura_fizyczna}
-%TODO
+
 \section{Architektura logiczna}
 \label{sec:architektura_logiczna}
-%TODO
+
 %----------------------------------------------------------------------------
 
 \chapter{Dobór technologii i narzędzi}
@@ -157,9 +165,102 @@ ApacheHttpClient
 \chapter{Implementacja}
 \label{cha:implementacja}
 
-\section{MVC}
+Podczas implementacji systemu tworzonego w~ramach pracy dołożono wszelkich starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~dalszej części pracy. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
+
+\section{Wzorzec MVC}
+
+W~celu zwiększenia czytelności i~elastyczności projektu warto zastosować wzorzec projektowy \emph{Model View Controller}. Jego głównym celem jest odseparowanie warstwy danych od prezentacji, aby zwiększyć możliwości ponownego wykorzystania komponentów do różnych celów. Model w~\cite{GoF} tłumaczony jest jako obiekt aplikacji, widok jako jego reprezentacja w~graficznym interfejsie użytkownika, a~kontroler to spójnik definiujący sposób reakcji na akcje użytkownika z poziomu interfejsu.
+
+Do aktualizacji widoku na podstawie modyfikacji wprowadzanych do modelu \emph{MVC} wykorzystuje wzorzec \emph{Obserwator}. Kiedy zmienią się dane modelu, informuje on o~tym obserwujące go obiekty, na przykład różne widoki.
+
+W aplikacjach webowych przypadek jest o~tyle szczególny, że to klient, któremu renderowany jest widok odpytuje serwer o~aktualizacje, a~model nie ma możliwości wpływać na wyświetlane dane. Zastosowanie obserwatorów nie będzie więc miało miejsca w adaptacji wzorca do potrzeb WWW\footnote{World Wide Web}.
+
+\emph{Play Framework} z~góry narzuca stosowanie \emph{Model View Controller} tworząc pakiety odpowiadające składowym wzorca. Tworzony system składa się z~części webowej i~mobilnej, więc możliwość wykorzystania tych samych składników dla obydwu modułów będzie dużą zaletą. Schematy zaprezentowane w dalszej części, dopasowane do charakterystyki projektu bazując na \cite{PfMC}, przedstawiają rozdzielenie poszczególnych elementów wzorca \emph{Model View Controller} pomiędzy tymi platformami.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth * 4/5]{MVC-WEB}
+	\caption{Schemat MVC z wyszczególnieniem platformy webowej}
+	\label{fig:mvc-web}
+\end{figure}
+
+Na rysunku \ref{fig:mvc-web} przedstawiono sposób komunikacji pomiędzy warstwami najwyższego poziomu dla aplikacji webowej. Użytkownik wpisując w~przeglądarce adres URL, pod którym upubliczniona jest aplikacja lub klikając w odnośniki wysyła żądania HTTP do serwera. Przed przekazaniem ich do kontrolera, następuje sprawdzenie autentyczności użytkownika opisane szerzej w rozdziałach \ref{sec:uwierzytelnianie} oraz \ref{sec:ochronaWybranychZasobow}. Jeśli dane uwierzytelniające są niepoprawne użytkownik przekierowywany jest do strony logowania. W~przeciwnym wypadku żądanie trafia do kontrolera, który je analizuje i~w~razie potrzeby aktualizuje model. Następnie na podstawie szablonów, które wypełniane są danymi modelu renderowany jest widok w postaci dokumentu HTML. Wynik przekazywany jest z~powrotem do klienta w~odpowiedzi HTTP, na podstawie której przeglądarka wyświetla stronę i~pozwala użytkownikowi na podjęcie kolejnych akcji.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth * 4/5]{MVC-MOBILE}
+	\caption{Schemat MVC z wyszczególnieniem platformy mobilnej}
+	\label{fig:mvc-mobile}
+\end{figure}
+
+%TODO: Odnośnik do bib z WebView?
+Aplikacje Android nie wykorzystują dokumentów HTML do prezentacji\footnote{Platforma Android pozwala na wyświetlenie dokumentów HTML przy pomocy klasy \emph{WebView}, jednak nie jest to standardowe podejście projektowania aplikacji}, więc widoki, które wyświetlane będą na telefonie komórkowym muszą zostać zaprojektowane od nowa, wykorzystując rozwiązania dostępne na tę platformę. Rysunek \ref{fig:mvc-mobile} przedstawia komunikację pomiędzy aplikacją mobilną a~serwerem. Jak widać na schemacie widok przeznaczony dla aplikacji webowych nie bierze już udziału w~wyświetlaniu treści. Aplikacja mobilna zawiera jego własną wersję, która odwzorowuje funkcjonalności osiągalne za pomocą strony internetowej, ale jest zrealizowana przy pomocy \emph{Android SDK}. Ze względu na to, że cała warstwa prezentacji musi znajdować się po stronie klienta w postaci aplikacji mobilnej, odpowiedzi zwracane przez kontroler powinny zwracać jedynie czystą reprezentację danych, dlatego zdecydowano się na format JSON. Innymi słowy dane, które w~przypadku klienta webowego były przekazywane do widoku celem przygotowania gotowego do wyświetlenia dokumentu i~zwrócenia go w~odpowiedzi, w~tym przypadku są przekazywane bezpośrednio do klienta mobilnego, który samodzielnie wypełnia nimi własne widoki.
+
+Na przedstawionych schematach widać, że rozdwojenie usługi na platformę mobilną i~webową zaczyna się dopiero za warstwą kontrolera, który razem z~modelem jest dla nich częścią wspólną. Jedyną różnicą pomiędzy obydwoma interfejsami stanowią widoki, co było celem, który udało się osiągnąć.
 
 \subsection{Modele}
+
+W~tworzonej aplikacji można wyróżnić następujące modele:
+\begin{description}
+\item[Patient]
+	Model pacjenta przychodni, składający się z~następujących danych:
+	\begin{itemize}
+		\item imię
+		\item nazwisko
+		\item numer PESEL
+		\item numer telefonu kontaktowego
+		\item nazwa ulicy adresu zamieszkaniu
+		\item numer domu
+		\item numer mieszkania
+		\item miejscowość
+		\item kod pocztowy
+	\end{itemize}
+\item[Doctor]
+	Model lekarza, czyli docelowego użytkownika aplikacji, agregujący następujące dane:
+	\begin{itemize}
+		\item imię 
+		\item nazwisko
+		\item nazwa użytkownika
+		\item hasło
+		\item sól hasła (patrz \ref{sec:sol})
+		\item adres e-mail
+	\end{itemize}
+\item[Visit]
+	Model wizyty, składający się z:
+	\begin{itemize}
+		\item lekarza wykonującego leczenie
+		\item pacjenta poddawanego leczeniu
+		\item daty i~czasu wizyty
+		\item listy wykonanych prac
+		\item dodatkowych informacji w postaci notatek
+	\end{itemize}
+\item[Work]
+	Praca wykonana w~ramach wizyty, w~której istnieje możliwość określenia:
+	\begin{itemize}
+		\item obszar w~jamie ustnej dotyczący wykonanej pracy
+		\item rozpoznanie
+		\item podjęte leczenie
+	\end{itemize}
+	W~aplikacji objęto jedynie przykładowe wartości odpowiadające powyższym składnikom wykonanej pracy, ale dzięki wydzieleniu obszaru w~bazie danych służącemu do ich przetrzymywania, istnieje możliwość aktualizacji dopasowując się do potrzeb danego gabinetu bez konieczności wprowadzania zmian w~kodzie źródłowym. Przykładowe wartości zgodne z~zaleceniami NFZ znaleźć można w~\cite{DzU13} oraz \cite{ICD9}.
+\item[Area]
+	Lista możliwych obszarów leczenia.
+\item[Diagnosis]
+	Lista możliwych obszarów rozpoznań.
+\item[Treatment]
+	Lista możliwych obszarów leczeń.
+\item[Token]
+	Token czasowy umożliwiający reset hasła, w którego skład wchodzą:
+	\begin{itemize}
+		\item lekarz, będący użytkownikiem, który chce zmienić hasło
+		\item czas utworzenia żądania, który posłuży do sprawdzenia ważności tokenu
+	\end{itemize}
+\item[Session]
+	Sesja, jaką nawiązuje użytkownik podczas logowania składająca się z:
+	\begin{itemize}
+		\item zalogowanego w sesji lekarza
+		\item daty i~czasu ostatniej aktywności w~sesji, do obsługi funkcji automatycznego wylogowania w przypadku zbyt długiej przerwy od ostatnio otrzymanego żądania
+	\end{itemize}
+\end{description}
 
 \subsection{Widoki}
 
@@ -171,21 +272,100 @@ ApacheHttpClient
 
 \subsection{Kontrolery}
 
-%TODO CRUD, transakcje, acid?
+W \emph{Play Framework} kontrolery stanowią jednocześnie interfejs Web Service'u typu REST. Jest to również jedyne miejsce, gdzie możliwe jest użycie adnotacji \emph{@Transactional}, która jak wskazuje nazwa służy do oznaczenia zakresu transakcji bazodanowych. W~związku z~tym, wszystkie metody kontrolerów, które zostały udostępnione za pośrednictwem Web Service'u zostały oznaczone tą adnotacją, aby w~razie wystąpienia problemu nastąpił \emph{rollback} obejmujący wszystkie działania na bazie danych od początku wywołania metody przez klienta.
+
+Głównym zadaniem większości ze stworzonych kontrolerów jest umożliwienie aktualizacji i~prezentacji modeli. Implementują one metody pozwalające na:
+
+\begin{itemize}
+	\item Wyświetlenie pojedynczego zasobu
+	\item Wyświetlenie listy zasobów
+	\item Aktualizację, lub utworzenie zasobu
+	\item Usunięcie zasobu
+\end{itemize}
+
+Wymienione funkcjonalności dotyczą następujących kontrolerów, których nazewnictwo odpowiada modelom na jakich operują:
+
+\begin{itemize}
+	\item DoctorController
+	\item PatientController
+	\item VisitController
+\end{itemize}
+
+Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} oraz \emph{TreatmentController}, które umożliwiają jedynie zwrócenie listy zasobów, czyli możliwych wyborów, którymi wypełnione zostaną kontrolki rozwijanej listy (\emph{Combo box}). Takie podejście pozwoli na wprowadzenie aktualizacji, zwiększając lekarzom możliwości wyboru leczeń i diagnoz, bez potrzeby ingerencji w kod źródłowy aplikacji.
+
+Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
 
 \section{Web Service}
 
+Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów RESTful jest ich prostota. Jako że opierają się silnie na HTTP, elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta tego protokołu.
+
 \subsection{API}
 
-``rozdwojenie'' API dla web i mobile
+Interfejsy RESTful zorientowane są na zasoby, odpowiednim podejściem będzie więc zaczęcie od ich identyfikacji. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Interfejs nie musi być wersjonowany, ponieważ jest on tylko do zastosowania wewnętrznego i~nie będzie upubliczniany. Moduł webowy oraz mobilny są jego jedynymi klientami i~stanowią integralną część aplikacji. Z~tego względu pierwszy człon adresu URL będzie od razu jednym z~zasobów, któremu zwykle przydziela się formę liczby mnogiej:
+\begin{itemize}
+	\item /patients
+	\item /doctors
+	\item /visits
+	\item /areas
+	\item /diagnoses
+	\item /treatments
+\end{itemize}
 
-zalecany interfejs restowy a ograniczenia html: brak PUT, DELETE; paginacja w url czy header Range?
+Zgodnie z~ogólnie przyjętą praktyką, o~której można przeczytać w \cite{WApiD}, dla zróżnicowania typów operacji na zasobach wykorzystuje się następujące metody \emph{HTTP}:
+\begin{description}
+	\item[GET] odczytywanie
+	\item[PUT] tworzenie nowej instancji
+	\item[POST] aktualizowanie
+	\item[DELETE] usuwanie
+\end{description}
+
+Posługując się zasobem pacjenta jako przykładem, wyróżnić można następujące zapytania:
+\begin{description}
+\item[GET /patients] odczyt listy pacjentów
+\item[GET /patients/\{id\}] odczyt pacjenta o~identyfikatorze \emph{\{id\}}
+\item[POST /patients] stworzenie nowego pacjenta
+\item[PUT /patients/\{id\}] aktualizacja pacjenta o~identyfikatorze \emph{\{id\}}
+\item[DELETE /patients/\{id\}] usunięcie pacjenta o~identyfikatorze \emph{\{id\}}
+\end{description}
+
+Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje powinny być przekazywane w~parametrach URL, aby nie zanieczyszczać nimi API. Przykładowo filtrowanie listy wizyt dla dnia 22.08.2014 i~aktualnie zalogowanego lekarza przybierze następującą postać:
+\begin{lstlisting}
+GET /visits?showOnlyMine=true&fromDate=22.08.2014&toDate=22.08.2014
+\end{lstlisting}
+
+Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej korzystającej z~\emph{Apache HttpClient} nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów przekształconych metod dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
+Ostateczny interfejs przedstawia listing \ref{lst:routes} zawierający fragment pliku \emph{routes} stosowanego frameworka.
+
+\begin{lstlisting}[caption={Fragment pliku \emph{routes} zawierającego mapowanie wzorców URL interfejsu RESTful do wywoływanych metod kontrolerów w \emph{Play Framework}}, label={lst:routes}]
+GET     /patients                                               controllers.PatientController.list(page: Int ?= 0, query: String ?= null)
+GET     /patients/:id                                           controllers.PatientController.get(id: Long)
+GET     /patients-create                                        controllers.PatientController.create()
+POST    /patients                                                 controllers.PatientController.save()
+GET     /patients-delete/:id                                     controllers.PatientController.remove(id: Long)
+
+GET     /doctors                                                 controllers.DoctorController.list(page: Int ?= 0)
+GET     /doctors/:id                                             controllers.DoctorController.get(id: Long)
+GET     /doctors-create                                          controllers.DoctorController.create()
+POST    /doctors                                                   controllers.DoctorController.save()
+GET     /doctors-delete/:id                                      controllers.DoctorController.remove(id: Long)
+
+GET     /visits                                                  controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long ?= -1)
+GET     /visits/:id                                              controllers.VisitController.get(id: Long)
+GET     /patients/:pId/visits-create                             controllers.VisitController.create(pId: Long)
+POST    /visits                                                  controllers.VisitController.save()
+GET     /visits-delete/:id                                       controllers.VisitController.remove(id: Long)
+
+GET     /areas                                                   controllers.AreaController.list()
+GET     /diagnoses                                               controllers.DiagnosisController.list()
+GET     /treatments                                              controllers.TreatmentController.list()
+\end{lstlisting}
 
 \section{Bezpieczeństwo}
 
 \subsection{Uwierzytelnianie}
+\label{sec:uwierzytelnianie}
 
-Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwieniu dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane przeznaczone dla każdego użytkownika z~osobna.
+Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W~informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwieniu dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane przeznaczone dla każdego użytkownika z~osobna.
 
 W wypadku aplikacji tworzonej w~ramach pracy, proces uwierzytelniania musi zostać zaimplementowany po stronie serwera Dentaise i~być jednakowo stosowany przez strony klienckie - webową oraz mobilną. Należy więc tak dobrać metodę, aby była możliwa do realizacji na tych dwóch różnych platformach.
 
@@ -216,7 +396,7 @@ Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4
 Cookie: JSESSIONID=589E30C58F80986353A1C6A6B9BC02ED
 \end{lstlisting}
 
-Jak się okazuje podczas analizy żądania po stronie serwera, dotyczy ono chronionego zasobu. Sposób w jaki określa się, które zasoby są chronione przybliżony został w podrozdziale \ref{sec:ochronaWybranychZasobow}. W tym momencie wystarczy wiedzieć, że w wypadku \emph{Basic Access Authentication}, dzięki temu, że należy do standardu HTTP większość serwerów WWW i kontenerów aplikacji pozwala na wygodną konfigurację poprzez wpisanie adresów URL mających być pokrytymi ochroną, oraz sprecyzowanie listy użytkowników wraz z hasłami dostępu. Ewidentną wadą tego podejścia jest statyczna baza użytkowników, nic jednak nie stoi na przeszkodzie, aby utworzyć własną implementację opisywanego schematu po stronie aplikacji webowej.
+Jak się okazuje podczas analizy żądania po stronie serwera, dotyczy ono chronionego zasobu. Sposób w jaki określa się, które zasoby są chronione przybliżony został w podrozdziale \ref{sec:ochronaWybranychZasobow}. W tym momencie wystarczy wiedzieć, że w wypadku \emph{Basic Access Authentication}, dzięki temu, że należy do standardu HTTP większość serwerów WWW i kontenerów aplikacji pozwala na wygodną konfigurację poprzez wpisanie adresów URL mających być pokrytymi ochroną, oraz sprecyzowanie listy użytkowników wraz z hasłami dostępu. Ewidentną wadą tego podejścia jest statyczna baza użytkowników\footnote{Niektóre kontenery, na przykład \emph{Tomcat}, pozwalają również na zdefiniowanie połączenia z bazą danych z poziomu pliku konfiguracyjnego, celem uwierzytelniania użytkowników}, nic jednak nie stoi na przeszkodzie, aby utworzyć własną implementację opisywanego schematu po stronie aplikacji webowej.
 
 Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z \cite{BDA99} nazwa strefy może być dowolna i jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
 \begin{lstlisting}
@@ -444,7 +624,7 @@ Ważną cechą zarówno funkcji skrótu jak i~soli jest ich nieprzewidywalność
 
 \paragraph{Przykład}
 
-W~implementowanej aplikacji do bezpiecznego przechowywania skrótów haseł zdecydowano się na wykorzystanie algorytmu \emph{PBKDF2}. Poniższy listing przestawia klasę realizującą zadanie przekształcania haseł do skrótów z~wykorzystaniem soli.
+W~implementowanej aplikacji do bezpiecznego przechowywania skrótów haseł zdecydowano się na wykorzystanie algorytmu \emph{PBKDF2}. Poniższy listing przedstawia klasę realizującą zadanie przekształcania haseł do skrótów z~wykorzystaniem soli.
 
 \begin{lstlisting}[language=Java]
 package controllers;
@@ -495,12 +675,6 @@ public class PasswordHashing {
 		return bigInteger.toString(16);
 	}
 	
-	public static void main(String[] args) {
-		String salt = generateSalt();
-		String hash = hash("s3cret", salt);
-		System.out.println(salt + " " + hash);
-	}
-	
 }
 \end{lstlisting}
 
@@ -512,6 +686,8 @@ public class PasswordHashing {
 Sesja służy do identyfikacji użytkownika łączącego się z~usługą po etapie logowania oraz pozwala na wymuszenie ponownego uwierzytelnienia się po upłynięciu zbyt długiego czasu od ostatniego otrzymanego żądania. Dodatkową zaletą jest wzrost wydajności, poprzez brak konieczności wywoływania kosztownej operacji funkcji skrótu na haśle użytkownika, które w~przeciwnym wypadku dołączane by było do każdego żądania.
 
 \paragraph{Cookies}
+\label{sec:cookies}
+
 Po zalogowaniu klient musi automatycznie wysyłać wszystkie żądania wraz z~przydzielonym mu identyfikatorem sesji. Ze względu na to, iż protokół \emph{HTTP} jest bezstanowy, wykorzystuje się w~tym celu \emph{Cookies} (ciasteczka). Jak można przeczytać w~\cite{MsC} służą one do przechowywania ogólnego zbioru  informacji dotyczących klienta, takich jak zawartość jego koszyka (w wypadku serwisu realizującego funkcjonalność sklepu internetowego), ustawień dotyczących odwiedzanej witryny, czy jego stanu. Dla przykładu klient może zmienić preferencje widoku strony internetowej, takie jak kolor tła. Dane te są początkowo przesyłane w~zapytaniu \emph{HTTP} do serwera, na przykład przy pomocy formularza \emph{HTML} i~metody \emph{POST}. Po stronie serwera następuje ich analiza i~tłumaczenie na polecenia ustawiające je jako ciasteczka na maszynie klienta. W~kolejnych zapytaniach ustawienia te są dołączane do wszystkich żądań, dzięki czemu strona wyświetla się zawsze w~kolorze wybranym przez użytkownika.
 
 Zgodnie z~\cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dwóch nagłówków protokołu \emph{HTTP}:
@@ -610,7 +786,7 @@ Z~punktu widzenie bezpieczeństwa najważniejsze jest, aby ciasteczko przechowuj
 \paragraph{Identyfikator}
 \label{sec:identyfikator}
 
-Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o~to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny identyfikator może uzyskać dostęp do chronionych zasobów, więc jej poprawne użycie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
+Użycie identyfikatora sesji pozwala na komunikację bez przesyłania hasła, więc należy zadbać o~to, aby był on odpowiednio bezpieczny. Każda osoba znająca (lub zgadująca) poprawny identyfikator może uzyskać dostęp do chronionych zasobów, więc jego poprawne zastosowanie jest równie ważne co obsługa początkowej fazy uwierzytelniania.
 
 Jednym z~najważniejszych sposobów zminimalizowania prawdopodobieństwa odgadnięcia identyfikatora sesji jest ustalenie jego odpowiedniej długości. Zarówno \cite{SId} jak i~\cite{SeMa08} zalecają minimum 128-bitowy identyfikator.
 
@@ -620,15 +796,15 @@ Dla lepszego zobrazowania bezpieczeństwa identyfikatora respektującego przedst
 
 $\frac{2^{B} + 1}{2A \cdot S}$
 
-gdzie \emph{A} jest liczbą prób zgadnięć identyfikatora, które atakujący jest w~stanie przeprowadzić w~ciągu sekundy, \emph{B} jest liczbą bitów entropii w~identyfikatorze, a \emph{S} to liczba identyfikatorów sesji, które są aktualnie akceptowalne do użycia, czyli w~poprawnie funkcjonującym systemie jest to liczba aktualnie zalogowanych użytkowników.
+gdzie \emph{A} jest liczbą prób zgadnięć identyfikatora, które atakujący jest w~stanie przeprowadzić w~ciągu sekundy, \emph{B} jest liczbą bitów entropii w~identyfikatorze, a~\emph{S} to liczba identyfikatorów sesji, które są aktualnie akceptowalne do użycia, czyli w~poprawnie funkcjonującym systemie jest to liczba aktualnie zalogowanych użytkowników.
 
-Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacuje się, że liczba bitów entropii w~\emph{CSPRNG} to połowa \cite{SId}; $128/2=64$), a~pod S $2000$ otrzymujemy $4,611686018\cdot10^{12}$ sekund, czyli $146235,604338768$ lat. Warto dodać, że podstawione wartości były znacznie zawyżone. Tak duża ilość zapytań z~pewnością zostałaby zablokowana przez firewall, a~liczbę użytkowników zalogowanych na raz w przypadku tworzonego systemu szacuje się na maksymalnie kilku.
+Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacuje się, że liczba bitów entropii w~\emph{CSPRNG} to połowa \cite{SId,SMC}; $128/2=64$), a~pod S $2000$ otrzymujemy $4,611686018\cdot10^{12}$ sekund, czyli $146235,604338768$ lat. Warto dodać, że podstawione wartości były znacznie zawyżone. Tak duża ilość zapytań z~pewnością zostałaby zablokowana przez firewall, a~liczbę użytkowników zalogowanych na raz w przypadku tworzonego systemu szacuje się na maksymalnie kilku.
 
 %TODO wireshark, przykład
 
 \subsection{Reset hasła}
 
-Usługa resetowania zapomnianego hasła, zaimplementowana w~niewłaściwy sposób może prowadzić do bardzo prostych ataków na konta użytkowników, bez konieczności posiadania dużej wiedzy w dziedzinie bezpieczeństwa. Przykładem tego jest sytuacja opisana w~\cite{FbB}, która dotyczy popularnego portalu społecznościowego jakim jest \emph{facebook}.
+Usługa resetowania zapomnianego hasła, zaimplementowana w~niewłaściwy sposób może prowadzić do bardzo prostych ataków na konta użytkowników, bez konieczności posiadania dużej wiedzy w~dziedzinie bezpieczeństwa. Przykładem tego jest sytuacja opisana w~\cite{FbB}, która dotyczy popularnego portalu społecznościowego jakim jest \emph{facebook}.
 
 Kiedy dowolny użytkownik chciał zresetować swoje hasło został przekierowywany na stronę o~adresie
 \begin{lstlisting}
@@ -648,17 +824,98 @@ Oczywiście należy pamiętać, że tak jak w przypadku soli, czy identyfikatora
 \subsection{Ochrona wybranych zasobów}
 \label{sec:ochronaWybranychZasobow}
 
-zwykłe podejście czyli chroniony url (trochę o podejściu klasycznym tzn. ochrona url bez wiedzy aplikacji z logowaniem jako osobny niechroniony moduł) vs adnotacje
-@Secured, przekierowania, sesja (krótko, więcej w osobnym rozdziale)
+Kiedy użytkownik otwiera stronę internetową w~przeglądarce, żądanie trafia do kontenera aplikacji (dla przykładu \emph{Tomcat}) parsuje jego adres URL i~kieruje do odpowiedniej aplikacji. Następnie jest ono kierowane do jednego z~jej zasobów (np. serwletu), według definicji znajdujących się w~deskryptorze \emph{web.xml} aplikacji. Twórca systemu ma możliwość zdecydowania, na którym etapie chce sprawdzić autentyczność klienta.
 
+W przedstawionym przykładzie znacznie lepszym podejściem byłoby wykonanie tej operacji już na etapie rozpatrywania żądania przez kontener. Jego konfiguracja pozwala na zdefiniowanie przestrzeni adresów URL, które mają być chronione\footnote{W najprostszych przypadkach, takich jak implementowany system jest to cała aplikacja, na przykład: ``/dentaise'', gdzie automatycznie chronione byłyby również podzasoby, to znaczy ``/dentaise/doctors/'' itp\ldots}. W przeciwnym wypadku programista musiałby pamiętać o~sprawdzeniu danych uwierzytelniających w~każdym zasobie, do którego można się dostać z~zewnątrz, włączając w~to wszystkie podstrony i~metody WebService'ów. Takie podejście narażałoby aplikację na poważne luki w~bezpieczeństwie i byłoby niewygodne w rozwoju.
+
+Kontener \emph{Tomcat} pozwala na konfigurację opisywanych w~pracy schematów \emph{Basic}, \emph{Digest}, oraz \emph{Form}. W przypadku realizowanej metody \emph{Form Access Authentication} poprawnym sposobem byłoby zdefiniowanie w~deskryptorze \emph{web.xml} relatywnych ścieżek do stron z~formularzem logowania oraz informacją o~błędzie i~zdefiniowanie połączenia \emph{JDBC} do bazy danych, wraz z~ustaleniem nazw tabel i~kolumn potrzebnych do przeprowadzenia operacji uwierzytelniania. Dokładny sposób konfiguracji tego przypadku opisany został w~\cite{JRUA}.
+
+Nie zawsze jednak uwierzytelnianie po stronie aplikacji, zamiast kontenera jest złym podejściem. W~wyjątkowych przypadkach może być ono realizowane przez wykorzystywany \emph{framework}. Istnieje również możliwość zaimplementowania własnych mechanizmów chroniących zasoby\footnote{Implementacja powinna jednak pozwalać na wygodne jej wykorzystanie, na przykład przy pomocy adnotacji jak jest to zrealizowane w~wypadku \emph{Play Framework}. Pozwoli to uchronić się przed pamiętaniem o~przeprowadzeniu operacji uwierzytelniania w~każdej metodzie.}, dopóki tylko posiada się dostęp do oryginalnego żądania.
+
+Implementowana aplikacja w celu uwierzytelniania korzysta z~adnotacji dostępnych w~\emph{Play Framework}. Utworzona została klasa respektująca zalecenia opisane w rozdziale \ref{sec:uwierzytelnianie}, która sprawdza stan sesji użytkownika jeśli kontroler lub wywoływana w nim metoda są adnotowane \emph{@Secured}. Jeżeli użytkownik nie przesłał w Cookie identyfikatora sesji, zostanie przekierowany do strony logowania. W przeciwnym wypadku z~bazy danych dla otrzymanego identyfikatora pobierany jest czas ostatniej akcji w sesji i~jeśli nie przekroczył on ustalone 30 minut, zostaje odświeżony do aktualnego, a~użytkownikowi wyświetlona zostają pożądana podstrona. Po przekroczeniu półgodzinnego limitu braku akcji, użytkownik przy próbie wysłania żądania zostaje wylogowany i~skierowany do strony logowania.
+ 
 \subsection{HTTPS}
+\label{sec:https}
 
-używane cały czas, nie tylko przy logowaniu (sessionId jest hasłem!)
+Szyfrowanie ruchu jest niezmiernie ważnym elementem bezpieczeństwa. Jest to szczególnie istotne podczas procesu logowania, ponieważ w~wybranym schemacie dane uwierzytelniające przesyłane są w~czystej postaci. Nie należy jednak ograniczać się do zabezpieczenia tylko tego etapu korzystania z~usługi. Po zalogowaniu się użytkownik nie przesyła już swojego hasła, ale posługuje się identyfikatorem sesji, który w tym wypadku jest równie poufną informacją. W~przypadku podsłuchania ruchu, atakujący będzie mógł przejąć kontrolę nad kontem użytkownika podstawiając w~Cookie jego identyfikator sesji. Serwer nie będzie miał możliwości zweryfikować czy komunikuje się z~nim inna osoba, ponieważ identyfikator jest jedynym elementem potrafiącym je rozróżnić i w~wypadku gdy jest taki sam, z~punktu widzenia serwera jest to również ten sam użytkownik. Dodatkowym zabezpieczeniem mogłoby być przetrzymywanie w~bazie danych adresu IP z~jakiego łączy się klient i~sprawdzanie czy nie zmienił się przy kolejnych żądaniach. Nie ma jednak takiej konieczności jeśli odpowiednio zadba się o~szyfrowanie komunikacji. 
+
+%TODO HTTPS w play
 
 \subsection{SQL Injection}
 
-\subsection{XSS}
+Najpopularniejszym rodzajem ataku ukierunkowanym w~stronę luk bezpieczeństwa znajdującym się w~warstwie połączenia z~bazą danych bez wątpienia jest \emph{SQL Injection}. Metoda pozwala na modyfikację zapytań, które częściowo składają się z~danych podawanych przez użytkownika.
 
+Przykład przedstawiony w~\cite{PSqlI} wykorzystuje atak, aby zalogować się w~usłudze bez znajomości nazwy użytkownika i~hasła, wypełniając jedynie w~odpowiedni sposób pola dostępne w~formularzu. Do przytoczonego przykładu warto dodać, że po stronie serwera uwierzytelnianie odbywa się przy pomocy zapytania języka \emph{SQL} uformowanego poprzez konkatenację wartości stałych ze zmiennymi dostarczonymi od klienta, na wzór poniższej instrukcji.
+
+\begin{lstlisting}[language=Java]
+String query = "SELECT * FROM users WHERE login='" + login + "' AND pwd='" + password + "'";
+\end{lstlisting}
+
+Zmienne \emph{login} oraz \emph{password} zaczerpnięte są z~formularza i~kiedy użytkownik wypełni go wartościami \emph{adam} i~\emph{s3cret} powyższy ciąg znaków zostanie złożony w~następującą całość.
+
+\begin{lstlisting}[language=SQL]
+SELECT * FROM users WHERE login='adam' AND pwd='s3cret'
+\end{lstlisting}
+
+Tabela użytkowników sprawdzona zostanie pod kątem przekazanych danych i~jeśli obydwie wartości będą się zgadzać zwrócony zostanie wiersz, który będzie odpowiadał właśnie zalogowanemu użytkownikowi.
+
+Jeżeli jednak w polu użytkownika podany zostanie ciąg [\lstinline$' OR 1=1 --$]\footnote{W języku \emph{SQL} ciąg znaków [\lstinline$--$] rozpoczyna komentarz, więc dalsza część zapytanie zostanie zignorowana}, a w~polu hasła [\lstinline$ $] ostatecznie zapytanie przybierze poniższą postać.
+
+\begin{lstlisting}[language=SQL]
+SELECT * FROM users WHERE login='' OR 1=1 --' AND pwd=' '
+\end{lstlisting}
+
+Powyższa instrukcja jest logicznie tożsama z pobraniem listy wszystkich użytkowników, więc uwierzytelnienie powiedzie się i atakujący zostanie zalogowany.
+
+W~celu uchronienia się przed tą metodą należy unikać ręcznej konkatenacji zapytań. W~\cite{sql-injection-prevention-cheat-sheet} wyszczególnia się następujące trzy sposoby poprawnej komunikacji z~bazą danych:
+
+\begin{description}
+\item[Zapytania parametryzowane] \hfill \\
+W~odróżnieniu od podejścia zaprezentowanego w~przykładzie, gdzie całe zapytanie składane jest ręcznie, polegają one na wcześniejszym przygotowaniu kwerendy, uwzględniając w~niej niewiadome, których wartości zostaną dostarczone w czasie późniejszym. Takie podejście pozwala na automatyczne sprawdzenie dostarczanych danych pod kątem zawartości znaków pozwalających na modyfikację zapytania.
+\item[Procedury składowane] \hfill \\
+Podobnie jak zapytania parametryzowane pozwala na wcześniejszą definicję kwerendy, z~tą różnicą, że będzie ona przetrzymywana po stronie bazy danych.
+\item[Sekwencja ucieczki] \hfill \\
+Wszelkie specjalne znaki zostaną poprzedzone przez znak ucieczki, przez co cały wkład użytkownika zostanie potraktowany jako jedna wartość. W omówionym przykładzie atakującemu nie udałoby się zamknąć warunku sprawdzenia loginu więc cały ciąg [\lstinline$' OR 1=1 --$] wykorzystany zostanie jako nazwa użytkownika do wyszukania.
+\end{description}
+
+W~implementowanej aplikacji do konstrukcji kwerend wykorzystano bezpieczne zapytania parametryzowane oraz \emph{JPA\footnote{Java Persistence API} Criteria API}. W~zamieszczonym poniżej listingu zawarto przykład wyszukiwania lekarzy o~danym adresie e-mail z~wykorzystaniem zapytań parametryzowanych.
+
+\begin{lstlisting}[language=Java]
+TypedQuery<Doctor> query = JPA.em().createQuery("FROM Doctor d WHERE d.email=:email", Doctor.class);
+query.setParameter("email", email);
+List<Doctor> doctors = query.getResultList();
+\end{lstlisting}
+
+\subsection{Cross-site scripting}
+
+Atak, zapisywany często również jako \emph{XSS} lub \emph{CSS}\footnote{Nie mylić z Cascading Style Sheets, językiem służącym do opisu prezentacji stron WWW}, który podobnie jak \emph{SQL Injection} pozwala na wstrzyknięcie złośliwego kodu. Ukierunkowany jest on na stronę kliencką i~jego najczęstszym celem jest wykradnięcie poufnych danych, na przykład znajdujących się w~Cookies, zwykle poprzez dodanie kodu \emph{JavaScript}, który uruchomiony zostanie w przeglądarce ofiary \cite{XSSE}.
+
+Wstrzyknięty kod może zostać opublikowany na stronie, przykładowo w~zamieszonym komentarzu do wpisu bloga. Ofiarą staje się wtedy każdy odwiedzający stronę WWW, ponieważ atakujący może w~ten próbować dostać się do zawartości Cookies i~przesyłać ją w ustalone przez siebie miejsce, bez świadomości atakowanego użytkownika. Dlatego niezmierne ważne jest również zabezpieczenie się przed nieuprawnionym dostępem do Cookies, co opisane zostało w~podrozdziale \ref{sec:cookies}. Oczywiście prawidłowa ochrona przed atakiem \emph{Cross-site Scripting} również skutecznie powstrzyma atak, ale niewłaściwa konfiguracja ciasteczek może przyczynić się do umożliwienia dostępu do nich spoza własnej usługi, gdzie taki atak będzie możliwy.
+
+Aby skutecznie obronić się przed atakiem \emph{Cross-site Scripting}, należy zapewnić podmianę znaków specjalnych w~danych przesyłanych przez użytkowników, tak aby nie były traktowane jako część dokumentu \emph{HTML}, a~ciąg znaków do wyświetlenia.
+
+\emph{Play Framework} domyślnie koduje znaki w danych przesyłanych pomiędzy kontrolerem, a szablonem strony. Dla pewności wykonano testy dostępne w \cite{XSST}. W polu notatek okna wizyty wklejono następującą treść.
+
+\begin{lstlisting}[language=HTML]
+';alert(String.fromCharCode(88,83,83))//';alert(String.fromCharCode(88,83,83))//";
+alert(String.fromCharCode(88,83,83))//";alert(String.fromCharCode(88,83,83))//--
+></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83))</SCRIPT>
+\end{lstlisting}
+
+Jeżeli atak się powiedzie, po odświeżeniu strony powinno pojawić się okienko z~treścią ``XSS''. Strona wyświetliła się poprawnie wyświetlając znaki wprowadzone przez użytkownika, nie interpretując nowej funkcjonalności ze wstrzykniętego kodu. Po zaglądnięciu w źródło strony rzeczywiście okazało się, że znaki specjalne zostały poprawnie zakodowane.
+
+\begin{lstlisting}[language=HTML]
+<div class="form-group">
+    <label for="notes" class="col-lg-2 control-label">Notatki</label>
+    <div class="col-lg-10">
+        <textarea name="notes" placeholder="Dodatkowe informacje..." class="form-control" rows="5">&#x27;;alert(String.fromCharCode(88,83,83))//&#x27;;alert(String.fromCharCode(88,83,83))//&quot;;
+
+alert(String.fromCharCode(88,83,83))//&quot;;alert(String.fromCharCode(88,83,83))//--
+
+&gt;&lt;/SCRIPT&gt;&quot;&gt;&#x27;&gt;&lt;SCRIPT&gt;alert(String.fromCharCode(88,83,83))&lt;/SCRIPT&gt;</textarea>
+    </div>
+</div>
+\end{lstlisting}
 
 %----------------------------------------------------------------------------
 
@@ -696,8 +953,6 @@ baseUrl, smtp.host, database itp...
 % \include{dodatekA}
 % \include{dodatekB}
 % itd.
-
-\label{cha:bibliografia}
 
 \bibliographystyle{alpha}
 \bibliography{bibliografia}

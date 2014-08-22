@@ -24,7 +24,7 @@ public class DoctorController extends Controller {
 		@Override
 		public <S, T> void applyOrder(CriteriaBuilder builder,
 				CriteriaQuery<S> criteriaQuery, Root<T> root) {
-			criteriaQuery.orderBy(builder.asc(root.get("surname")));
+			criteriaQuery.orderBy(builder.asc(root.get("surname")), builder.asc(root.get("forename")), builder.asc(root.get("username")));
 		}
 		
 		@Override

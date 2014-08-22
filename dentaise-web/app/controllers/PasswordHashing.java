@@ -46,10 +46,4 @@ public class PasswordHashing {
 		return bigInteger.toString(16);
 	}
 	
-	public static void main(String[] args) {
-		String salt = generateSalt();
-		String hash = hash("s3cret", salt);
-		System.out.println(salt + " " + hash);
-	}
-	
 }
