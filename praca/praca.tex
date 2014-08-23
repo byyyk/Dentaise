@@ -73,10 +73,21 @@ literate={ą}{{\k{a}}}1
 \setlength{\cftsecnumwidth}{10mm}
 
 %---------------------------------------------------------------------------
-%TODO Cytaty ``''
+\long\def\/*#1*/{}
+%Cytaty ``''
+%obrazki 
+\/*
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\linewidth * 4/5]{MVC-MOBILE}
+	\caption{Schemat MVC z wyszczególnieniem platformy mobilnej}
+	\label{fig:mvc-mobile}
+\end{figure}
+*/
+
+
 %TODO Content Negotiation
 %TODO StringEntity entity = new StringEntity(mapper.writeValueAsString(patient), HTTP.UTF_8);
-%TODO Maintenece - spójność api - latwiejsze w utrzymaniu, klient ma tylko widok i pobiera dane z ws łącznie ze zdefiniowanymi leczeniami/rozpoznaniami. Dzięki temu nie trzeba będzie aktualizować obydwu aplikacji, a jedynie zdefiniować nowe leczenie/rozpoznanie po stronie serwera. Gdyby api było zewnętrzne to warto by się pokusić o oddzielny interjefs, skoro jest tylko wew. wygodniej będzie utrzymywać jeden
 %TODO ajax, jquery?
 %TODO play - formularze z zagnieżdżonymi obiektami oraz listami
 %TODO? hibernate, jackson, lazy-load (VisitController.list)
@@ -129,26 +140,127 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 
 %----------------------------------------------------------------------------
 
-\chapter{Dobór technologii i narzędzi}
+\chapter{Projekt}
 \label{cha:dobor_technologii_i_narzedzi}
 
-W rozdziale tym opisane zostały technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami.
+%TODO dopisać o projektowaniu interfejsów
+W~rozdziale tym opisane zostały technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami.
 
 %TODO dopisać coś o Javie
 
 \section{Baza Danych}
+
+Charakter tworzonej aplikacji wymaga, aby dane jakie będą tworzyć i~modyfikować użytkownicy były zapamiętane pomiędzy sesjami klienta, a~także muszą być dostępne i~spójne, niezależnie od tego czy osoba korzystająca z~usługi łączy się z~nią każdorazowo przy pomocy tego samego komputera. Dane uzupełniane w~systemie muszą być również identyczne dla każdego użytkownika, to znaczy muszą oni mieć możliwość przeglądania treści dodawanych przez inne osoby. Z~tego powodu niezbędne jest przetrzymywanie ich po stronie serwera za pomocą bazy danych.
+
 \subsection{System zarządzania relacyjnymi bazami danych}
+
+Spośród różnych dostępnych typów baz danych zdecydowano się na relacyjną bazę \emph{PostgreSQL}. Cechuje się ona dużą niezawodnością i~jest w pełni darmowa nawet w~przypadku użytku komercyjnego. Jej popularność, a~zatem i~duże wsparcie ze strony społeczności, będzie również zaletą w razie wystąpienia nieoczekiwanych problemów.
+
+Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania o nazwie \emph{pgadmin}. Przy jego pomocy nadzorowanie i modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
+
 \subsection{Mapowanie obiektowo-relacyjne}
+
+W relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można przyrównać do prostej postaci tabularnej, gdzie dane przetrzymywane są bez informacje o~typach innych danych powiązanych z~nimi. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
+
+Dostęp do bazy danych w~języku Java zapewniony jest przez technologię JDBC\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań SQL, będących z punktu widzenia kompilatora jedynie ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~ poprawności zapytań co może doprowadzić do nieobliczalnych błędów oraz trudności w rozwoju i~ utrzymaniu kodu.
+
+Mapowanie obiektowo-relacyjne rozwiązuje ten problem poprzez automatyczne zarządzanie niższą warstwą trwałości na podstawie zdefiniowanego przez programistę interfejsy obiektowego. Narzędzia generowania schematów baz danych tworzą całą strukturę, którą konfiguruje się przy pomocy adnotacji encji, będących zwykle prostymi obiektami POJO\footnote{Plain Old Java Object}. Tak utworzone API jest gotowe do wykorzystania jako warstwa trwałości danych.
+
+Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA} dostarczany wraz z \emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów co pozytywnie wpływanie na utrzymanie projektu. Więcej na temat mapowania relacyjno-obiektowego można przeczytać w \cite{HORM}.
+
+\subsection{Schemat bazy danych}
+
+Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana zostanie w~logice biznesowej aplikacji wygenerowano schemat bazy danych przedstawiony na rysunku \ref{fig:dbschema}. Znaczenie tabeli ma swoje odwzorowanie w obiektach modelu, które zostały bardziej przybliżone w~podrozdziale \ref{sec:modele} przy okazji omawiania szczegółów implementacji.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[height=\textheight * 4/5]{dbschema}
+	\caption{Graficzna reprezentacja schematu bazy danych wygenerowana przy pomocy aplikacji \emph{SchemaSpy}}.
+	\label{fig:dbschema}
+\end{figure}
+
+
 \section{Web Service}
+
+Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z tego samego zbioru danych co aplikacja webowa. 
+
 \subsection{Protokół}
 \subsubsection{SOAP}
 \subsubsection{REST}
 \subsubsection{Wybór i uzasadnienie}
 \subsection{Serializacja}
 jackson
+\subsection{API}
+
+%TODO przenieść gdzieś ten akapit???
+Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów RESTful jest ich prostota. Jako że opierają się silnie na HTTP, elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta tego protokołu. Dzięki temu nie sprawi to problemu w użytkowaniu go również po stronie aplikacji mobilnej. Między wykorzystanym w nim kliencie protokołu HTTP, a przeglądarką internetową istnieją jednak pewne różnice, które trzeba mieć na uwadze przy projektowaniu interfejsu.
+
+Interfejsy RESTful zorientowane są na zasoby, odpowiednim podejściem będzie więc zaczęcie od ich identyfikacji. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Interfejs nie musi być wersjonowany, ponieważ jest on tylko do zastosowania wewnętrznego i~nie będzie upubliczniany. Moduł webowy oraz mobilny są jego jedynymi klientami i~stanowią integralną część aplikacji. Z~tego względu pierwszy człon adresu URL będzie od razu jednym z~zasobów, któremu zwykle przydziela się formę liczby mnogiej:
+\begin{itemize}
+	\item /patients
+	\item /doctors
+	\item /visits
+	\item /areas
+	\item /diagnoses
+	\item /treatments
+\end{itemize}
+
+Zgodnie z~ogólnie przyjętą praktyką, o~której można przeczytać w \cite{WApiD}, dla zróżnicowania typów operacji na zasobach wykorzystuje się następujące metody \emph{HTTP}:
+\begin{description}
+	\item[GET] odczytywanie
+	\item[PUT] tworzenie nowej instancji
+	\item[POST] aktualizowanie
+	\item[DELETE] usuwanie
+\end{description}
+
+Posługując się zasobem pacjenta jako przykładem, wyróżnić można następujące zapytania:
+\begin{description}
+\item[GET /patients] odczyt listy pacjentów
+\item[GET /patients/\{id\}] odczyt pacjenta o~identyfikatorze \emph{\{id\}}
+\item[POST /patients] stworzenie nowego pacjenta
+\item[PUT /patients/\{id\}] aktualizacja pacjenta o~identyfikatorze \emph{\{id\}}
+\item[DELETE /patients/\{id\}] usunięcie pacjenta o~identyfikatorze \emph{\{id\}}
+\end{description}
+
+Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje, uściślające sposób wykonania operacji, powinny być przekazywane w~parametrach URL, aby nie zanieczyszczać nimi API. Przykładowo filtrowanie listy wizyt dla dnia 22.08.2014 i~aktualnie zalogowanego lekarza przybierze następującą postać:
+\begin{lstlisting}
+GET /visits?showOnlyMine=true&fromDate=22.08.2014&toDate=22.08.2014
+\end{lstlisting}
+
+Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej korzystającej z~\emph{Apache HttpClient} nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów przekształconych metod dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
+Ostateczny interfejs przedstawia listing \ref{lst:routes} zawierający fragment pliku \emph{routes} stosowanego frameworka.
+
+\begin{lstlisting}[caption={Fragment pliku \emph{routes} zawierającego mapowanie wzorców URL interfejsu RESTful do wywoływanych metod kontrolerów w \emph{Play Framework}}, label={lst:routes}]
+GET     /patients                                               controllers.PatientController.list(page: Int ?= 0, query: String ?= null)
+GET     /patients/:id                                           controllers.PatientController.get(id: Long)
+GET     /patients-create                                        controllers.PatientController.create()
+POST    /patients                                                 controllers.PatientController.save()
+GET     /patients-delete/:id                                     controllers.PatientController.remove(id: Long)
+
+GET     /doctors                                                 controllers.DoctorController.list(page: Int ?= 0)
+GET     /doctors/:id                                             controllers.DoctorController.get(id: Long)
+GET     /doctors-create                                          controllers.DoctorController.create()
+POST    /doctors                                                   controllers.DoctorController.save()
+GET     /doctors-delete/:id                                      controllers.DoctorController.remove(id: Long)
+
+GET     /visits                                                  controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long ?= -1)
+GET     /visits/:id                                              controllers.VisitController.get(id: Long)
+GET     /patients/:pId/visits-create                             controllers.VisitController.create(pId: Long)
+POST    /visits                                                  controllers.VisitController.save()
+GET     /visits-delete/:id                                       controllers.VisitController.remove(id: Long)
+
+GET     /areas                                                   controllers.AreaController.list()
+GET     /diagnoses                                               controllers.DiagnosisController.list()
+GET     /treatments                                              controllers.TreatmentController.list()
+\end{lstlisting}
+
+
 \section{Moduł web}
 \subsection{Back-end}
 playframework
+%play ma hibernate
+%play ma jackson
+%play ma rest
 \subsection{Front-end}
 bootstrap, javascript, jquery, html, css
 \section{Moduł mobile}
@@ -164,6 +276,8 @@ ApacheHttpClient
 
 \chapter{Implementacja}
 \label{cha:implementacja}
+
+%TODO mobile? klient ws (logowanie), propertiesy (persistence), appcompat
 
 Podczas implementacji systemu tworzonego w~ramach pracy dołożono wszelkich starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~dalszej części pracy. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
 
@@ -198,7 +312,8 @@ Aplikacje Android nie wykorzystują dokumentów HTML do prezentacji\footnote{Pla
 
 Na przedstawionych schematach widać, że rozdwojenie usługi na platformę mobilną i~webową zaczyna się dopiero za warstwą kontrolera, który razem z~modelem jest dla nich częścią wspólną. Jedyną różnicą pomiędzy obydwoma interfejsami stanowią widoki, co było celem, który udało się osiągnąć.
 
-\subsection{Modele}
+\section{Modele}
+\label{sec:modele}
 
 W~tworzonej aplikacji można wyróżnić następujące modele:
 \begin{description}
@@ -262,15 +377,19 @@ W~tworzonej aplikacji można wyróżnić następujące modele:
 	\end{itemize}
 \end{description}
 
-\subsection{Widoki}
+\section{Widoki}
 
 %jedyne miejsce zmienne dla urządzeń!!
 
-\subsubsection{Web}
+\subsection{Web}
 
-\subsubsection{Mobile}
+\subsection{Mobile}
 
-\subsection{Kontrolery}
+\subsection{User Experience}
+układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalendarz, wyszukiwarka, paginacja, (walidacja PESEL??)
+%----------------------------------------------------------------------------
+
+\section{Kontrolery}
 
 W \emph{Play Framework} kontrolery stanowią jednocześnie interfejs Web Service'u typu REST. Jest to również jedyne miejsce, gdzie możliwe jest użycie adnotacji \emph{@Transactional}, która jak wskazuje nazwa służy do oznaczenia zakresu transakcji bazodanowych. W~związku z~tym, wszystkie metody kontrolerów, które zostały udostępnione za pośrednictwem Web Service'u zostały oznaczone tą adnotacją, aby w~razie wystąpienia problemu nastąpił \emph{rollback} obejmujący wszystkie działania na bazie danych od początku wywołania metody przez klienta.
 
@@ -295,70 +414,7 @@ Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} o
 
 Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
 
-\section{Web Service}
 
-Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów RESTful jest ich prostota. Jako że opierają się silnie na HTTP, elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta tego protokołu.
-
-\subsection{API}
-
-Interfejsy RESTful zorientowane są na zasoby, odpowiednim podejściem będzie więc zaczęcie od ich identyfikacji. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Interfejs nie musi być wersjonowany, ponieważ jest on tylko do zastosowania wewnętrznego i~nie będzie upubliczniany. Moduł webowy oraz mobilny są jego jedynymi klientami i~stanowią integralną część aplikacji. Z~tego względu pierwszy człon adresu URL będzie od razu jednym z~zasobów, któremu zwykle przydziela się formę liczby mnogiej:
-\begin{itemize}
-	\item /patients
-	\item /doctors
-	\item /visits
-	\item /areas
-	\item /diagnoses
-	\item /treatments
-\end{itemize}
-
-Zgodnie z~ogólnie przyjętą praktyką, o~której można przeczytać w \cite{WApiD}, dla zróżnicowania typów operacji na zasobach wykorzystuje się następujące metody \emph{HTTP}:
-\begin{description}
-	\item[GET] odczytywanie
-	\item[PUT] tworzenie nowej instancji
-	\item[POST] aktualizowanie
-	\item[DELETE] usuwanie
-\end{description}
-
-Posługując się zasobem pacjenta jako przykładem, wyróżnić można następujące zapytania:
-\begin{description}
-\item[GET /patients] odczyt listy pacjentów
-\item[GET /patients/\{id\}] odczyt pacjenta o~identyfikatorze \emph{\{id\}}
-\item[POST /patients] stworzenie nowego pacjenta
-\item[PUT /patients/\{id\}] aktualizacja pacjenta o~identyfikatorze \emph{\{id\}}
-\item[DELETE /patients/\{id\}] usunięcie pacjenta o~identyfikatorze \emph{\{id\}}
-\end{description}
-
-Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje powinny być przekazywane w~parametrach URL, aby nie zanieczyszczać nimi API. Przykładowo filtrowanie listy wizyt dla dnia 22.08.2014 i~aktualnie zalogowanego lekarza przybierze następującą postać:
-\begin{lstlisting}
-GET /visits?showOnlyMine=true&fromDate=22.08.2014&toDate=22.08.2014
-\end{lstlisting}
-
-Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej korzystającej z~\emph{Apache HttpClient} nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów przekształconych metod dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
-Ostateczny interfejs przedstawia listing \ref{lst:routes} zawierający fragment pliku \emph{routes} stosowanego frameworka.
-
-\begin{lstlisting}[caption={Fragment pliku \emph{routes} zawierającego mapowanie wzorców URL interfejsu RESTful do wywoływanych metod kontrolerów w \emph{Play Framework}}, label={lst:routes}]
-GET     /patients                                               controllers.PatientController.list(page: Int ?= 0, query: String ?= null)
-GET     /patients/:id                                           controllers.PatientController.get(id: Long)
-GET     /patients-create                                        controllers.PatientController.create()
-POST    /patients                                                 controllers.PatientController.save()
-GET     /patients-delete/:id                                     controllers.PatientController.remove(id: Long)
-
-GET     /doctors                                                 controllers.DoctorController.list(page: Int ?= 0)
-GET     /doctors/:id                                             controllers.DoctorController.get(id: Long)
-GET     /doctors-create                                          controllers.DoctorController.create()
-POST    /doctors                                                   controllers.DoctorController.save()
-GET     /doctors-delete/:id                                      controllers.DoctorController.remove(id: Long)
-
-GET     /visits                                                  controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long ?= -1)
-GET     /visits/:id                                              controllers.VisitController.get(id: Long)
-GET     /patients/:pId/visits-create                             controllers.VisitController.create(pId: Long)
-POST    /visits                                                  controllers.VisitController.save()
-GET     /visits-delete/:id                                       controllers.VisitController.remove(id: Long)
-
-GET     /areas                                                   controllers.AreaController.list()
-GET     /diagnoses                                               controllers.DiagnosisController.list()
-GET     /treatments                                              controllers.TreatmentController.list()
-\end{lstlisting}
 
 \section{Bezpieczeństwo}
 
@@ -547,7 +603,7 @@ Sesja ma ograniczony czas trwania, ale może również zostać przedwcześnie pr
 
 Więcej o~sposobach tworzenia i~zarządzania sesją można przeczytać w podrozdziale \ref{sec:sesja}.
 
-\subsection{Wybór metody}
+\subsubsection{Wybór metody}
 
 Niezmiernie ważnym aspektem dla wyboru odpowiedniego schematu uwierzytelniania jest uchronienie nie tylko wrażliwych danych użytkownika ale i~pacjenta. \emph{Basic Access Authentication} oraz \emph{Form-based Authentication} nie zapewniają same w sobie ochrony dla żadnego z~nich, podczas gdy \emph{Digest Access Authentication} chroni hasło użytkownika, pozostawiając jednak inne treści w~czystej postaci. Konieczne jest zatem, niezależnie od wyboru, wprowadzenie szyfrowania całej komunikacji pomiędzy klientem a~serwerem przy pomocy protokołu \emph{HTTPS}. W~takim wypadku korzyść zastosowania \emph{Digest Access Authentication} w miejsce \emph{Basic Access Authentication} jest niewielka, ponieważ dane użytkownika będą bezpieczne niezależnie od wyboru. Prostota \emph{Basic Access Authentication} przemawia na jej korzyść, jednak niesie ze sobą wiele ograniczeń takich jak brak możliwości wylogowania oraz implementacji własnego interfejsu logowania.
 
@@ -917,19 +973,6 @@ alert(String.fromCharCode(88,83,83))//&quot;;alert(String.fromCharCode(88,83,83)
 </div>
 \end{lstlisting}
 
-%----------------------------------------------------------------------------
-
-\chapter{Opis}
-\label{cha:opis}
-
-\section{Web}
-\subsection{Zakres}
-\subsection{Prezentacja}
-\section{Mobile}
-\subsection{Zakres}
-\subsection{Prezentacja}
-\section{User Experience}
-układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalendarz, wyszukiwarka, paginacja, (walidacja PESEL??)
 %----------------------------------------------------------------------------
 
 \chapter{Konfiguracja i uruchomienie}
