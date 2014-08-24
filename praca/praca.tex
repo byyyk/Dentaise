@@ -87,12 +87,13 @@ literate={ą}{{\k{a}}}1
 
 
 %TODO Content Negotiation
-%TODO StringEntity entity = new StringEntity(mapper.writeValueAsString(patient), HTTP.UTF_8);
 %TODO ajax, jquery?
 %TODO play - formularze z zagnieżdżonymi obiektami oraz listami
 %TODO? hibernate, jackson, lazy-load (VisitController.list)
 %TODO? paginator w sql injection albo rozdziale o paginacji? jeśli w rozdziale o paginacji to wspomnieć w sql injection że jest tam przykład JPA Criteria API
 %TODO wypełnienie danymi
+%TODO? brak rozliczeń z NFZ
+%TODO apliakacja mobilna a service - cookies, bezpieczeństwo, opisać w implementacji na najwyższym poziomie, propertiesy czy jak to się zwało do ustawien? sesja
 
 \setcounter{secnumdepth}{3}
 
@@ -143,34 +144,40 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 \chapter{Projekt}
 \label{cha:dobor_technologii_i_narzedzi}
 
-%TODO dopisać o projektowaniu interfejsów
-W~rozdziale tym opisane zostały technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami.
+Głównym problemem w~projektowaniu systemu składającego się z~wielu komponentów jest dopasowanie interfejsów do każdego z~nich, co będzie głównym tematem tego rozdziału. Omówione zostaną zadania charakterystyczne dla każdego modułu aplikacji i~sposób integracji pomiędzy nimi.
 
-%TODO dopisać coś o Javie
+W~rozdziale tym opisane będą również technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów dla danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami. Projekt realizowany będzie w głównej mierze z~wykorzystaniem technologii Java, która posiada bardzo bogaty ekosystem, co daje ogromne możliwości wyboru bibliotek i~narzędzi wspomagających prace programistyczne.
 
-\section{Baza Danych}
+\section {Serwer}
+
+Całość systemu powinna zostać wykonana w~sposób spełniający normy bezpieczeństwa charakterystyczne dla tego typu aplikacji biznesowych. Każdy zasób dostępny z~zewnątrz musi być chroniony, tzn. możliwy do interakcji tylko dla uwierzytelnionych użytkowników. Ochrona tych elementów i~dostarczenie bazującej na nich logiki biznesowej w~formie możliwej do użycia z~poziomu aplikacji mobilnej oraz przeglądarki internetowej będą głównymi zadaniami części serwerowej systemu.
+
+\subsection{Baza Danych}
+\label{sec:bazaDanych}
 
 Charakter tworzonej aplikacji wymaga, aby dane jakie będą tworzyć i~modyfikować użytkownicy były zapamiętane pomiędzy sesjami klienta, a~także muszą być dostępne i~spójne, niezależnie od tego czy osoba korzystająca z~usługi łączy się z~nią każdorazowo przy pomocy tego samego komputera. Dane uzupełniane w~systemie muszą być również identyczne dla każdego użytkownika, to znaczy muszą oni mieć możliwość przeglądania treści dodawanych przez inne osoby. Z~tego powodu niezbędne jest przetrzymywanie ich po stronie serwera za pomocą bazy danych.
 
-\subsection{System zarządzania relacyjnymi bazami danych}
+\subsubsection{System zarządzania relacyjnymi bazami danych}
 
 Spośród różnych dostępnych typów baz danych zdecydowano się na relacyjną bazę \emph{PostgreSQL}. Cechuje się ona dużą niezawodnością i~jest w pełni darmowa nawet w~przypadku użytku komercyjnego. Jej popularność, a~zatem i~duże wsparcie ze strony społeczności, będzie również zaletą w razie wystąpienia nieoczekiwanych problemów.
 
-Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania o nazwie \emph{pgadmin}. Przy jego pomocy nadzorowanie i modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
+Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania o~nazwie \emph{pgadmin}. Przy jego pomocy nadzorowanie i~modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
 
-\subsection{Mapowanie obiektowo-relacyjne}
+\subsubsection{Mapowanie obiektowo-relacyjne}
 
-W relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można przyrównać do prostej postaci tabularnej, gdzie dane przetrzymywane są bez informacje o~typach innych danych powiązanych z~nimi. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
+W relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można przyrównać do prostej postaci tabularnej, gdzie dane przetrzymywane są bez informacje o~typach innych danych powiązanych z~nimi. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
 
-Dostęp do bazy danych w~języku Java zapewniony jest przez technologię JDBC\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań SQL, będących z punktu widzenia kompilatora jedynie ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~ poprawności zapytań co może doprowadzić do nieobliczalnych błędów oraz trudności w rozwoju i~ utrzymaniu kodu.
+Dostęp do bazy danych w~języku Java zapewniony jest przez technologię JDBC\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań SQL, będących z~punktu widzenia kompilatora jedynie ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~ poprawności zapytań co może doprowadzić do nieobliczalnych błędów oraz trudności w rozwoju i~ utrzymaniu kodu.
 
 Mapowanie obiektowo-relacyjne rozwiązuje ten problem poprzez automatyczne zarządzanie niższą warstwą trwałości na podstawie zdefiniowanego przez programistę interfejsy obiektowego. Narzędzia generowania schematów baz danych tworzą całą strukturę, którą konfiguruje się przy pomocy adnotacji encji, będących zwykle prostymi obiektami POJO\footnote{Plain Old Java Object}. Tak utworzone API jest gotowe do wykorzystania jako warstwa trwałości danych.
 
-Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA} dostarczany wraz z \emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów co pozytywnie wpływanie na utrzymanie projektu. Więcej na temat mapowania relacyjno-obiektowego można przeczytać w \cite{HORM}.
+Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w~pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA} dostarczany wraz z \emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów co pozytywnie wpływanie na utrzymanie projektu. Więcej na temat mapowania obiektowo-relacyjnego można przeczytać w~\cite{HORM}.
 
-\subsection{Schemat bazy danych}
+\subsubsection{Schemat bazy danych}
 
-Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana zostanie w~logice biznesowej aplikacji wygenerowano schemat bazy danych przedstawiony na rysunku \ref{fig:dbschema}. Znaczenie tabeli ma swoje odwzorowanie w obiektach modelu, które zostały bardziej przybliżone w~podrozdziale \ref{sec:modele} przy okazji omawiania szczegółów implementacji.
+Dane najbardziej wrażliwe na zmiany to takie, które pochodzą z~zewnątrz. Zalecenia Narodowego Funduszu Zdrowia do definiowania wykonanych przez lekarza prac mogą ulegać zmianie, więc bardzo istotny jest przemyślany system aktualizacji. Aplikacja webowa nie stanowi tu problemu, ponieważ nie jest instalowana po stronie klienta, a~jedynie renderowana na podstawie danych uzyskiwanych z~serwera, wobec czego wystarczająca będzie jego aktualizacja. W~przypadku aplikacji mobilnych, logika interpretacji danych i~ich renderowanie będzie znajdować się po stronie telefonu komórkowego. Dobrym podejściem byłoby uniezależnienie się od statycznych wartości, możliwych do uzupełniania w~aplikacji, takich jak obszary leczenia, czy typ rozpoznania. Modyfikacja bazy tych zasobów nie powinna zmuszać wszystkich, korzystających z~niej lekarzy do pobierania aktualizacji, zwłaszcza że nie jest to konieczne. Nie jest to również bez znaczenia w~utrzymaniu produktu - wprowadzanie takich aktualizacji w~kodzie aplikacji nie będzie wcale konieczne, ponieważ zostaną one zastąpione przez wykonanie prostego skryptu aktualizującego zawartość bazy danych po stronie serwera.
+
+Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana zostanie w~logice biznesowej aplikacji wygenerowano schemat bazy danych przedstawiony na rysunku \ref{fig:dbschema}. Znaczenie tabeli ma swoje odwzorowanie w~obiektach modelu, które zostały bardziej przybliżone w~podrozdziale \ref{sec:modele} przy okazji omawiania szczegółów implementacji.
 
 \begin{figure}[h!]
 	\centering
@@ -179,21 +186,45 @@ Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana 
 	\label{fig:dbschema}
 \end{figure}
 
+\subsection{Web Service}
 
-\section{Web Service}
+Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z tego samego zbioru danych co aplikacja webowa. Warstwa trwałości, opisana w podrozdziale \ref{sec:bazaDanych}, znajdować się ma na serwerze, wobec czego należy opracować sposób dostępu do tych danych, osiągalny z~poziomu klienta mobilnego. Elementem udostępniającym te dane będzie Web Service.
 
-Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z tego samego zbioru danych co aplikacja webowa. 
+\subsubsection{Protokół}
 
-\subsection{Protokół}
-\subsubsection{SOAP}
-\subsubsection{REST}
-\subsubsection{Wybór i uzasadnienie}
-\subsection{Serializacja}
-jackson
-\subsection{API}
+Istnieją dwa wiodące standardy tworzenia Web Service'ów: RESTful\footnote{REpresentational State Transfer} oraz SOAP\footnote{Simple Object Access Protocol}. Obydwa rozwiązania mają swoje wady i~zalety, jednak wybór odpowiedniego musi być ściśle dopasowany do potrzeb realizowanego projektu, w czym pomoże krótkie wprowadzenie do ich koncepcji.
 
-%TODO przenieść gdzieś ten akapit???
-Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów RESTful jest ich prostota. Jako że opierają się silnie na HTTP, elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta tego protokołu. Dzięki temu nie sprawi to problemu w użytkowaniu go również po stronie aplikacji mobilnej. Między wykorzystanym w nim kliencie protokołu HTTP, a przeglądarką internetową istnieją jednak pewne różnice, które trzeba mieć na uwadze przy projektowaniu interfejsu.
+\paragraph{RESTful}
+
+Web Service typu RESTful oparty jest na wzorcu architektury \emph{REST}, zaproponowanym przez jednego z~autorów protokołu HTTP - Roy'a Fieldinga. W~\cite{RFD} jego autorstwa czytamy, że główną abstrakcją informacji jest zasób, którym może być wszystko co da się nazwać: dokument, obrazek, usługa udzielająca informacji o pogodzie, kolekcja innych zasobów, obiekt rzeczywisty (np. osoba) itp. Wokół tych zasobów, tworzących nieskończony zbiór, zdefiniowane są skończone akcje, określone przez metody protokołu HTTP. Taki styl architektury nosi nazwę \emph{Resource Oriented Architecture}.
+
+Usługi tego typu są bardzo silnie powiązane z~protokołem HTTP, to znaczy wykorzystują jego pola do przesyłania danych charakterystycznych dla usługi, a~nie transportu zagnieżdżonego protokołu. Dla przykładu zapytanie pobierające dane pewnego zasobu o~określonym identyfikatorze, może skutkować w~odpowiedzi \emph{HTTP 404 Not Found}, jeśli odpytywany zasób nie istnieje. W przypadku gdyby protokół HTTP był wykorzystywany jedynie do komunikacji, odpowiedzią byłoby \emph{200 OK}, a~status błędu zakodowany zostałby wewnątrz transportowanych danych.
+
+Dzięki takiemu podejściu jedyne co jest potrzebne do konsumpcji usługi \emph{RESTful} to klient protokołu \emph{HTTP}.
+
+\paragraph{SOAP}
+
+Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są wykorzystywane do opisu wyników operacji czy parametryzowania zapytań. W~tym wypadku protokół ten wykorzystywany jest jedynie do przekazania danych, opisywanych przy wykorzystaniu własnego standardu, opartego na języku \emph{XML}. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
+
+Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jest plikiem \emph{WSDL} zapisanym w formacie XML. Kontrakt ten musi zostać opublikowany, lub przesłany do osób zainteresowanych konsumpcją usługi. Ręczne użytkowanie, wbrew temu co sugeruje nazwa i~założenia, jest na tyle skomplikowane, że w~większości przypadków do efektywnej pracy niezbędne są narzędzia pozwalające na generowanie kodu strony klienckiej lub serwerowej na podstawie kontraktu \emph{WSDL}. W~przeciwnym wypadku konieczne jest dogłębne poznanie standardu, aby móc parsować i~tworzyć wiadomości \emph{SOAP}.
+
+W odróżnieniu od podejścia \emph{REST}, protokół \emph{SOAP} jest zorientowany na usługę (\emph{Service Oriented Architecture}), czyli akcje możliwe do wykonania, a~nie zasoby.
+
+\paragraph{Wybór i uzasadnienie}
+
+Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług podążających tą drogą ma jasny interfejs nie wymagający większej dokumentacji, poza wymienieniem dostępnych zasobów, ponieważ metody HTTP wykorzystywane do wykonywania na nich operacji zwykle dobierane są w~sposób jednakowy, zgodnie z~zalecanymi standardami.
+
+W~przypadku implementowanego systemu zdecydowanie lepszą drogą będzie skorzystanie z~usługi typu \emph{RESTful}. Jest to również technologia oficjalnie zalecana do użycia na platformie Android. Ze względu na to, że opiera się ona na stylu architektury REST, który jest sposobem definiowania zasobów przeznaczonym dla WWW, taką usługę będzie można wykorzystać także dla drugiego tworzonego modułu klienckiego - strony internetowej, co byłoby znacznie trudniejsze do osiągnięcia przy wykorzystaniu \emph{SOAP}. Możliwość wykorzystania wspólnego interfejsu między tym dwoma modułami znacznie ułatwi prace rozwojowe i~utrzymanie projektu.
+
+\subsubsection{Serializacja}
+
+Jedną z~zalet wykorzystania \emph{Web Service'ów} jest możliwość rozwijania produktu w~innych technologiach po dwóch różnych jego stronach - klienckiej i serwerowej. Powoduje to jednak, że przesyłane dane muszą być zapisane w~notacji niezależnej od języka programowania. W~tym celu stosuje się serializację obiektów do jednego z~formatów - zwykle jest to \emph{JSON} lub \emph{XML}.
+
+W~języku Java istnieje wiele rozwiązań umożliwiających automatyczną konwersję obiektów typu \emph{POJO} do jednego z nich. W~aplikacji tworzonej na potrzeby pracy zdecydowano się na bibliotekę \emph{Jackson}, obsługującą format \emph{JSON}.
+
+\subsubsection{API}
+
+Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w~tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów RESTful jest ich prostota. Jako że opierają się silnie na HTTP, elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta tego protokołu. Dzięki temu nie sprawi to problemu w~użytkowaniu go również po stronie aplikacji mobilnej. Między wykorzystanym w~nim kliencie protokołu HTTP, a przeglądarką internetową istnieją jednak pewne różnice, które trzeba mieć na uwadze przy projektowaniu interfejsu.
 
 Interfejsy RESTful zorientowane są na zasoby, odpowiednim podejściem będzie więc zaczęcie od ich identyfikacji. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Interfejs nie musi być wersjonowany, ponieważ jest on tylko do zastosowania wewnętrznego i~nie będzie upubliczniany. Moduł webowy oraz mobilny są jego jedynymi klientami i~stanowią integralną część aplikacji. Z~tego względu pierwszy człon adresu URL będzie od razu jednym z~zasobów, któremu zwykle przydziela się formę liczby mnogiej:
 \begin{itemize}
@@ -227,7 +258,7 @@ Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje, uściślające spos
 GET /visits?showOnlyMine=true&fromDate=22.08.2014&toDate=22.08.2014
 \end{lstlisting}
 
-Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej korzystającej z~\emph{Apache HttpClient} nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów przekształconych metod dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
+Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów przekształconych metod dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
 Ostateczny interfejs przedstawia listing \ref{lst:routes} zawierający fragment pliku \emph{routes} stosowanego frameworka.
 
 \begin{lstlisting}[caption={Fragment pliku \emph{routes} zawierającego mapowanie wzorców URL interfejsu RESTful do wywoływanych metod kontrolerów w \emph{Play Framework}}, label={lst:routes}]
@@ -254,34 +285,113 @@ GET     /diagnoses                                               controllers.Dia
 GET     /treatments                                              controllers.TreatmentController.list()
 \end{lstlisting}
 
+\section{Aplikacja webowa}
 
-\section{Moduł web}
-\subsection{Back-end}
-playframework
-%play ma hibernate
-%play ma jackson
-%play ma rest
-\subsection{Front-end}
-bootstrap, javascript, jquery, html, css
-\section{Moduł mobile}
+Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności przewidzianych w~systemie. Ze względu na większy komfort obsługi, spowodowany przeciętnie większym rozmiarem wyświetlaczy w~komputerach stacjonarnych niż w~telefonach komórkowych i~tabletach oraz możliwością skorzystania z~urządzeń wejściowych, takich jak klawiatura czy myszka, jest przewidziana jako docelowe narzędzie pracy wnoszonej przez użytkowników systemu.
+
+W~zakres aplikacji powinno wchodzić:
+\begin{itemize}
+	\item przeglądanie bazy pacjentów z~opcją filtrowania po imieniu, nazwisku lub numerze PESEL
+	\item zarządzanie bazą pacjentów, tzn. ich dodawanie, usuwanie i~edycja
+	\item możliwość planowania wizyt z~poziomu widoku pacjenta
+	\item widok do przeglądania listy wizyt, umożliwiający filtrowanie po dacie oraz obecnie zalogowanym lekarzu
+	\item możliwość podglądu, edycji i~usunięcia wybranej wizyty
+	\item zarządzanie bazą lekarzy, czyli użytkowników systemu, a~w~szczególności przeglądanie, edycja, usuwanie oraz możliwość zmiany hasła
+	\item udogodnienia pozwalające na realizację najczęściej wykonywanych operacji przy pomocy jednego kliknięcia, zamiast żmudnego powtarzania tych samych czynności, a~w~szczególności:
+	\begin{itemize}
+		\item możliwość przeglądania wszystkich wizyt danego pacjenta z poziomu jego widoku
+		\item skrót służący do przeglądania wizyt na aktualny dzień przypisanych do zalogowanego lekarza
+	\end{itemize} 
+\end{itemize}
+
+\subsection{Dobór technologii}
+
+Na platformę Java istnieje wiele kompleksowych narzędzi, takich jak Google Web Toolkit czy Vaadin, pozwalających na konstrukcję strony internetowej przy pomocy tego języka, bez konieczności zapoznawania się z~technologiami uruchamianymi po stronie klienta w~przeglądarce internetowej. Takie podejście niesie jednak ze sobą sporo ograniczeń wobec mnogości rozwiązań pokroju jQueryUI, czy Ext JS, niezależnych od strony serwerowej. Rozdzielenie tych dwóch warstw, choć wymaga większej wiedzy, zwykle jednak również skutkuje we wzroście wydajności w~stosunku do języka Java kompilowanego do JavaScript, co jest oferowane przez rozwiązania tego typu.
+
+Zdecydowano się więc na oddzielenie strony serwerowej (Back end) od klienckiej (Front end) co pozwoli dokonać niezależnego wyboru dla każdej z~nich, zwiększając wachlarz możliwości.
+
+\subsubsection{Back end}
+
+Framework umożliwiający implementację strony serwerowej, powinien pozwalać na definiowanie szablonów stron HTML. Dzięki temu można będzie uniezależnić się od strony klienckiej, dla której wybierze się technologie wspomagające wyświetlanie treści użytkownikom w~ich przeglądarkach internetowych.
+
+Jednym z~takich frameworków jest \emph{Play Framework}, który wpasowuje się również w~inne założenia postawione w~tym rozdziale, a~w~szczególności:
+
+\begin{itemize}
+	\item umożliwia wykorzystanie \emph{Hibernate} jako implementacji \emph{JPA}
+	\item \emph{Jackson} jest domyślną biblioteką do serializacji w~notacji \emph{JSON}, ale istnieje również możliwość skorzystania z~innych
+	\item pozwala na proste mapowanie wzorców \emph{URL} do metod kontrolerów, tzn. ułatwi w~znaczny sposób implementację \emph{Web Service'u} typu \emph{RESTful}
+\end{itemize}
+
+Z wymienionych wyżej powodów, zdecydowano że \emph{Play Framework} będzie dobrym wyborem dla serwerowej strony implementowanego systemu.
+
+\subsubsection{Front end}
+Dzięki odseparowaniu strony klienckiej od \emph{Javy}, można dla niej dobrać technologie przeznaczone specjalnie do rozwoju stron WWW, będącego bardzo prężnie rozwijającą się dziedziną w~dobie internetu, co znacznie powiększa możliwości wyboru.
+
+Jako baza dla witryny posłuży kod \emph{HTML}, wzbogacony przez następujące frameworki, języki i~biblioteki:
+
+\begin{description}
+\item[JavaScript] do zapewnienia dynamicznej zawartości
+\item[CSS] jako język definiujący styl strony
+\item[jQuery] pomagające w konstruowaniu zapytań \emph{AJAX}, obsłudze zdarzeń oraz modyfikacji struktury dokumentu
+\item[Twitter Bootstrap] do strukturyzacji strony i ujednoliconego wyglądu komponentów
+\item[Glyphicons] jako pakiet ikon dostępny wraz z \emph{Twitter Bootstrap}
+\end{description}
+
+\section{Aplikacja mobilna}
+
+Aplikacja przeznaczona na telefon komórkowy powinna mieć mniejszy zakres działań od aplikacji webowej. Przeciętny rozmiar urządzeń mobilnych i~brak zewnętrznej klawiatury oraz myszki w~zestawie\footnote{Platformy mobilne pozwalają na podłączenie zewnętrznych urządzeń wejściowych poprzez technologię bluetooth lub USB, jednak nie jest to częsta praktyka.} ogranicza swobodę korzystania z~aplikacji, a~w~szczególności pisania długich tekstów czy też przełączania się pomiędzy różnymi oknami aplikacji, co w~przeglądarce internetowej da się łatwo osiągnąć przy pomocy kart.
+
+Głównym zadaniem aplikacji mobilnej powinno być umożliwienie wykonania szybkich akcji, nawet w~obecności pacjenta, bez konieczności podchodzenia do komputera. W~szczególności autor ma na myśli automatyczne filtrowanie wizyt dla zalogowanego lekarza i~aktualnego dnia, oraz nie zanieczyszczanie interfejsu zbyt skomplikowanymi operacjami, takimi jak zarządzanie innymi lekarzami, które dużo wygodniej będzie zrealizować przy pomocy aplikacji webowej.
+
+W zakres aplikacji mobilnej powinno więc wchodzić:
+
+\begin{itemize}
+	\item Przeglądanie bazy pacjentów
+	\item Dodawanie i~edycja pacjenta
+	\item Przeglądanie wizyt z~automatycznym ograniczeniem do aktualnego dnia i~zalogowanego lekarza
+	\item Edytowanie wizyt
+	\item Konfiguracja usługi klienta \emph{Web Service'u}, to znaczy możliwość określenia:
+	\begin{itemize}
+		\item adresu IP i~port serwera
+		\item nazwy i~hasła użytkownika
+	\end{itemize}
+	Po poprawnej konfiguracji, logowanie w usłudze i~zarządzanie sesją powinno następować automatycznie, bez zmuszania użytkownika do ponownego podawania danych nawet po długim okresie bezczynności. Dane konfiguracyjne muszą być trwale zapisywane w~aplikacji, tzn. zapamiętane pomiędzy sesjami użytkowania.
+\end{itemize}
+
+Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizyt dla pacjentów powinny zostać wykonane po stronie aplikacji webowej.
+%dodawanie wizyt nie może być zrobione, bo nie można ich będzie przeglądać chyba że będą na aktualny dzień
+
 \subsection{Platforma}
-Android
+
+Dostępne na rynku mobilne systemy operacyjne nie pozwalają na przenośność aplikacji pomiędzy nimi, a~więc przy wyborze jednego z~nich warto skupić się na potrzebie potencjalnego klienta, a~nie wygodzie w~implementacji. Zgodnie z~danymi udostępnionymi w~\cite{AMS} platforma \emph{Android} w~roku 2014 zajmuje pierwsze miejsce na rynku europejskim z~udziałem \emph{73,3\%}, na drugim miejscu jest produkt \emph{Apple} z~wynikiem 16,6\%, a~na trzecim \emph{Windows} z~8,1\% udziałów. Na rynku amerykańskim sytuacja \emph{Apple} poprawia się wyrównując walkę z produktem \emph{Google}, jednak tworzona aplikacja dostosowana jest dla polskiego odbiorcy, więc statystyki zebrane w~Europie są tutaj bardziej znaczące.
+
+Platforma \emph{Android} pozwala również na implementowanie aplikacji w~języku Java. Ze względu na dużą popularność, co sprawi że gotowy produkt będzie mógł trafić do jak największej liczby lekarzy oraz zachowanie spójności z~technologią Java, będzie ona odpowiednim wyborem dla tworzonej aplikacji.
+
+Wydzielenie logiki w~postaci \emph{Web Service'u} pozwoli także w~przyszłości rozwinąć system o~inne platformy mobilne.
+
 \subsection{Klient WebService}
-ApacheHttpClient
-\section{Zarządzanie zależnościami}
-\subsection{Sbt}
-\subsection{Gradle}
+
+Dzięki wybraniu RESTful jako sposobu implementacji \emph{Web Service'u}, komunikacja z~nim po stronie aplikacji mobilnej jest zadaniem znacznie ułatwionym. Problem konsumpcji usługi ogranicza się do wyboru odpowiedniego klienta protokołu HTTP. W implementowanym systemie zdecydowano się na wykorzystanie w tym celu klasy \emph{AndroidHttpClient} implementującej interfejs \emph{HttpClient} znanej w~świecie Javy organizacji \emph{Apache}.
+
+\section{Narzędzia programistyczne}
+
+Realizowany system dzieli się na dwa główne projekty: aplikację mobilną oraz webową, zawierającą w~sobie stronę serwerową. \emph{Play Framework} jest niezależny od środowiska programistycznego, więc jako IDE przeznaczone do rozwoju drugiego z~wymienionych fragmentów wykorzystane zostanie środowisko Eclipse, używane na co dzień przez autora pracy.
+
+Platforma \emph{Android} również nie narzuca wyboru środowiska, ale ze względu na rozdzielenie tych dwóch fragmentów abstrakcyjną warstwą Web Service'u, korzyść z~użytkowania wspólnego IDE byłaby niewielka, ze względu na brak bezpośredniego połączenia pomiędzy projektami programistycznymi. Zalety z~użytkowania środowiska dedykowanego tej platformie, tzn. Android Studio opartego na środowisku IntelliJ, przewyższają ujednolicenie projektu, oferując między innymi automatyczną integrację z~Android SDK i~zaawansowane narzędzia refaktoryzacji, dostosowane do projektów tego typu.
+
+Ręczne zarządzanie bibliotekami programistycznymi bywa bardzo kłopotliwym zadaniem oraz zwiększa zapotrzebowanie miejsca na dysku w~systemie kontroli wersji. Dodatkowo wymusza wybór środowiska programistycznego przy projekcie kolaboracyjnym, co jednak tutaj nie stanowi projektu ze względu na jednego autora systemu. Niemniej jednak zdecydowano się na wykorzystanie systemów zarządzania zależnościami, w~celu zwiększenia wygody programowania. Niestety \emph{Play Framework} oraz \emph{Android} mają różne zalecenia jeśli chodzi o ich wybór. Dzięki całkowitemu oddzieleniu tych projektów od siebie nie przyniesie to jednak kłopotu, więc wybranymi systemami będą odpowiednio \emph{Sbt} oraz \emph{Gradle}.
 
 %----------------------------------------------------------------------------
 
 \chapter{Implementacja}
 \label{cha:implementacja}
 
-%TODO mobile? klient ws (logowanie), propertiesy (persistence), appcompat
+%TODO: mobile? klient ws (logowanie), propertiesy (persistence), appcompat
 
-Podczas implementacji systemu tworzonego w~ramach pracy dołożono wszelkich starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~dalszej części pracy. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
+Podczas implementacji systemu tworzonego w~ramach pracy dołożono wszelkich starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
 
 \section{Wzorzec MVC}
+\label{sec:wzorzecMVC}
 
 W~celu zwiększenia czytelności i~elastyczności projektu warto zastosować wzorzec projektowy \emph{Model View Controller}. Jego głównym celem jest odseparowanie warstwy danych od prezentacji, aby zwiększyć możliwości ponownego wykorzystania komponentów do różnych celów. Model w~\cite{GoF} tłumaczony jest jako obiekt aplikacji, widok jako jego reprezentacja w~graficznym interfejsie użytkownika, a~kontroler to spójnik definiujący sposób reakcji na akcje użytkownika z poziomu interfejsu.
 
@@ -307,7 +417,7 @@ Na rysunku \ref{fig:mvc-web} przedstawiono sposób komunikacji pomiędzy warstwa
 	\label{fig:mvc-mobile}
 \end{figure}
 
-%TODO: Odnośnik do bib z WebView?
+%TODO? Odnośnik do bib z WebView?
 Aplikacje Android nie wykorzystują dokumentów HTML do prezentacji\footnote{Platforma Android pozwala na wyświetlenie dokumentów HTML przy pomocy klasy \emph{WebView}, jednak nie jest to standardowe podejście projektowania aplikacji}, więc widoki, które wyświetlane będą na telefonie komórkowym muszą zostać zaprojektowane od nowa, wykorzystując rozwiązania dostępne na tę platformę. Rysunek \ref{fig:mvc-mobile} przedstawia komunikację pomiędzy aplikacją mobilną a~serwerem. Jak widać na schemacie widok przeznaczony dla aplikacji webowych nie bierze już udziału w~wyświetlaniu treści. Aplikacja mobilna zawiera jego własną wersję, która odwzorowuje funkcjonalności osiągalne za pomocą strony internetowej, ale jest zrealizowana przy pomocy \emph{Android SDK}. Ze względu na to, że cała warstwa prezentacji musi znajdować się po stronie klienta w postaci aplikacji mobilnej, odpowiedzi zwracane przez kontroler powinny zwracać jedynie czystą reprezentację danych, dlatego zdecydowano się na format JSON. Innymi słowy dane, które w~przypadku klienta webowego były przekazywane do widoku celem przygotowania gotowego do wyświetlenia dokumentu i~zwrócenia go w~odpowiedzi, w~tym przypadku są przekazywane bezpośrednio do klienta mobilnego, który samodzielnie wypełnia nimi własne widoki.
 
 Na przedstawionych schematach widać, że rozdwojenie usługi na platformę mobilną i~webową zaczyna się dopiero za warstwą kontrolera, który razem z~modelem jest dla nich częścią wspólną. Jedyną różnicą pomiędzy obydwoma interfejsami stanowią widoki, co było celem, który udało się osiągnąć.
@@ -410,13 +520,13 @@ Wymienione funkcjonalności dotyczą następujących kontrolerów, których naze
 	\item VisitController
 \end{itemize}
 
-Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} oraz \emph{TreatmentController}, które umożliwiają jedynie zwrócenie listy zasobów, czyli możliwych wyborów, którymi wypełnione zostaną kontrolki rozwijanej listy (\emph{Combo box}). Takie podejście pozwoli na wprowadzenie aktualizacji, zwiększając lekarzom możliwości wyboru leczeń i diagnoz, bez potrzeby ingerencji w kod źródłowy aplikacji.
+Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} oraz \emph{TreatmentController}, które umożliwiają jedynie zwrócenie listy zasobów, czyli możliwych wyborów, którymi wypełnione zostaną kontrolki rozwijanej listy (\emph{Combo box}). Takie podejście pozwoli na wprowadzenie aktualizacji, zwiększając lekarzom możliwości wyboru leczeń i diagnoz, bez potrzeby ingerencji w kod źródłowy aplikacji. Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
 
-Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
-
-
+Zgodnie z~ustaleniami omówionymi w~podrozdziale \ref{sec:wzorzecMVC} wymienione kontrolery muszą zwracać dane w~różnych formatach odpowiednich dla klienta mobilnego (obiekt \emph{JSON}) oraz webowego (dokument \emph{HTML}). Obydwie strony klienckie korzystają z~tego samego interfejsu \emph{REST}, więc wybór zwracanego typu musi być zaimplementowany we wnętrzu kontrolera. Każda ze stron ma możliwość określenia jakiego typu dane chce otrzymać w~nagłówku protokołu \emph{HTTP} o~nazwie \emph{Accept}, który zostanie przeanalizowany wewnątrz metody kontrolera mającej bezpośredni dostęp do żądania otrzymanego przez serwer. Opisane podejście nosi nazwę \emph{Content Negotiation}. Przeglądarka internetowa ma możliwość wyświetlania wielu typów danych i~często ogłasza chęć akceptowania wszystkich przy pomocy wartości \emph{*/*}. W aplikacji mobilnej istnieje możliwość własnej konfiguracji tego nagłówka i~w~tym przypadku ustawiono tylko wartość \emph{application/json}. Kontroler, po wykonaniu logiki, ma więc przygotowany wynik w~postaci danych, które należy zwrócić i jeśli zawartość nagłówka \emph{Accept} zawiera wpis \emph{text/html} (wliczając grupy, takie jak \emph{text/*} czy \emph{*/*}) decyduje się na wysłanie wyrenederowanego na ich podstawie dokumentu \emph{HTML} lub obiektu w formacie \emph{JSON} w przeciwnym wypadku.
 
 \section{Bezpieczeństwo}
+
+%TODO: coś to napisać albo przenieść z któregoś z podrozdziałów
 
 \subsection{Uwierzytelnianie}
 \label{sec:uwierzytelnianie}
@@ -635,7 +745,7 @@ Atak polegający na sprawdzaniu wszystkich możliwości, na przykład: aaaaaa, a
 Metoda umożliwiająca łamanie wielu hashy równolegle poprzez wcześniejsze przygotowanie dużego zbioru skrótów i~haseł, na podstawie których zostały wygenerowane. W~odróżnieniu od ataku słownikowego metoda ta nie wymaga już obliczania skrótu dla każdego sprawdzanego hasła, co sprawia że jest znacznie szybsza.
 \item[Reverse Lookup Tables] \hfill \\
 Połączenie podejść \emph{Lookup Table} i~ataku słownikowego lub metody \emph{Brute Force}, gdzie najpierw dla wszystkich skrótów znajdujących się w~wykradzionej bazie danych przyporządkowuje się użytkowników, którym był przypisany. Następnie oblicza się skrót dla każdego zgadywanego hasła metodą słownikową lub sprawdzając wszystkie kolejne możliwości i~sprawdza się którzy użytkownicy mieli uzyskany hash. Metoda ta wykorzystuje fakt, że często wielu użytkowników korzysta z~tego samego hasła.
-%TODO doczytać http://kestas.kuliukas.com/RainbowTables/
+%TODO? doczytać http://kestas.kuliukas.com/RainbowTables/
 \item[Rainbow Tables] \hfill \\
 Usprawnienie metody \emph{Lookup Table}, która ze względu na konieczność przechowywania wszystkich skrótów zajmuje bardzo dużą część przestrzeni dyskowej. Zastosowanie tablic tęczowych pozwala na przechowywanie większej bazy, kosztem czasu potrzebnego na złamanie hasła. Modyfikacja polega na wprowadzeniu funkcji redukującej, która przyporządkowuje skrótom ciągi znaków kwalifikujące się jako hasła. Należy podkreślić, że nie jest to operacja odwracająca operację funkcji skrótu, tzn. wynik redukcji nie jest hasłem na podstawie którego otrzymano skrót, będący wejściem dla tej funkcji. Metoda polega na tworzeniu łańcuchów $plaintext \rightarrow hash \rightarrow plaintext \rightarrow hash \rightarrow \ldots \rightarrow plaintext \rightarrow hash$, gdzie przetrzymywane są jedynie początkowe i~końcowe wartości oraz przechodzeniu po nich celem odnalezienia skrótu wejściowego. Szukane hasło jest wartością poprzedzającą. Dokładniejsze wyjaśnienie działania tablic tęczowych można przeczytać w~\cite{RT}.
 \end{description}
@@ -976,6 +1086,7 @@ alert(String.fromCharCode(88,83,83))//&quot;;alert(String.fromCharCode(88,83,83)
 %----------------------------------------------------------------------------
 
 \chapter{Konfiguracja i uruchomienie}
+%TODO dane, wykonanie sql...
 \label{cha:konfiguracja_i_uruchomienie}
 a może jako dodatek zamiast rozdziału?
 
