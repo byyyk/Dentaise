@@ -12,6 +12,9 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{picinpar}
+
+\usepackage{wrapfig}
 
 \lstloadlanguages{TeX}
 
@@ -41,6 +44,44 @@ literate={ą}{{\k{a}}}1
 }
 
 \graphicspath{ {./gfx/} }
+
+\newcommand{\fullWidthPicture}[2]{
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=\linewidth]{#1}
+	\caption{#2}
+	\label{fig:#1}
+\end{figure}
+}
+
+\newcommand{\customWidthPicture}[3]{
+\begin{figure}[h!]
+	\centering
+		\includegraphics[width=#1\linewidth]{#2}
+	\caption{#3}
+	\label{fig:#2}
+\end{figure}
+}
+
+
+\newcommand{\wrappedPicture}[4]{
+\begin{figwindow}[2,#1,{
+	\includegraphics[width=0.28\textwidth]{#2}
+	\label{fig:#2}
+},{#3}]
+#4
+\end{figwindow}
+}
+
+\newcommand{\wrappedPictureB}[3]{
+\begin{wrapfigure}{#1}{0.3\textwidth}
+	\begin{center}
+		\includegraphics[width=0.28\textwidth]{#2}
+	\end{center}
+	\caption{#3}
+	\label{fig:#2}
+\end{wrapfigure}
+}
 
 %---------------------------------------------------------------------------
 
@@ -93,7 +134,7 @@ literate={ą}{{\k{a}}}1
 %TODO? paginator w sql injection albo rozdziale o paginacji? jeśli w rozdziale o paginacji to wspomnieć w sql injection że jest tam przykład JPA Criteria API
 %TODO wypełnienie danymi
 %TODO? brak rozliczeń z NFZ
-%TODO apliakacja mobilna a service - cookies, bezpieczeństwo, opisać w implementacji na najwyższym poziomie, propertiesy czy jak to się zwało do ustawien? sesja
+%TODO aplikacja mobilna a service - cookies, bezpieczeństwo, opisać w implementacji na najwyższym poziomie, propertiesy czy jak to się zwało do ustawien? sesja
 
 \setcounter{secnumdepth}{3}
 
@@ -104,9 +145,9 @@ literate={ą}{{\k{a}}}1
 
 \begin{abstract}
 
-Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~ obowiązującymi normami, a przedstawienie sposobu implementacji systemu składającego się  z~kilku komponentów, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę Android. Ze względu na duże zróżnicowanie potrzeb w zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
+Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~ obowiązującymi normami, a przedstawienie sposobu implementacji systemu składającego się  z~kilku komponentów, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę \emph{Android}. Ze względu na duże zróżnicowanie potrzeb w zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
 
-W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki Replay oraz SQL Injection.
+W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Replay} oraz \emph{SQL Injection}.
 
 Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~ implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
 
@@ -489,15 +530,147 @@ W~tworzonej aplikacji można wyróżnić następujące modele:
 
 \section{Widoki}
 
-%jedyne miejsce zmienne dla urządzeń!!
+Widok jest jedynym elementem wzorca \emph{Model View Controller} wymagającym osobnej implementacji w~dwóch aplikacjach klienckich tworzonego systemu. W~dalszej części tego podrozdziału przedstawione zostaną zrzuty ekranu efektów wykonanych prac, wraz z opisem funkcjonalności jakie ze sobą niosą.
 
-\subsection{Web}
+Dla potrzeb aplikacji stworzono logotyp przedstawiony na rysunku \ref{fig:logo}, który jest wykorzystywany jako logo i favikona strony WWW oraz logo i ikona klienta mobilnego.
 
-\subsection{Mobile}
+\begin{figure}[h!]
+	\centering
+	\includegraphics{logo}
+	\caption{Logotyp przedstawiający ząb, wykorzystywany w aplikacjach.}
+	\label{fig:logo}
+\end{figure}
 
-\subsection{User Experience}
-układ formularzy, komunikaty po akcjach (do zrobienia?), walidacja pól, kalendarz, wyszukiwarka, paginacja, (walidacja PESEL??)
-%----------------------------------------------------------------------------
+\subsection{Aplikacja webowa}
+
+Aplikacja webowa, zgodnie z projektem pozwala na wykonanie wszystkich funkcjonalności uwzględnionych w systemie.
+
+\subsubsection{Logowanie do systemu}
+
+\begin{wrapfigure}{r}{0.3\textwidth}
+	\begin{center}
+		\includegraphics[width=0.28\textwidth]{logowanie}
+	\end{center}
+	\caption{Ekran logowania.}
+	\label{fig:logowanie}
+\end{wrapfigure}
+
+Po wpisaniu w przeglądarce adresu strony WWW, użytkownikowi wyświetlony zostaje ekran logowania przedstawiony na rysunku \ref{fig:logowanie}, w którym może podać swoją nazwę użytkownika i hasło. Jeśli para podanych danych nie jest zgodna, wyświetlony zostaje komunikat o błędzie i użytkownik może ponowić próbę. Kliknięcie w odnośnik ``Reset hasła'' spowoduje przejście do formularza zgłoszenia zapomnianego hasła.
+
+\subsubsection{Resetowanie hasła}
+\label{sec:resetowanieHaslaWidok}
+
+%TODO: co jak nie zostanie znaleziony w bazie?!
+
+Proces zmiany hasła rozpoczyna się od podania adresu e-mail. Formularz jaki jest wtedy wyświetlany przedstawiony jest w punkcie \emph{a} rysunku \ref{fig:resetHasla}. Wpisany adres e-mail musi być zgodny z podanym w czasie rejestracji, w przeciwnym wypadku użytkownik nie zostanie znaleziony w bazie.
+
+\begin{figure}[h!]
+	\begin{center}
+		a)~\includegraphics[width=0.28\textwidth]{reset-hasla-1}
+		\hspace{5mm}
+		b)~\includegraphics[width=0.28\textwidth]{reset-hasla-2}
+		\hspace{5mm}
+		c)~\includegraphics[width=0.28\textwidth]{reset-hasla-3}
+	\end{center}
+	\caption{Widoki biorące udział w procesie resetu hasła użytkownika.}
+	\label{fig:resetHasla}
+\end{figure}
+
+Po kliknięciu przycisku ``Resetuj'', użytkownikowi wyświetlany jest komunikat przedstawiony w punkcie \emph{b} rysunku \ref{fig:resetHasla}. W międzyczasie otrzymuje on wiadomość e-mail z odnośnikiem zawierającym tajny token (patrz \ref{sec:resetHaslaBezp}, który pozwala przejść do właściwego formularza zmiany hasła.
+
+Kiedy użytkownik klika na odnośnik zawarty w wiadomości, jest skierowany do formularza \emph{c} rysunku \ref{fig:resetHasla}, gdzie dwukrotnie wpisuje swoje nowe hasło. Po kliknięciu ``Zmień'', jeśli token jest ważny i pola wypełnione w formularzu są zgodne, nowe dane zostają zatwierdzone i użytkownik może ich użyć do zalogowania się w systemie.
+
+\subsubsection{Strona główna}
+
+Pierwszą stroną jaką widzi użytkownik po zalogowaniu jest strona główna przedstawiona na rysunku \ref{fig:home}. Zawiera ona proste powitanie, pod którym znajduje się odnośnik kierujący lekarza do widoku wizyt, filtrującego je pod kątem aktualnego dnia i zalogowanego użytkownika. Przeglądanie własnych wizyt jest najczęściej wykonywaną akcją w ciągu dnia, gdyż pozwala na dotarcie do innych podstron, takich jak dane pacjenta, który właśnie wkroczył do gabinetu. Tak małe udogodnienie jest więc w rzeczywistości bardzo istotne, biorąc pod uwagę szacowaną częstotliwość wykonywania tej operacji.
+
+\fullWidthPicture{home}{Strona główna aplikacji.}
+
+Nad zwartością strony widoczne jest menu, umożliwiające nawigację po aplikacji. Klikając w logo użytkownik jest kierowany do omawianej strony głównej. Kolejne trzy elementy prowadzą do widoków przedstawionych kolejno w podrozdziałach \ref{sec:listaPacjentow}, \ref{sec:listaWizyt} i \ref{sec:listaLekarzy}, a ostatni umożliwia wylogowanie się z usługi.
+
+\subsubsection{Lista pacjentów}
+\label{sec:listaPacjentow}
+
+Jednym z głównych widoków, do którego można dostać się z poziomu menu nawigacji jest ``Lista pacjentów'' przedstawiona na rysunku \ref{fig:pacjenci}. Menu podstrony widoczne pod tytułem umożliwia dodawanie nowych pozycji do listy oraz filtrowanie jej pod kątem imienia, nazwiska lub numeru PESEL, po dowolnej ilości tych danych na raz. Dla przykładu wpisując frazę ``Bo Ko 81'' zwrócone zostać mogą następujące wiersze:
+\begin{itemize}
+	\item \textbf{81}043012034, \textbf{Bo}gdan \textbf{Ko}za
+	\item \textbf{81}012184392, \textbf{Bo}rys \textbf{Ko}gut
+	\item \textbf{81}110938293, \textbf{Bo}lesława \textbf{Ko}była
+	\item \textbf{81}080712983, \textbf{Ko}nrad \textbf{Bo}cian
+\end{itemize}
+Kolejność podawanych danych nie ma znaczenia.
+
+\fullWidthPicture{pacjenci}{Widok umożliwiający przeglądanie listy pacjentów.}
+
+Klikając w dowolny element listy, użytkownik kierowany jest do widoku danego pacjenta, który został omówiony w \ref{sec:pacjent}.
+
+Widok listy pacjentów, podobnie jak pozostałe służące do przeglądania danych, obsługuje paginację, do czego służy element widoczny pod listą pacjentów.
+
+\subsubsection{Lista wizyt}
+\label{sec:listaWizyt}
+
+Kolejnym widokiem dostępnym z poziomu głównej nawigacji jest ``Lista wizyt'' przedstawiona na rysunku \ref{fig:wizyty}. Menu tej podstrony pozwala na filtrowanie wyświetlanych wizyt po kryteriach zalogowanego lekarza i okresu czasu.
+
+\fullWidthPicture{wizyty}{Widok umożliwiający przeglądanie listy wizyt.}
+
+Klikając jedną z pozycji listy, użytkownik zostaje przekierowany do podstrony edytowania wizyty, omówionej w \ref{sec:wizyta}. Podobnie jak pozostałe widoki spełniające funkcjonalność przeglądania danych, podstrona ``Lista wizyt'' obsługuje paginację przy pomocy panelu znajdującego się pod wyświetlanymi wizytami. 
+
+\subsubsection{Lista lekarzy}
+\label{sec:listaLekarzy}
+
+Podstrona ``Lista lekarzy'', przedstawiona na rysunku \ref{fig:lekarze}, jest ostatnim z widoków, możliwym do dostania się z poziomu menu nawigacji. Podobnie jak w przypadku widoku pozwalającego na zarządzanie bazą pacjentów, w panelu widocznym pod tytułem strony znajduje się przycisk służący do definiowania nowych lekarzy, czyli użytkowników systemu.
+
+\fullWidthPicture{lekarze}{Widok umożliwiający przeglądanie listy lekarzy.}
+
+Pod panelem znajduje się lista lekarzy, a jeszcze niżej zaobserwować można panel paginacji. Klikając w jeden z elementów listy, przechodzi się do widoku edycji lekarza, który został omówiony w podrozdziale \ref{sec:lekarz}.
+
+\subsubsection{Pacjent}
+\label{sec:pacjent}
+
+Rysunek \ref{fig:pacjent} przedstawia widok edycji pacjenta, do którego można się dostać z podstrony ``Lista pacjentów''. W jego tytule widnieje imię i nazwisko, a pod nim znajdują się wszystkie możliwe do edycji dane pacjenta. Korzystając z przycisków akcji, oznaczonych kolorem niebieskim, użytkownik ma możliwość usunąć pacjenta, zaplanować dla niego wizytę przechodząc do widoku jej edycji (patrz \ref{sec:wizyta}) oraz wyświetlić listę jego wszystkich wizyt. Kliknięcie ostatniej pozycji spowoduje przejście do widoku ``Lista wizyt'', omówionej w podrozdziale \ref{sec:listaWizyt}, gdzie tytuł strony podmieniony zostanie na ``Lista wizyt pacjenta <Imię> <Nazwisko>'' i dodany będzie ukryty warunek filtrowania po identyfikatorze wybranego pacjenta.
+
+\fullWidthPicture{pacjent}{Zrzut ekranu przedstawiający widok edycji pacjenta.}
+
+Na samym dole strony znajdują się przyciski umożliwiające zapis lub anulowanie zmodyfikowanych danych.
+
+
+\subsubsection{Wizyta}
+\label{sec:wizyta}
+
+Pierwszym elementem widoku edycji wizyty, który został przedstawiony na rysunku \ref{fig:wizyta}, jest pole do określenia terminu. Klikając w ikonkę kalendarza widoczną po jego prawej stronie, pojawia się pomocnicze okienko graficznego wybierania daty, jak pokazano w punkcie \emph{a} rysunku \ref{fig:datepicker}. Poprzez kliknięcie w ikonkę zegara umieszczoną na jego spodzie przechodzi się do określania czasu (punkt \emph{b}). Przy każdym wyborze wartość pola terminu wizyty jest na bieżąco aktualizowana.
+
+\fullWidthPicture{wizyta}{Zrzut ekranu przedstawiający widok edycji wizyty.}
+
+Poniżej pola terminu znajduje się lista wykonanych prac, których wartości zdefiniowane są przez modele \emph{Area}, \emph{Diagnosis} oraz \emph{Treatment}. Przycisk ``Dodaj pracę'' pozwala na dodawanie prac do listy. Nowe elementy zawierają pola możliwe do edycji, w postaci rozwijanych list. Pozostałe są statyczne i nie można ich modyfikować, co ma zapobiec pomyłkowym nadpisaniom zatwierdzonych treści. W razie popełnienia błędu w definicji pracy, można ją jednak usunąć, klikając w ikonkę kosza, znajdującą się po jej prawej stronie. Operacje dodawania i usuwania na całych elementach listy, podobnie jak reszta widoku edycji, są zatwierdzane dopiero po kliknięciu przycisku ``Zapisz''.
+
+Pod listą wizyt znajduje się pole ``Notatki''. Można je wykorzystać do zapamiętania wszystkich informacji, których nie da się zapisać przy pomocy przygotowanego widoku.
+
+Panel akcji pozwala na usunięcie wizyty, oraz przejście do podstrony powiązanego z nią pacjenta.
+
+\subsubsection{Lekarz}
+\label{sec:lekarz}
+
+Widok edycji lekarza przedstawia rysunek \ref{fig:lekarz}. Tytuł podstrony składa się z imienia i nazwiska edytowanego lekarza, pod którym widnieją dane możliwe do edycji. Panel akcji pozwala na usunięcie lekarza i zmianę jego hasła. Proces zmiany hasła w tym wypadku jest zbliżony do opisanego w podrozdziale o resecie zapomnianego hasła (\ref{sec:resetowanieHaslaWidok}), jednakże w tym wypadku e-mail lekarza jest już znany, więc zaczyna się on od punktu \emph{b} z rysunku \ref{fig:resetHasla}.
+
+\fullWidthPicture{lekarz}{Zrzut ekranu przedstawiający widok edycji lekarza.}
+
+\subsection{Aplikacja mobilna}
+
+%TODO: usunąć karty w pacjencie, dodawanie pacjentów nie hula (może usunąć?)
+
+Aplikacja mobilna, z powodów wyjaśnionych podczas opisu projektowania systemu, implementuje jedynie podzbiór operacji możliwych do wykonania w aplikacji webowej.
+
+\subsubsection{Ekran główny}
+
+
+
+\subsubsection{}
+\subsubsection{}
+\subsubsection{}
+\subsubsection{}
+\subsubsection{}
+\subsubsection{}
+
 
 \section{Kontrolery}
 
@@ -523,6 +696,105 @@ Wymienione funkcjonalności dotyczą następujących kontrolerów, których naze
 Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} oraz \emph{TreatmentController}, które umożliwiają jedynie zwrócenie listy zasobów, czyli możliwych wyborów, którymi wypełnione zostaną kontrolki rozwijanej listy (\emph{Combo box}). Takie podejście pozwoli na wprowadzenie aktualizacji, zwiększając lekarzom możliwości wyboru leczeń i diagnoz, bez potrzeby ingerencji w kod źródłowy aplikacji. Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
 
 Zgodnie z~ustaleniami omówionymi w~podrozdziale \ref{sec:wzorzecMVC} wymienione kontrolery muszą zwracać dane w~różnych formatach odpowiednich dla klienta mobilnego (obiekt \emph{JSON}) oraz webowego (dokument \emph{HTML}). Obydwie strony klienckie korzystają z~tego samego interfejsu \emph{REST}, więc wybór zwracanego typu musi być zaimplementowany we wnętrzu kontrolera. Każda ze stron ma możliwość określenia jakiego typu dane chce otrzymać w~nagłówku protokołu \emph{HTTP} o~nazwie \emph{Accept}, który zostanie przeanalizowany wewnątrz metody kontrolera mającej bezpośredni dostęp do żądania otrzymanego przez serwer. Opisane podejście nosi nazwę \emph{Content Negotiation}. Przeglądarka internetowa ma możliwość wyświetlania wielu typów danych i~często ogłasza chęć akceptowania wszystkich przy pomocy wartości \emph{*/*}. W aplikacji mobilnej istnieje możliwość własnej konfiguracji tego nagłówka i~w~tym przypadku ustawiono tylko wartość \emph{application/json}. Kontroler, po wykonaniu logiki, ma więc przygotowany wynik w~postaci danych, które należy zwrócić i jeśli zawartość nagłówka \emph{Accept} zawiera wpis \emph{text/html} (wliczając grupy, takie jak \emph{text/*} czy \emph{*/*}) decyduje się na wysłanie wyrenederowanego na ich podstawie dokumentu \emph{HTML} lub obiektu w formacie \emph{JSON} w przeciwnym wypadku.
+
+\section{Mobilny klient WebService}
+
+Na platformie Android czasochłonne operacje powinny być uruchamiane spoza wątku interfejsu użytkownika (UI). Do tego celu służy klasa \emph{AsyncTask}, dziedziczenie po której pozwoli na ujednolicenie zachowania wszystkich wywołań Web Service'u w aplikacji. Do realizacji tego celu potrzebne było nadpisanie funkcjonalności trzech z jej metod:
+
+\customWidthPicture{.3}{mobileLadowanie}{Zrzut ekranu prezentujący widok ładowania podczas nawiązywania komunikacji z usługą Web Service'u.}
+
+\begin{description}
+	\item[onPreExecute] \hfill \\
+	Metoda wywoływana jako pierwsza, jeszcze z poziomu wątku interfejsu użytkownika. Pozwala na wyświetlenie informacji przed rozpoczęcie wykonania właściwej pracy. W klasie pochodnej zaimplementowany w niej został ekran ładowania ukazany na rysunku \ref{fig:mobileLadowanie}.
+	\item[doInBackground] \hfill \\
+	Praca wykonywana w tle, poza wątkiem UI. Zrealizowano w niej szablon wywołujący funkcję abstrakcyjną (\emph{makeRestCall()}), której implementacje będą korzystać z różnych metod Web Service'u, aby umożliwić wykorzystanie tego samego zachowania dla różnych typów wywołań. Szablon rejestruje wyjątki rzucane w warstwie połączenia z Web Servicem, aby na ich podstawie móc wyświetlić stosowne informacje na ekranie, na przykład o problemie nawiązania komunikacji z serwerem.
+	\item[onPostExecute] \hfill \\
+	Metoda wywoływana po wykonaniu \emph{doInBackground}, ponownie na wątku UI. Zwykle wykorzystywana jest w celu aktualizacji interfejsu na podstawie danych uzyskanych przez metodę wykonującą się w tle. We własnej implementacji zrealizowano w niej wyświetlenie predefiniowanych komunikatów na podstawie błędów zarejestrowanych w metodzie \emph{doInBackground}. W przypadku pomyślnego wykonania operacji nastąpi wywołanie kolejnej metody abstrakcyjnej służącej do przetworzenia uzyskanego wyniku (\emph{handleResult()}) oraz funkcji wyświetlającej wiadomość o sukcesie (\emph{onSuccessMessage()}), którą również w razie zaistnienia potrzeby można nadpisać.
+\end{description}
+
+Omawiana klasa nosi nazwę \emph{RestCallAsyncTask} i przedstawiona została na listingu \ref{lst:restCallAsyncTask}.
+
+\begin{lstlisting}[caption={Implementacja klasy wyświatlającej informacje na temat przebiegu procesu komunikacji z~usługą Web Service'u.}, label={lst:restCallAsyncTask}]
+public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
+
+    private static final String TAG = RestCallAsyncTask.class.getSimpleName();
+    private boolean connectionFault;
+    private boolean authenticationFault;
+    private final Context context;
+    private ProgressDialog progress;
+
+    public RestCallAsyncTask(Context context) {
+        this.context = context;
+        progress = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        progress.setMessage(getResourceString(R.string.progress_wait));
+        progress.show();
+    }
+
+    @Override
+    protected T doInBackground(Void... params) {
+        try {
+            connectionFault = false;
+            authenticationFault = false;
+            return makeRestCall();
+        } catch (IOException e) {
+            connectionFault = true;
+            Log.i(TAG, "Could not connect to server: " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "Error parsing JSON: " + e.getMessage());
+        } catch (AuthenticationFailedException e) {
+            Log.e(TAG, "Could not log in: " + e.getMessage());
+            authenticationFault = true;
+        }
+        return null;
+    }
+
+    protected abstract T makeRestCall() throws IOException, JSONException, AuthenticationFailedException;
+
+    @Override
+    protected void onPostExecute(T result) {
+        progress.dismiss();
+
+        if (result != null) {
+            handleResult(result);
+        }
+
+        if(connectionFault) {
+            toast(getResourceString(R.string.toast_connection_fault));
+        } else if (authenticationFault) {
+            toast(getResourceString(R.string.toast_authentication_fault));
+        } else {
+            toast(onSuccessMessage());
+        }
+    }
+
+    protected abstract void handleResult(T result);
+    protected String onSuccessMessage() {
+        return null;
+    }
+
+    private String getResourceString(int resId) {
+        return context.getResources().getString(resId);
+    }
+
+    private void toast(String message) {
+        Log.d(TAG, "Displaying toast: " + message);
+        if (message != null) {
+            Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+}
+
+\end{lstlisting}
+
+\wrappedPicture{r}{mobileUnauthorized}{Zrzut ekranu przedstawiający komunikat błędu uwierzytelniania.\label{fig:mobileUnauthorized}}{
+Graficzną obsługę wywołań \emph{Web Service'u} zrealizowano dziedzicząc po zaprezentowanej klasie i nadpisując metody \emph{makeRestCall}, \emph{handleResult} oraz \emph{onSuccessMessage}. W pierwszej z nich wykorzystuje się klasę obsługującą warstwę połączenia z usługą, która udostępnia metody potrzebne do wykonywania operacji na zasobach. W bezpośredniej komunikacji z \emph{Web Servicem} uczestniczy klasa \emph{AndroidHttpClient}, która pozwala na zarządzanie \emph{Cookies}, dzięki czemu proces uwierzytelniania w przeglądarce oraz kliencie mobilnym może przebiegać w identyczny sposób. Obsługę procesu logowania zautomatyzowano poprzez analizowanie odpowiedzi serwera. Jeśli żądanie spowoduje otrzymanie komunikatu \emph{401 Unauthorized}, następuje próba logowania i ponowienie wysłania żądania. Jeżeli status odpowiedzi nie zmienił się, oznacza to, że dane uwierzytelniania są niepoprawne i rzucany jest wyjątek AuthenticationFailedException, który może zostać obsłużony w omówionej klasie \emph{RestCallAsyncTask} poprzez wyświetlenie odpowiedniego komunikatu, co zostało ukazane na rysunku \ref{fig:mobileUnauthorized}. Dzięki temu użytkownik podczas pracy nie musi martwić się o utrzymanie połączenia z serwerem -- jego jedynym zadaniem jest wpisanie odpowiednich danych uwierzytelniających w oknie ustawień. Dane te muszą być zapamiętane pomiędzy różnymi sesjami użytkowania, co zrealizowano przy pomocy API \emph{Preference}. W przypadku wystąpienia innych błędów połączenia, aby umożliwić zróżnicowanie wyświetlanych użytkownikowi wiadomości, rzucany jest oddzielny wyjątek \emph{IOException}.
+}
 
 \section{Bezpieczeństwo}
 
@@ -969,6 +1241,7 @@ Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacu
 %TODO wireshark, przykład
 
 \subsection{Reset hasła}
+\label{sec:resetHaslaBezp}
 
 Usługa resetowania zapomnianego hasła, zaimplementowana w~niewłaściwy sposób może prowadzić do bardzo prostych ataków na konta użytkowników, bez konieczności posiadania dużej wiedzy w~dziedzinie bezpieczeństwa. Przykładem tego jest sytuacja opisana w~\cite{FbB}, która dotyczy popularnego portalu społecznościowego jakim jest \emph{facebook}.
 

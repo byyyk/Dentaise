@@ -32,7 +32,11 @@ public class PatientController extends Controller {
 	public static Result create() {
 		Patient patient = new Patient();
 		JPA.em().persist(patient);
-		return get(patient.getId());
+		if (requestFromMobilePhone()) {
+			return ok(Json.toJson(patient));
+		} else {
+			return get(patient.getId());
+		}
 	}
 	
 	@Transactional

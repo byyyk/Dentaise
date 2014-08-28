@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
     		R.drawable.ic_menu_allfriends,
     		R.drawable.ic_menu_today,
     		R.drawable.ic_menu_preferences,
-    		R.drawable.ic_menu_close_clear_cancel,
+    		//R.drawable.ic_menu_close_clear_cancel,
     };
 
     /**
@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
                 getString(R.string.title_activity_find_patient),
                 getString(R.string.title_activity_find_visit),
                 getString(R.string.title_activity_settings),
-                getString(R.string.title_activity_exit),
+                //getString(R.string.title_activity_exit),
         };
         MainMenuAdapter mainMenuAdapter = new MainMenuAdapter(this, R.layout.main_menu_item , menuItemLabels);
         

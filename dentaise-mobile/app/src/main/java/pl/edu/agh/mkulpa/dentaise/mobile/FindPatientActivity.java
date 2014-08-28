@@ -96,12 +96,31 @@ public class FindPatientActivity extends Activity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.action_add:
-                Intent intent = new Intent(this, EditPatientActivity.class);
-                startActivity(intent);
+
+                createNewPatientAndGoToEditActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void createNewPatientAndGoToEditActivity() {
+        new RestCallAsyncTask<Patient>(FindPatientActivity.this) {
+            @Override
+            protected String onSuccessMessage() {
+                return null;
+            }
+            @Override
+            protected Patient makeRestCall() throws IOException, JSONException, AuthenticationFailedException {
+                return Repositories.patient.createPatient();
+            }
+            @Override
+            protected void handleResult(Patient result) {
+                Intent intent = new Intent(FindPatientActivity.this, EditPatientActivity.class);
+                intent.putExtra(FindPatientActivity.EXTRA_PATIENT_ID, result.getId());
+                startActivity(intent);
+            }
+        }.execute();
     }
 
     private class PatientListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {

@@ -52,10 +52,6 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
         return null;
     }
 
-    protected String onSuccessMessage() {
-        return null;
-    }
-
     protected abstract T makeRestCall() throws IOException, JSONException, AuthenticationFailedException;
 
     @Override
@@ -75,6 +71,11 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
         }
     }
 
+    protected abstract void handleResult(T result);
+    protected String onSuccessMessage() {
+        return null;
+    }
+
     private String getResourceString(int resId) {
         return context.getResources().getString(resId);
     }
@@ -87,6 +88,6 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
         }
     }
 
-    protected abstract void handleResult(T result);
+
 
 }

@@ -21,6 +21,14 @@ public class PatientRepository {
         this.appRepository = appRepository;
     }
 
+    public Patient createPatient() throws IOException, JSONException, AuthenticationFailedException {
+        HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/patients-create");
+        HttpResponse response = appRepository.execute(httpGet);
+        ObjectMapper mapper = new ObjectMapper();
+        Patient patient = mapper.readValue(response.getEntity().getContent(), Patient.class);
+        return patient;
+    }
+
     public Patient getPatient(long id) throws IOException, JSONException, AuthenticationFailedException {
         HttpGet httpGet = new HttpGet(appRepository.getBaseUrl() + "/patients/" + id);
         HttpResponse response = appRepository.execute(httpGet);
