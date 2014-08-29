@@ -429,7 +429,7 @@ Ręczne zarządzanie bibliotekami programistycznymi bywa bardzo kłopotliwym zad
 
 %TODO: mobile? klient ws (logowanie), propertiesy (persistence), appcompat
 
-Podczas implementacji systemu tworzonego w~ramach pracy dołożono wszelkich starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
+Podczas implementacji systemu tworzonego w~ramach pracy dołożono starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
 
 \section{Wzorzec MVC}
 \label{sec:wzorzecMVC}
@@ -586,10 +586,10 @@ Pierwszą stroną jaką widzi użytkownik po zalogowaniu jest strona główna pr
 
 \fullWidthPicture{home}{Strona główna aplikacji.}
 
-Nad zwartością strony widoczne jest menu, umożliwiające nawigację po aplikacji. Klikając w logo użytkownik jest kierowany do omawianej strony głównej. Kolejne trzy elementy prowadzą do widoków przedstawionych kolejno w podrozdziałach \ref{sec:listaPacjentow}, \ref{sec:listaWizyt} i \ref{sec:listaLekarzy}, a ostatni umożliwia wylogowanie się z usługi.
+Nad zwartością strony widoczne jest menu, umożliwiające nawigację po aplikacji. Klikając w logo użytkownik jest kierowany do omawianej strony głównej. Kolejne trzy elementy prowadzą do widoków przedstawionych kolejno w podrozdziałach \ref{sec:pacjenci}, \ref{sec:wizyty} i \ref{sec:lekarze}, a ostatni umożliwia wylogowanie się z usługi.
 
-\subsubsection{Lista pacjentów}
-\label{sec:listaPacjentow}
+\subsubsection{Pacjenci}
+\label{sec:pacjenci}
 
 Jednym z głównych widoków, do którego można dostać się z poziomu menu nawigacji jest ``Lista pacjentów'' przedstawiona na rysunku \ref{fig:pacjenci}. Menu podstrony widoczne pod tytułem umożliwia dodawanie nowych pozycji do listy oraz filtrowanie jej pod kątem imienia, nazwiska lub numeru PESEL, po dowolnej ilości tych danych na raz. Dla przykładu wpisując frazę ``Bo Ko 81'' zwrócone zostać mogą następujące wiersze:
 \begin{itemize}
@@ -602,42 +602,32 @@ Kolejność podawanych danych nie ma znaczenia.
 
 \fullWidthPicture{pacjenci}{Widok umożliwiający przeglądanie listy pacjentów.}
 
-Klikając w dowolny element listy, użytkownik kierowany jest do widoku danego pacjenta, który został omówiony w \ref{sec:pacjent}.
-
 Widok listy pacjentów, podobnie jak pozostałe służące do przeglądania danych, obsługuje paginację, do czego służy element widoczny pod listą pacjentów.
 
-\subsubsection{Lista wizyt}
-\label{sec:listaWizyt}
-
-Kolejnym widokiem dostępnym z poziomu głównej nawigacji jest ``Lista wizyt'' przedstawiona na rysunku \ref{fig:wizyty}. Menu tej podstrony pozwala na filtrowanie wyświetlanych wizyt po kryteriach zalogowanego lekarza i okresu czasu.
-
-\fullWidthPicture{wizyty}{Widok umożliwiający przeglądanie listy wizyt.}
-
-Klikając jedną z pozycji listy, użytkownik zostaje przekierowany do podstrony edytowania wizyty, omówionej w \ref{sec:wizyta}. Podobnie jak pozostałe widoki spełniające funkcjonalność przeglądania danych, podstrona ``Lista wizyt'' obsługuje paginację przy pomocy panelu znajdującego się pod wyświetlanymi wizytami. 
-
-\subsubsection{Lista lekarzy}
-\label{sec:listaLekarzy}
-
-Podstrona ``Lista lekarzy'', przedstawiona na rysunku \ref{fig:lekarze}, jest ostatnim z widoków, możliwym do dostania się z poziomu menu nawigacji. Podobnie jak w przypadku widoku pozwalającego na zarządzanie bazą pacjentów, w panelu widocznym pod tytułem strony znajduje się przycisk służący do definiowania nowych lekarzy, czyli użytkowników systemu.
-
-\fullWidthPicture{lekarze}{Widok umożliwiający przeglądanie listy lekarzy.}
-
-Pod panelem znajduje się lista lekarzy, a jeszcze niżej zaobserwować można panel paginacji. Klikając w jeden z elementów listy, przechodzi się do widoku edycji lekarza, który został omówiony w podrozdziale \ref{sec:lekarz}.
-
-\subsubsection{Pacjent}
-\label{sec:pacjent}
-
-Rysunek \ref{fig:pacjent} przedstawia widok edycji pacjenta, do którego można się dostać z podstrony ``Lista pacjentów''. W jego tytule widnieje imię i nazwisko, a pod nim znajdują się wszystkie możliwe do edycji dane pacjenta. Korzystając z przycisków akcji, oznaczonych kolorem niebieskim, użytkownik ma możliwość usunąć pacjenta, zaplanować dla niego wizytę przechodząc do widoku jej edycji (patrz \ref{sec:wizyta}) oraz wyświetlić listę jego wszystkich wizyt. Kliknięcie ostatniej pozycji spowoduje przejście do widoku ``Lista wizyt'', omówionej w podrozdziale \ref{sec:listaWizyt}, gdzie tytuł strony podmieniony zostanie na ``Lista wizyt pacjenta <Imię> <Nazwisko>'' i dodany będzie ukryty warunek filtrowania po identyfikatorze wybranego pacjenta.
+Klikając w dowolny element listy, użytkownik kierowany jest do widoku danego pacjenta, który został przedstawiony na rysunku \ref{fig:pacjent}. W jego tytule widnieje imię i nazwisko, a pod nim znajdują się wszystkie możliwe do edycji dane pacjenta. Korzystając z przycisków akcji, oznaczonych kolorem niebieskim, użytkownik ma możliwość usunąć pacjenta, zaplanować dla niego wizytę przechodząc do widoku jej edycji oraz wyświetlić listę jego wszystkich wizyt. Kliknięcie ostatniej pozycji spowoduje przejście do widoku ``Lista wizyt'', omówionego w podrozdziale \ref{sec:wizyty}, gdzie tytuł strony podmieniony zostanie na ``Lista wizyt pacjenta <Imię> <Nazwisko>'' i dodany będzie ukryty warunek filtrowania po identyfikatorze wybranego pacjenta.
 
 \fullWidthPicture{pacjent}{Zrzut ekranu przedstawiający widok edycji pacjenta.}
 
 Na samym dole strony znajdują się przyciski umożliwiające zapis lub anulowanie zmodyfikowanych danych.
 
+\subsubsection{Wizyty}
+\label{sec:wizyty}
 
-\subsubsection{Wizyta}
-\label{sec:wizyta}
+Kolejnym widokiem dostępnym z poziomu głównej nawigacji jest ``Lista wizyt'' przedstawiona na rysunku \ref{fig:wizyty}. Menu tej podstrony pozwala na filtrowanie wyświetlanych wizyt po kryteriach zalogowanego lekarza i okresu czasu. Podobnie jak pozostałe widoki spełniające funkcjonalność przeglądania danych, podstrona ``Lista wizyt'' obsługuje paginację przy pomocy panelu znajdującego się pod wyświetlanymi wizytami.
 
-Pierwszym elementem widoku edycji wizyty, który został przedstawiony na rysunku \ref{fig:wizyta}, jest pole do określenia terminu. Klikając w ikonkę kalendarza widoczną po jego prawej stronie, pojawia się pomocnicze okienko graficznego wybierania daty, jak pokazano w punkcie \emph{a} rysunku \ref{fig:datepicker}. Poprzez kliknięcie w ikonkę zegara umieszczoną na jego spodzie przechodzi się do określania czasu (punkt \emph{b}). Przy każdym wyborze wartość pola terminu wizyty jest na bieżąco aktualizowana.
+\fullWidthPicture{wizyty}{Widok umożliwiający przeglądanie listy wizyt.}
+
+Klikając jedną z pozycji listy, użytkownik zostaje przekierowany do podstrony edytowania wizyty,   przedstawionej na rysunku \ref{fig:wizyta}. Pierwszym jej elementem jest pole do określenia terminu. Klikając w ikonkę kalendarza widoczną po jego prawej stronie, pojawia się pomocnicze okienko graficznego wybierania daty, jak pokazano w punkcie \emph{a} rysunku \ref{fig:datepicker}. Poprzez kliknięcie w ikonkę zegara umieszczoną na jego spodzie przechodzi się do określania czasu (punkt \emph{b} rysunku \ref{fig:datepicker}). Przy każdym wyborze wartość pola terminu wizyty jest na bieżąco aktualizowana.
+
+\begin{figure}[h!]
+	\begin{center}
+		a)~\includegraphics[width=0.4\textwidth]{datePickerDate}
+		\hspace{5mm}
+		b)~\includegraphics[width=0.4\textwidth]{datePickerTime}
+	\end{center}
+	\caption{Kontrolka ułatwiająca wprowadzanie daty.}
+	\label{fig:datepicker}
+\end{figure}
 
 \fullWidthPicture{wizyta}{Zrzut ekranu przedstawiający widok edycji wizyty.}
 
@@ -647,30 +637,77 @@ Pod listą wizyt znajduje się pole ``Notatki''. Można je wykorzystać do zapam
 
 Panel akcji pozwala na usunięcie wizyty, oraz przejście do podstrony powiązanego z nią pacjenta.
 
-\subsubsection{Lekarz}
-\label{sec:lekarz}
 
-Widok edycji lekarza przedstawia rysunek \ref{fig:lekarz}. Tytuł podstrony składa się z imienia i nazwiska edytowanego lekarza, pod którym widnieją dane możliwe do edycji. Panel akcji pozwala na usunięcie lekarza i zmianę jego hasła. Proces zmiany hasła w tym wypadku jest zbliżony do opisanego w podrozdziale o resecie zapomnianego hasła (\ref{sec:resetowanieHaslaWidok}), jednakże w tym wypadku e-mail lekarza jest już znany, więc zaczyna się on od punktu \emph{b} z rysunku \ref{fig:resetHasla}.
+\subsubsection{Lekarze}
+\label{sec:lekarze}
+
+Podstrona ``Lista lekarzy'', przedstawiona na rysunku \ref{fig:lekarze}, jest ostatnim z widoków, możliwym do dostania się z poziomu menu nawigacji. Podobnie jak w przypadku widoku pozwalającego na zarządzanie bazą pacjentów, w panelu widocznym pod tytułem strony znajduje się przycisk służący do definiowania nowych lekarzy, czyli użytkowników systemu.
+
+\fullWidthPicture{lekarze}{Widok umożliwiający przeglądanie listy lekarzy.}
+
+Pod panelem znajduje się lista lekarzy, a jeszcze niżej zaobserwować można panel paginacji. Klikając w jeden z elementów listy, przechodzi się do widoku edycji lekarza, który został ukazany na rysunku \ref{fig:lekarz}. Jego tytuł składa się z imienia i nazwiska edytowanego lekarza, pod którym widnieją dane możliwe do edycji. Panel akcji pozwala na usunięcie lekarza i zmianę jego hasła. Proces zmiany hasła w tym wypadku jest zbliżony do opisanego w podrozdziale o resecie zapomnianego hasła (\ref{sec:resetowanieHaslaWidok}), jednakże w tym wypadku e-mail lekarza jest już znany, więc zaczyna się on od punktu \emph{b} z rysunku \ref{fig:resetHasla}.
 
 \fullWidthPicture{lekarz}{Zrzut ekranu przedstawiający widok edycji lekarza.}
 
 \subsection{Aplikacja mobilna}
 
-%TODO: usunąć karty w pacjencie, dodawanie pacjentów nie hula (może usunąć?)
-
-Aplikacja mobilna, z powodów wyjaśnionych podczas opisu projektowania systemu, implementuje jedynie podzbiór operacji możliwych do wykonania w aplikacji webowej.
+Aplikacja mobilna, z~powodów wyjaśnionych podczas opisu projektowania systemu, implementuje jedynie podzbiór operacji możliwych do wykonania w~aplikacji webowej.
 
 \subsubsection{Ekran główny}
+\label{sec:ekranGlownyMobile}
+
+Po uruchomieniu aplikacji, użytkownikowi ukazuje się jej główny ekran, który przedstawiony został na rysunku \ref{fig:ekranGlownyMobile}. Tak jak pozostałe widoki omawiane w tym rozdziale zawiera on z panel akcji, umożliwiający nawigację oraz wykonywanie innych akcji charakterystycznych dla danego widoku. W tym wypadku znajduje się w nim jedynie logo aplikacji.
+
+\customWidthPicture{.3}{ekranGlownyMobile}{Zrzut ekranu przedstawiający widok głównego menu aplikacji mobilnej.}
+
+Z ekranu głównego istnieje możliwość przejścia do następujących widoków:
+\begin{itemize}
+\item Pacjenci (podrozdział \ref{sec:pacjenciMobile})
+\item Wizyty (podrozdział \ref{sec:wizytyMobile})
+\item Ustawienia (podrozdział \ref{sec:ustawieniaMobile})
+\end{itemize}
 
 
 
-\subsubsection{}
-\subsubsection{}
-\subsubsection{}
-\subsubsection{}
-\subsubsection{}
-\subsubsection{}
+\subsubsection{Pacjenci}
+\label{sec:pacjenciMobile}
 
+Widok ten pozwala na przeglądanie wszystkich pacjentów (patrz punkt \emph{a} rysunku \ref{fig:pacjenciMobile}) znajdujących się w systemie. Panel akcji zawiera przyciski służące odpowiednio do szukania oraz dodania nowego pacjenta. Wyszukiwanie działa na takich samych zasadach jak przedstawiono w podrozdziale \ref{sec:pacjenci}. Po kliknięciu w przycisk dodawania pacjenta lub jedną z pozycji na liście, użytkownik zostanie automatycznie przeniesiony do widoku edycji danych przedstawionego w punkcie \emph{b} rysunku \ref{fig:pacjenciMobile}.
+
+\begin{figure}[h!]
+	\begin{center}
+		a)~\includegraphics[width=0.3\textwidth]{pacjenciMobile}
+		\hspace{5mm}
+		b)~\includegraphics[width=0.3\textwidth]{pacjentMobile}
+	\end{center}
+	\caption{Zrzuty ekranu przedstawiające widoki przeglądania oraz edycji pacjentów w aplikacji mobilnej.}
+	\label{fig:pacjenciMobile}
+\end{figure}
+
+\subsubsection{Wizyty}
+\label{sec:wizytyMobile}
+
+Widok listy wizyt, przedstawiony w punkcie \emph{a} rysunku \ref{fig:wizytyMobile}, ukazuje terminy na jakie zarejestrowani są pacjenci na obecny dzień dla zalogowanego lekarza. Po kliknięciu w daną wizytę przechodzi się do widoku jej edycji, przedstawionego w punktach \emph{b} oraz \emph{c} rysunku \ref{fig:wizytyMobile}.
+
+\begin{figure}[h!]
+	\begin{center}
+		a)~\includegraphics[width=0.28\textwidth]{wizytyMobile}
+		\hspace{5mm}
+		b)~\includegraphics[width=0.28\textwidth]{wizyta1Mobile}
+		\hspace{5mm}
+		c)~\includegraphics[width=0.28\textwidth]{wizyta2Mobile}
+	\end{center}
+	\caption{Zrzuty ekranu przedstawiające widoki przeglądania oraz edycji pacjentów w aplikacji mobilnej.}
+	\label{fig:wizytyMobile}
+\end{figure}
+
+
+\subsubsection{Ustawienia}
+\label{sec:ustawieniaMobile}
+
+Widok ustawień pozwala na konfigurację połączenia z serwerem Dentaise, poprzez wprowadzenie jego adresu oraz nazwy i hasła użytkownika. Dane są zapamiętane do kolejnego uruchomienia aplikacji dzięki wykorzystaniu \emph{Preference} API. Widok został przedstawiony na rysunku \ref{fig:ustawieniaMobile}.
+
+\customWidthPicture{.3}{ustawieniaMobile}{Zrzut ekranu przedstawiający widok ustawień w aplikacji mobilnej.}
 
 \section{Kontrolery}
 
