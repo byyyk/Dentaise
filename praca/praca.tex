@@ -126,15 +126,10 @@ literate={ą}{{\k{a}}}1
 \end{figure}
 */
 
-
-%TODO Content Negotiation
-%TODO ajax, jquery?
-%TODO play - formularze z zagnieżdżonymi obiektami oraz listami
-%TODO? hibernate, jackson, lazy-load (VisitController.list)
+%TODO sprawdzic zawartosc plytki z konf i uruchom. przed oddaniem
 %TODO? paginator w sql injection albo rozdziale o paginacji? jeśli w rozdziale o paginacji to wspomnieć w sql injection że jest tam przykład JPA Criteria API
 %TODO wypełnienie danymi
-%TODO? brak rozliczeń z NFZ
-%TODO aplikacja mobilna a service - cookies, bezpieczeństwo, opisać w implementacji na najwyższym poziomie, propertiesy czy jak to się zwało do ustawien? sesja
+%TODO sprawdzić czy admin zadziała na pustej bazie
 
 \setcounter{secnumdepth}{3}
 
@@ -147,9 +142,9 @@ literate={ą}{{\k{a}}}1
 
 Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~ obowiązującymi normami, a przedstawienie sposobu implementacji systemu składającego się  z~kilku komponentów, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę \emph{Android}. Ze względu na duże zróżnicowanie potrzeb w zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
 
-W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Replay} oraz \emph{SQL Injection}.
+W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Cross-site Scripting} oraz \emph{SQL Injection}.
 
-Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~ implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
+Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
 
 \end{abstract}
 
@@ -161,24 +156,38 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 
 \chapter{Wstęp}
 \label{cha:wstep}
+
+Informatyka jest bardzo dynamicznie rozwijającą się dziedziną co skutkuje w gwałtownych powstawaniu nowych urządzeń, stopniowo zastępujących aktualne. Trend ten można zaobserwować również na rynku smartfonów, które według \cite{MG} w pierwszym kwartale 2014 stanowiły 65\% wszystkich sprzedanych aparatów. Szacuje się również że pod koniec 2019 roku liczba smartfonów w Europie przekroczy 765 mln, a więc przerośnie liczbę mieszkańców. Warto wykorzystać tę tendencję poprzez umożliwienie użytkowania tworzonych systemów na różnych platformach mobilnych. Tworzony produkt, będący narzędziem wspomagającym pracę gabinetu dentystycznego o nazwie ``Dentaise'', jest tego przykładem.
 %TODO problem spójności api
 %TODO praca odnosi się do konkretnych frameworków i niektóre rozwiązania są do zastosowania tylko w ich obrębie, ale niektóre zagadnienia mają charakter ogólny
 \section{Cele pracy}
 \label{sec:cele_pracy}
 
+Praca ma na celu ukazać przykładowy sposób implementacji systemu, który umożliwia interakcję z nim przy pomocy dwóch różnych aplikacji klienckich: webowej (poprzez przeglądarkę internetową) oraz mobilnej (na platformie Android). Na przykładzie realizacji systemu przeznaczonego dla gabinetu dentystycznego przedstawione zostaną różne alternatywy komunikacji między tymi modułami oraz problemy z jakimi trzeba się zmierzyć przy projektowaniu i implementacji produktów tego typu. Istotną częścią pracy jest również zapewnienie odpowiedniego bezpieczeństwa, które minimalizuje prawdopodobieństwo sukcesu najpopularniejszych ataków.
+
 \section{Zawartość pracy}
 \label{sec:zawartosc_pracy}
+
+W rozdziale \ref{cha:architektura} przedstawiono architekturę systemu, z uwzględnieniem wszystkich głównych komponentów i połączeń pomiędzy nimi. Szczegóły takie jak projektowanie interfejsów oraz dobór odpowiednich protokołów, technologii i narzędzi programistycznych zawarte zostały w rozdziale \ref{cha:dobor_technologii_i_narzedzi}. Opisuje on również problem dostosowania API możliwego do użytku z poziomu przeglądarki internetowej oraz platformy mobilnej, a także przedstawia projekt bazy danych. Rozdział \ref{cha:implementacja} składa się z opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w nim sposób realizacji założeń postawionych w rozdziale poprzednim z uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji oraz uruchomienia systemu.
 
 %----------------------------------------------------------------------------
 
 \chapter{Architektura}
 \label{cha:architektura}
 
-\section{Architektura fizyczna}
-\label{sec:architektura_fizyczna}
+Przed projektowaniem poszczególnych warstw aplikacji, należy określić z jakich komponentów będzie się ona składać. Rysunek \ref{fig:architektura} przedstawia architekturę z wydzielonymi modułami systemu, pomiędzy którymi może nastąpić komunikacja z wykorzystaniem sieci internet.
 
-\section{Architektura logiczna}
-\label{sec:architektura_logiczna}
+\fullWidthPicture{architektura}{Architektura tworzonego systemu}
+
+Na podstawie przedstawionego schematu można wyróżnić następujące komponenty wchodzące w skład systemu:
+\begin{description}
+\item[DB] - baza danych
+\item[Dentaise Server] - serwer zawierający logikę aplikacji i udostępniający ją klientom webowym oraz mobilnym w formie odpowiedniej dla nich
+\item[Dentaise Web] - klient webowy
+\item[Dentaise Mobile] - klient mobilny na platformę android
+\end{description}
+
+Całość systemu opiera się na platformie Java, więc komunikacja pomiędzy serwerem a relacyjną bazą danych odbędzie się przy pomocy protokołu JDBC. Dane niezbędne do wyświetlenia aplikacji webowej w przeglądarce użytkownika otrzymywane będą przy użyciu protokołu HTTP lub jego szyfrowanej wersji HTTPS. Aplikacja kliencka \emph{Android} także musi korzystać z podobnego zestawu danych, który będzie dla niej udostępniony poprzez \emph{Web Service}. Szczegóły doboru odpowiednich protokołów i dostosowania interfejsów dla aplikacji klienckich zostaną przedstawione w rozdziale \ref{cha:dobor_technologii_i_narzedzi}. 
 
 %----------------------------------------------------------------------------
 
@@ -426,8 +435,6 @@ Ręczne zarządzanie bibliotekami programistycznymi bywa bardzo kłopotliwym zad
 
 \chapter{Implementacja}
 \label{cha:implementacja}
-
-%TODO: mobile? klient ws (logowanie), propertiesy (persistence), appcompat
 
 Podczas implementacji systemu tworzonego w~ramach pracy dołożono starań, aby był on zgodny obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
 
@@ -922,7 +929,6 @@ Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formu
 Warto zauważyć, że dane przesyłane są w niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy, jaką podaje w oknie logowania użytkownik, po zdekodowaniu zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z wysyłanym żądaniem. Zwykle w tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
 
 \paragraph{Digest Access Authentication}
-%TODO? w razie potrzeby będzie można uzupełnić o dokładny sposób tworzenia skrótu
 
 Ze względu na to, że w schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych.
 
@@ -935,7 +941,7 @@ Oprócz parametru \emph{realm} omówionego wcześniej, w~odpowiedzi zwrotnej mog
 \item[domain] \hfill \\
 Lista adresów przypadających pod strefę określoną w~\emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w~tym polu zasobów.
 \item[nonce] \hfill \\
-%TODO? nonce jest ogólnym pojęciem, można o nim coś więcej napisać...
+
 Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W~tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Zwykle jest ciągiem znaków zakodowanym w Base64 lub zapisanym w systemie heksadecymalnym, który zawiera w~sobie między innymi aktualny czas, aby umożliwić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
 \item[opaque] \hfill \\
 Ciąg znaków ustalany przez serwer, który powinien być zwrócony w niezmienionej postaci przez klienta. Może zostać użyty do przesyłania dodatkowych informacji, na przykład kiedy za uwierzytelnianie odpowiada serwer inny niż hostujący zasób, do którego klient chce uzyskać dostęp. W~tym celu można jednak również wykorzystać pole \emph{nonce}.
@@ -1163,6 +1169,8 @@ Sesja służy do identyfikacji użytkownika łączącego się z~usługą po etap
 \paragraph{Cookies}
 \label{sec:cookies}
 
+%TODO ustawić parametry ciasteczek w play!!
+
 Po zalogowaniu klient musi automatycznie wysyłać wszystkie żądania wraz z~przydzielonym mu identyfikatorem sesji. Ze względu na to, iż protokół \emph{HTTP} jest bezstanowy, wykorzystuje się w~tym celu \emph{Cookies} (ciasteczka). Jak można przeczytać w~\cite{MsC} służą one do przechowywania ogólnego zbioru  informacji dotyczących klienta, takich jak zawartość jego koszyka (w wypadku serwisu realizującego funkcjonalność sklepu internetowego), ustawień dotyczących odwiedzanej witryny, czy jego stanu. Dla przykładu klient może zmienić preferencje widoku strony internetowej, takie jak kolor tła. Dane te są początkowo przesyłane w~zapytaniu \emph{HTTP} do serwera, na przykład przy pomocy formularza \emph{HTML} i~metody \emph{POST}. Po stronie serwera następuje ich analiza i~tłumaczenie na polecenia ustawiające je jako ciasteczka na maszynie klienta. W~kolejnych zapytaniach ustawienia te są dołączane do wszystkich żądań, dzięki czemu strona wyświetla się zawsze w~kolorze wybranym przez użytkownika.
 
 Zgodnie z~\cite{RfcC11}, zarządzanie \emph{Cookies} odbywa się przy pomocy dwóch nagłówków protokołu \emph{HTTP}:
@@ -1275,7 +1283,7 @@ gdzie \emph{A} jest liczbą prób zgadnięć identyfikatora, które atakujący j
 
 Dla przykładu podstawiając pod A wartość $1000$, pod B wartość $64$ (szacuje się, że liczba bitów entropii w~\emph{CSPRNG} to połowa \cite{SId,SMC}; $128/2=64$), a~pod S $2000$ otrzymujemy $4,611686018\cdot10^{12}$ sekund, czyli $146235,604338768$ lat. Warto dodać, że podstawione wartości były znacznie zawyżone. Tak duża ilość zapytań z~pewnością zostałaby zablokowana przez firewall, a~liczbę użytkowników zalogowanych na raz w przypadku tworzonego systemu szacuje się na maksymalnie kilku.
 
-%TODO wireshark, przykład
+%TODO? wireshark, przykład
 
 \subsection{Reset hasła}
 \label{sec:resetHaslaBezp}
@@ -1396,21 +1404,40 @@ alert(String.fromCharCode(88,83,83))//&quot;;alert(String.fromCharCode(88,83,83)
 %----------------------------------------------------------------------------
 
 \chapter{Konfiguracja i uruchomienie}
-%TODO dane, wykonanie sql...
 \label{cha:konfiguracja_i_uruchomienie}
-a może jako dodatek zamiast rozdziału?
+
+W rozdziale tym przedstawiony zostanie sposób konfiguracji i uruchomienia całości systemu Dentaise. Wszystkie wykorzystane komponenty mogą być instalowane na systemach Linux, Windows oraz Mac OS X, więc cały produkt również nie jest zależny od platformy. Istnieje także możliwość rozdzielenia modułów systemu na różne maszyny fizyczne, korzystające z innych systemów operacyjnych.
 
 \subsection{Baza danych}
+
+Aplikacja Dentaise jako system zarządzania bazą danych wykorzystuje PostgreSQL, który należy zainstalować w pierwszej kolejności oraz dokonać ustawień pozwalających na skomunikowanie się z nią przy pomocy z góry określonych parametrów. Domyślna konfiguracja oczekuje bazy danych o nazwie ``dentaise'' dostępnej pod adresem localhost:5432 dla użytkownika \emph{postgres} z hasłem \emph{postgres}. W razie potrzeby parametry te można dowolnie zmodyfikować w pliku \emph{application.conf} frameworka \emph{Play}, który zostanie bliżej przedstawiony w podrozdziale \ref{sec:playFramework}. Możliwa jest również zmiana całego systemu zarządzania bazą danych na inny (np. MySQL, Oracle, MS SQL) -- należy jednak podkreślić, że nie zostało to przetestowane i nie jest zalecane, jeśli nie zachodzi taka konieczność.
+
+Zakres usług realizowanych przez różne gabinety stomatologiczne nie musi być identyczny, wobec tego bazę danych należy spersonalizować dla potrzeb danej przychodni poprzez wypełnienie tabel \emph{area}, \emph{diagnosis} oraz \emph{treatment} wartościami możliwych obszarów leczenia, rozpoznań oraz zabiegów.
+
 \subsection{Play Framework}
-%pamiętaj o https
-\subsubsection{Instalacja}
-\subsubsection{Plik application.conf}
-baseUrl, smtp.host, database itp...
-\subsection{Android SDK}
-\subsection{Zależności}
-\subsubsection{Sbt}
-\subsubsection{Gradle}
-\subsection{Uruchomienie}
+\label{sec:playFramework}
+
+Podczas rozwoju aplikacji wykorzystano \emph{Play Framework} w wesji \emph{2.3.1} i jest ona zalecana przy próbie uruchomienia systemu. Do poprawnego działania wszystkich funkcji niezbędna jest konfiguracja pliku \emph{Dentaise/dentaise-web/conf/application.conf}, a w szczególności parametrów:
+\begin{description}
+\item[application.baseUrl] - adres pod jakim aplikacja jest dostępna z poziomu tej samej maszyny
+\item[application.outerBaseUrl] - adres pod jakim aplikacja jest dostępna z zewnątrz
+\item[smtp.host] - adres serwera \emph{SMTP}, który jest konieczny do wysyłania maili z tajnym tokenem zmiany hasła
+\end{description}
+Dodatkowo konfiguracja grupy \emph{db.default.*} umożliwia spersonalizowanie dostępu do bazy danych.
+
+Przedstawione parametry mają jedynie charakter informacyjny i muszą być zgodne z parametrami uruchomienia aplikacji. Domyślnie \emph{Play Framework} nasłuchuje na porcie \emph{9000}, a wartości baseUrl wskazują na port \emph{9443}. Rozbieżność ta bierze się stąd, że usługa powinna być uruchomiona na protokole \emph{HTTPS}, co można uczynić następującym poleceniem:
+
+\begin{lstlisting}
+activator run -Dhttps.port=9443
+\end{lstlisting}
+
+Po wywołaniu powyższej komendy usługa powinna być dostępna pod adresami \emph{http://<adres\_ip>:9000} oraz \emph{https://<adres\_ip>:9443}. Podczas pierwszego logowania w aplikacji można użyć nazwy użytkownika \emph{admin} oraz hasła \emph{admin}. Po skonfigurowaniu własnej bazy lekarzy konto domyśle powinno zostać usunięte.
+
+\subsection{Android}
+
+Plik \emph{apk}, potrzebny do zainstalowania mobilnego klienta Dentaise na platformie Android, znajduje się w katalogu \emph{Dentaise/dentaise-mobile/app/build/apk}. Po wgraniu na docelowe urządzenie wystarczy go uruchomić, aby rozpocząć proces instalacji. Należy przed tym w ustawieniach telefonu zezwolić na instalowanie aplikacji ze źródeł innych niż ``Play Store''. Aplikację przetestowano na smartfonie \emph{Samsung Galaxy S2} z systemem \emph{Android} w wersji 4.1.2.
+
+Podczas konfiguracji z usługą \emph{Web Service'u} należy mieć na uwadze, że aplikacja \emph{Dentaise Mobile} domyślnie dodaje przedrostek z protokołem ``https://'' do adresu jeśli ten nie zaczyna się od ``http://'' lub ``https://''. W przypadku wpisania adresu z pominięciem protokołu, serwer musi być więc uruchomiony z opcją \emph{-Dhttps.port} aby nawiązanie połączenia się powiodło.
 
 % itd.
 % \appendix

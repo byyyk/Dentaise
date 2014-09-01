@@ -63,8 +63,8 @@ public class AppRepository {
 
     public void setServerAddress(String serverAddress) {
         this.serverAddress = serverAddress;
-        if (!serverAddress.startsWith("http://")) {
-            this.baseUrl = "http://" + serverAddress;
+        if (!serverAddress.startsWith("https://") || !serverAddress.startsWith("http://")) {
+            this.baseUrl = "https://" + serverAddress;
         } else {
             this.baseUrl = serverAddress;
         }

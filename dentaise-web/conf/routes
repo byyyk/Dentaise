@@ -38,7 +38,5 @@ GET     /treatments                         controllers.TreatmentController.list
 
 #GET     /patients/:pId/visits               controllers.VisitController.list(page: Int ?= 0, onlyMine: Boolean ?= false, fromDate: String ?= null, toDate: String ?= null, pId: Long)
 
-GET     /test-init                          controllers.Util.testInit()
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
