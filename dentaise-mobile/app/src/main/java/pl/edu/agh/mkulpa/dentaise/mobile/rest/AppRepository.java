@@ -7,10 +7,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.message.BasicNameValuePair;
@@ -18,8 +19,16 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.BasicHttpContext;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by byyyk on 05.08.14.
@@ -28,7 +37,7 @@ public class AppRepository {
     private final String TAG = AppRepository.class.getSimpleName();
     private AndroidHttpClient httpClient;
     private String baseUrl;
-    private BasicHttpContext context;
+    private BasicHttpContext httpContext;
     private BasicCookieStore cookieStore;
     private String username;
     private String password;
@@ -37,11 +46,44 @@ public class AppRepository {
     public AppRepository(String serverAddress, String username, String password) {
         httpClient = AndroidHttpClient.newInstance("dentaiseHttpClient");
         cookieStore = new BasicCookieStore();
-        context = new BasicHttpContext();
-        context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+        httpContext = new BasicHttpContext();
+        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+        loadCertificate();
         setServerAddress(serverAddress);
         setUsername(username);
         setPassword(password);
+    }
+
+    private void loadCertificate() {
+        try {
+            KeyStore keyStore = null;
+            keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+
+            String keystoreLocation = "res/raw/generated.keystore";
+            InputStream certStream = this.getClass().getClassLoader().getResourceAsStream(keystoreLocation);
+            try {
+                keyStore.load(certStream, null);
+
+            } finally {
+                certStream.close();
+            }
+
+            SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore);
+            Scheme sch = new Scheme("https", socketFactory, 443);
+            httpClient.getConnectionManager().getSchemeRegistry().register(sch);
+        } catch (CertificateException e) {
+            Log.e(TAG, null, e);
+        } catch (NoSuchAlgorithmException e) {
+            Log.e(TAG, null, e);
+        } catch (IOException e) {
+            Log.e(TAG, null, e);
+        } catch (KeyStoreException e) {
+            Log.e(TAG, null, e);
+        } catch (UnrecoverableKeyException e) {
+            Log.e(TAG, null, e);
+        } catch (KeyManagementException e) {
+            Log.e(TAG, null, e);
+        }
     }
 
     public void reconfigure() {
@@ -93,7 +135,7 @@ public class AppRepository {
         entity.add(new BasicNameValuePair("password", password));
         httpPost.setEntity(new UrlEncodedFormEntity(entity, "UTF-8"));
 
-        HttpResponse response = httpClient.execute(httpPost, context);
+        HttpResponse response = httpClient.execute(httpPost, httpContext);
         print(response);
         if (unauthorized(response)) {
             throw new AuthenticationFailedException("Could not login, probably wrong user or password");
@@ -132,7 +174,7 @@ public class AppRepository {
 
         Log.i(TAG, "Trying to call " + request.getMethod() + " " + request.getURI() + " ...");
         request.setHeader("Accept", "application/json");
-        response = httpClient.execute(request, context);
+        response = httpClient.execute(request, httpContext);
         print(response);
 
         boolean definitelyUnauthorized = false;
@@ -142,7 +184,7 @@ public class AppRepository {
                 // maybe session expired, retry
                 login();
                 Log.i(TAG, "Retrying...");
-                response = httpClient.execute(request, context);
+                response = httpClient.execute(request, httpContext);
                 print(response);
                 if (unauthorized(response)) {
                     definitelyUnauthorized = true;
