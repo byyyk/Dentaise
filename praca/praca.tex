@@ -13,7 +13,8 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{picinpar}
-
+\usepackage{tabularx}
+\usepackage{enumitem}
 \usepackage{wrapfig}
 
 \lstloadlanguages{TeX}
@@ -42,6 +43,8 @@ literate={ą}{{\k{a}}}1
 {Ź}{{\'Z}}1
 {Ż}{{\.Z}}1
 }
+
+
 
 \graphicspath{ {./gfx/} }
 
@@ -92,7 +95,7 @@ literate={ą}{{\k{a}}}1
 \titleEN{Design and implementation of mobile doctors office management system using JavaEE and Android technologies}
 
 \shorttitlePL{Projekt i~implementacja mobilnego systemu wspomagającego prowadzenie gabinetu lekarskiego w technologii JavaEE oraz Android}
-\shorttitleEN{Skrócony tytuł angielski}
+\shorttitleEN{Design and implementation of mobile doctors office management system using JavaEE and Android technologies}
 
 \thesistype{Praca dyplomowa magisterska}
 
@@ -127,8 +130,6 @@ literate={ą}{{\k{a}}}1
 */
 
 %TODO sprawdzic zawartosc plytki z konf i uruchom. przed oddaniem
-%TODO? paginator w sql injection albo rozdziale o paginacji? jeśli w rozdziale o paginacji to wspomnieć w sql injection że jest tam przykład JPA Criteria API
-%TODO wypełnienie danymi
 %TODO sprawdzić czy admin zadziała na pustej bazie
 
 \setcounter{secnumdepth}{3}
@@ -157,23 +158,25 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 \chapter{Wstęp}
 \label{cha:wstep}
 
-Informatyka jest bardzo dynamicznie rozwijającą się dziedziną co skutkuje w~gwałtownym powstawaniu nowych urządzeń i~systemów, stopniowo zastępujących dotychczasowe standardy. Trend ten można zaobserwować również na rynku smartfonów, które według \cite{MG} w~pierwszym kwartale 2014 stanowiły 65\% wszystkich sprzedanych aparatów. Szacuje się również, że pod koniec 2019 roku liczba smartfonów w~Europie przekroczy 765 mln, a~więc przerośnie liczbę mieszkańców. Warto wykorzystać tę tendencję poprzez umożliwienie użytkowania systemów na różnych platformach mobilnych. Tworzony produkt, będący narzędziem wspomagającym pracę gabinetu dentystycznego o~nazwie ``Dentaise'', jest tego przykładem.
-%TODO? problem spójności api
-%TODO? praca odnosi się do konkretnych frameworków i niektóre rozwiązania są do zastosowania tylko w ich obrębie, ale niektóre zagadnienia mają charakter ogólny
+Informatyka jest bardzo dynamicznie rozwijającą się dziedziną co skutkuje w~gwałtownym powstawaniu nowych urządzeń i~systemów, stopniowo zastępujących dotychczasowe standardy. Trend ten można zaobserwować również na rynku smartfonów, które według \cite{MG} w~pierwszym kwartale 2014 stanowiły 65\% wszystkich sprzedanych aparatów. Szacuje się również, że pod koniec 2019 roku liczba smartfonów w~Europie przekroczy 765 mln, a~więc przerośnie liczbę mieszkańców. Warto wykorzystać tę tendencję poprzez umożliwienie korzystania z systemów na różnych platformach mobilnych. Tworzony produkt, będący narzędziem wspomagającym pracę gabinetu dentystycznego o~nazwie ``Dentaise'', jest tego przykładem.
+
 \section{Cele pracy}
 \label{sec:cele_pracy}
 
-Praca ma na celu ukazać przykładowy sposób implementacji systemu, który umożliwia interakcję z~nim przy pomocy dwóch różnych aplikacji klienckich: webowej (poprzez przeglądarkę internetową) oraz mobilnej (na platformie Android). Na przykładzie realizacji systemu przeznaczonego dla gabinetu dentystycznego przedstawione zostaną różne alternatywy komunikacji między tymi modułami oraz problemy z~jakimi trzeba się zmierzyć przy projektowaniu i~implementacji produktów tego typu. Istotną częścią pracy jest również zapewnienie odpowiedniego bezpieczeństwa, które minimalizuje prawdopodobieństwo sukcesu najpopularniejszych ataków.
+Celem pracy jest projekt i implementacja systemu wspomagającego pracę przychodni lekarskiej, który umożliwia interakcję z~nim przy pomocy dwóch aplikacji klienckich: webowej (poprzez przeglądarkę internetową) oraz mobilnej (na platformie Android). Na przykładzie realizacji systemu przeznaczonego dla gabinetu dentystycznego przedstawione zostaną różne alternatywy komunikacji między tymi modułami oraz problemy z~jakimi trzeba się zmierzyć przy projektowaniu i~implementacji produktów tego typu. Istotną częścią pracy jest również zapewnienie odpowiedniego bezpieczeństwa, które minimalizuje prawdopodobieństwo sukcesu najpopularniejszych ataków.
 
 \section{Zawartość pracy}
 \label{sec:zawartosc_pracy}
 
-W~rozdziale \ref{cha:architektura} przedstawiono architekturę systemu, z~uwzględnieniem wszystkich głównych komponentów i~połączeń pomiędzy nimi. Szczegóły takie jak projektowanie interfejsów oraz dobór odpowiednich protokołów, technologii i~narzędzi programistycznych zawarte zostały w rozdziale \ref{cha:dobor_technologii_i_narzedzi}. Opisuje on również problem dostosowania API możliwego do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej, a~także przedstawia projekt bazy danych. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale poprzednim z~uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji oraz uruchomienia systemu.
+%TODO zaktualizować
+W~rozdziale \ref{cha:architektura} przedstawiono architekturę systemu, z~uwzględnieniem wszystkich głównych komponentów i~połączeń pomiędzy nimi. Szczegóły takie jak projektowanie interfejsów oraz dobór odpowiednich protokołów, technologii i~narzędzi programistycznych zawarte zostały w rozdziale \ref{cha:dobor_technologii_i_narzedzi}. Opisano w nim również problem dostosowania API możliwego do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej, a~także przedstawiono projekt bazy danych. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale poprzednim z~uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji oraz uruchomienia systemu.
 
 %----------------------------------------------------------------------------
 
 \chapter{Architektura}
 \label{cha:architektura}
+
+%TODO przeniesc do projektu
 
 Przed projektowaniem poszczególnych warstw aplikacji, należy określić z~jakich komponentów będzie się ona składać. Rysunek \ref{fig:architektura} przedstawia architekturę z~wydzielonymi modułami systemu, pomiędzy którymi może nastąpić komunikacja z~wykorzystaniem sieci internet.
 
@@ -194,11 +197,124 @@ Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy s
 \chapter{Projekt}
 \label{cha:dobor_technologii_i_narzedzi}
 
-Jednym z problemów w~projektowaniu systemu składającego się z~wielu komponentów jest dopasowanie interfejsów do każdego z~nich, co będzie głównym tematem tego rozdziału. Omówione zostaną zadania charakterystyczne dla każdego modułu aplikacji i~sposób integracji pomiędzy nimi.
+Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu systemowi oraz przedstawienie interfejsów komponentów wchodzących w jego skład. Omówione zostaną również zadania charakterystyczne dla wszystkich głównych modułów aplikacji i~sposób integracji pomiędzy nimi. Opisane będą technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy jego poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która wyróżnia się bardzo bogatym ekosystemem, co sprzyja w dobieraniu bibliotek i~narzędzi wspomagających prace programistyczne.
 
-W~rozdziale tym opisane będą również technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która posiada bardzo bogaty ekosystem, co daje ogromne możliwości wyboru bibliotek i~narzędzi wspomagających prace programistyczne.
+\section {Wymagania funkcjonalne aplikacji webowej}
+\def\useCaseNazwa{Funkcja}
+\def\useCaseUzytkownik{Zarejestrowany użytkownik (lekarz)}
+\def\useCaseAktor{Aktor}
+\def\useCaseWarPocz{Warunki początkowe}
+\def\useCaseScenAlt{Scenariusz alternatywny}
+\def\useCaseScenBaz{Przebieg interakcji}
+\def\useCaseWarKonc{Warunki końcowe}
+\def\useCaseZdarzInicj{Zdarzenie inicjujące}
 
-\section {Serwer}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}%
+
+
+\begin{tabularx}{\textwidth}{ |r|L| }
+	\hline
+	\textbf{\useCaseNazwa} & Logowanie się do systemu \\
+	\hline
+	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
+	\hline
+	\textbf{\useCaseWarPocz}  & Użytkownik jest wylogowany. \\
+	\hline
+	\textbf{\useCaseZdarzInicj} & Użytkownik wprowadza w przeglądarce internetowej adres aplikacji. \\
+	\hline
+	\textbf{\useCaseScenBaz}  & 
+		\begin{enumerate}
+		\item System wyświetla formularz umożliwiający wprowadzenie danych uwierzytelniających, składających się z nazwy użytkownika oraz hasła.
+		\item Użytkownik wpisuje swoją nazwę użytkownika i hasło w formularzu.
+		\item Użytkownik zatwierdza operację w klikając w przycisk ``Zaloguj''.
+		\item System weryfikuje dane i stwierdza ich poprawność.
+		\item{Użytkownik jest przekierowany do strony głównej aplikacji.}
+		\end{enumerate}
+		\\
+	\hline
+	\textbf{\useCaseScenAlt}  & 
+		\begin{enumerate}[label=4a\arabic*.]
+		\item Dane przesłane przez użytkownika są niepoprawne
+		\item System ponownie wyświetla formularz wraz z informacją o błędzie logowania.
+		\item Kontynuacja od punktu 2 scenariusza bazowego
+		\end{enumerate}
+		\\
+	\hline
+	\textbf{\useCaseWarKonc}  & 
+		\begin{itemize}
+		\item{Została utworzona sesja dla użytkownika.}
+		\end{itemize}
+	\\
+	\hline
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}{ |r|L| }
+	\hline
+	\textbf{\useCaseNazwa} & Wylogowanie się z systemu \\
+	\hline
+	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
+	\hline
+	\textbf{\useCaseWarPocz}  & Użytkownik jest zalogowany. \\
+	\hline
+	\textbf{\useCaseZdarzInicj} & Użytkownik klika na przycisk wylogowania w panelu głównym aplikacji. \\
+	\hline
+	\textbf{\useCaseScenBaz}  & 
+		\begin{enumerate}
+		\item System przetwarza żądanie.
+		\item Użytkownik jest przekierowany do strony logowania
+		\end{enumerate}
+		\\
+	\hline
+	\textbf{\useCaseWarKonc}  & 
+	Sesja użytkownika została usunięta z systemu.
+	\\
+	\hline
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}{ |r|L| }
+	\hline
+	\textbf{\useCaseNazwa} & Zmiana zapomnianego hasła użytkownika \\
+	\hline
+	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
+	\hline
+	\textbf{\useCaseWarPocz}  & Użytkownik jest wylogowany. \\
+	\hline
+	\textbf{\useCaseZdarzInicj} & Użytkownik wprowadza w przeglądarce internetowej adres aplikacji. \\
+	\hline
+	\textbf{\useCaseScenBaz}  & 
+		\begin{enumerate}
+		\item System wyświetla użytkownikowi formularz logowania.
+		\item Użytkownik klika w przycisk ``Resetuj hasło''.
+		\item System wyświetla formularz z polem do wprowadzenia adresu e-mail powiązanego z kontem użytkownika.
+		\item Użytkownik wprowadza swój adres e-mail.
+		\item System wyszukuje konto użytkownika powiązane z otrzymanym adresem oraz generuje dla niego \emph{token} upoważniający do zmiany hasła.
+		\item System wysyła odnośnik z tajnym identyfikatorem \emph{tokenu}.
+		\item Użytkownik wchodzi na swoją skrzynkę mailową i klika w odnośnik.
+		\item System wyświetla użytkownikowi formularz z dwoma polami do wprowadzenia nowego hasła.
+		\item Użytkownik wprowadza nowe hasło do obydwu pól formularza.
+		\item Użytkownik zatwierdza wprowadzone dane.
+		\item System analizuje zgodność wprowadzonych haseł oraz ważność tokenu i stwierdza poprawność otrzymanych danych.
+		\item Użytkownik jest kierowany do strony z komunikatem o sukcesie operacji.
+		\end{enumerate}
+		\\
+	\hline
+	\textbf{\useCaseScenAlt}  & 
+		\begin{enumerate}[label=4a\arabic*.]
+		\item Dane przesłane przez użytkownika są niepoprawne
+		\item System ponownie wyświetla formularz wraz z informacją o błędzie logowania.
+		\item Kontynuacja od punktu 2 scenariusza bazowego
+		\end{enumerate}
+		\\
+	\hline
+	\textbf{\useCaseWarKonc}  & 
+	Hasło użytkownika zostało zmienione.
+	\\
+	\hline
+\end{tabularx}
+
+
+\section {Strona Serwerowa}
 
 Całość systemu powinna zostać wykonana w~sposób spełniający normy bezpieczeństwa charakterystyczne dla tego typu aplikacji biznesowych. Każdy zasób dostępny z~zewnątrz musi być chroniony, tzn. możliwy do interakcji tylko dla uwierzytelnionych użytkowników. Ochrona tych elementów i~dostarczenie bazującej na nich logiki biznesowej w~formie możliwej do użycia z~poziomu aplikacji mobilnej oraz przeglądarki internetowej będą głównymi zadaniami części serwerowej systemu.
 
@@ -215,7 +331,7 @@ Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania
 
 \subsubsection{Mapowanie obiektowo-relacyjne}
 
-W~relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można przyrównać do prostej postaci tabularnej, gdzie dane przetrzymywane są bez informacje o~typach innych danych powiązanych z~nimi. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia, że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
+W~relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można porównać do postaci tabelarycznej, gdzie dane przetrzymywane są bez informacji o~typach innych, powiązanych z~nimi danych. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia, że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
 
 Dostęp do bazy danych w~języku Java zapewniony jest przez technologię JDBC\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań SQL, będących z~punktu widzenia kompilatora jedynie ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~poprawności zapytań co może doprowadzić do nieobliczalnych błędów oraz trudności w~rozwoju i~utrzymaniu kodu.
 
@@ -254,15 +370,15 @@ Dzięki takiemu podejściu jedyne co jest potrzebne do konsumpcji usługi \emph{
 
 \paragraph{SOAP}
 
-Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są wykorzystywane do opisu wyników operacji czy parametryzowania zapytań. W~tym wypadku jest on wykorzystywany jedynie do przekazania danych, opisywanych przy wykorzystaniu własnego standardu, opartego na języku \emph{XML}. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
+Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są używane w~celu opisania wyników operacji czy parametryzowania zapytań. Dane te zapisane są w~zawartości komunikatów przy pomocy języka \emph{XML}, a~wspomniane nagłówki służą jedynie do informacji o transporcie danych. Dla przykładu z~punktu widzenie protokołu \emph{HTTP} zapytanie o~nieistniejący zasób jest poprawne i powinno skutkować w odpowiedzi \emph{200 OK}, a informacja o~błędzie powinna zostać uwzględniona w~zawartości komunikatu. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
 
-Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jest plikiem \emph{WSDL} zapisanym w formacie \emph{XML}. Kontrakt ten musi zostać opublikowany lub przesłany do osób zainteresowanych konsumpcją usługi. Ręczne użytkowanie, wbrew temu co sugeruje nazwa i~założenia, jest na tyle skomplikowane, że w~większości przypadków do efektywnej pracy niezbędne są narzędzia pozwalające na generowanie kodu strony klienckiej lub serwerowej na podstawie kontraktu \emph{WSDL}. W~przeciwnym wypadku, aby móc parsować i~tworzyć wiadomości \emph{SOAP}, konieczne jest dogłębne zapoznanie się ze standardem.
+Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jest plikiem \emph{WSDL} zapisanym w formacie \emph{XML}. Kontrakt ten musi zostać opublikowany lub przesłany do osób zainteresowanych konsumpcją usługi. Ręczne użytkowanie, wbrew temu co sugeruje nazwa i~założenia, jest na tyle skomplikowane, że w~większości przypadków do efektywnej pracy niezbędne są narzędzia pozwalające na generowanie kodu strony klienckiej lub serwerowej na podstawie wspomnianego kontraktu. W~przeciwnym wypadku, aby móc parsować i~tworzyć wiadomości \emph{SOAP}, konieczne jest dogłębne zapoznanie się ze standardem.
 
 W odróżnieniu od podejścia \emph{REST}, protokół \emph{SOAP} jest zorientowany na usługę (\emph{Service Oriented Architecture}), czyli akcje możliwe do wykonania, a~nie zasoby.
 
 \paragraph{Wybór i uzasadnienie}
 
-Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług podążających tą drogą ma jasny interfejs nie wymagający większej dokumentacji, poza wymienieniem dostępnych zasobów, ponieważ metody HTTP wykorzystywane do wykonywania na nich operacji zwykle dobierane są w~sposób jednakowy, zgodnie z~zalecanymi standardami.
+Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług podążających tą drogą ma jasny interfejs nie wymagający tworzenia obszernej dokumentacji. Często wystarczające jest jedynie wymienienie dostępnych zasobów, ponieważ metody \emph{HTTP} wykorzystywane do definiowania możliwych operacji zwykle dobierane są w~sposób zgodny z~powszechnie znanymi standardami.
 
 W~przypadku implementowanego systemu zdecydowanie lepszą drogą będzie skorzystanie z~usługi typu \emph{RESTful}. Jest to również technologia oficjalnie zalecana do użycia na platformie Android. Ze względu na to, że opiera się ona na stylu architektury \emph{REST}, który jest sposobem definiowania zasobów przeznaczonym dla \emph{WWW}\footnote{World Wide Web}, taką usługę będzie można wykorzystać także dla drugiego tworzonego modułu klienckiego - strony internetowej, co byłoby znacznie trudniejsze do osiągnięcia przy użyciu \emph{SOAP}. Możliwość wykorzystania wspólnego interfejsu między tym dwoma modułami znacznie ułatwi prace rozwojowe i~utrzymanie projektu.
 
