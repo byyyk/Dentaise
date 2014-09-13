@@ -59,11 +59,11 @@ public class AppRepository {
             KeyStore keyStore = null;
             keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 
-            String keystoreLocation = "res/raw/generated.keystore";
+            String keystoreLocation = "res/raw/android.bks";
+            Log.i(TAG, "Reading keystore: " + keystoreLocation);
             InputStream certStream = this.getClass().getClassLoader().getResourceAsStream(keystoreLocation);
             try {
-                keyStore.load(certStream, null);
-
+                keyStore.load(certStream, "changeit".toCharArray());
             } finally {
                 certStream.close();
             }

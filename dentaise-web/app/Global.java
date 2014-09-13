@@ -9,6 +9,7 @@ import play.Logger;
 import play.data.format.Formatters;
 import play.data.format.Formatters.SimpleFormatter;
 import play.db.jpa.JPA;
+import play.libs.F.Function0;
 import controllers.Application;
 import controllers.PasswordHashing;
 import controllers.Util;
@@ -36,17 +37,23 @@ public class Global extends GlobalSettings {
 	
 	public void initDb() {
 		try {
-			List<Doctor> doctors = Util.findAll(Doctor.class);
-			if (doctors.isEmpty()) {
-				Logger.info("creating default admin:admin account");
-				Doctor defaultAdmin = new Doctor();
-				String salt = PasswordHashing.generateSalt();
-				String hashedPwd = PasswordHashing.hash(DEFAULT_ADMIN_PASSWORD, salt);
-				defaultAdmin.setUsername(DEFAULT_ADMIN_USERNAME);
-				defaultAdmin.setSalt(salt);
-				defaultAdmin.setPassword(hashedPwd);
-				JPA.em().persist(defaultAdmin);
-			}
+			JPA.withTransaction(new Function0<Void>() {
+				@Override
+				public Void apply() throws Throwable {
+					List<Doctor> doctors = Util.findAll(Doctor.class);
+					if (doctors.isEmpty()) {
+						Logger.info("creating default admin:admin account");
+						Doctor defaultAdmin = new Doctor();
+						String salt = PasswordHashing.generateSalt();
+						String hashedPwd = PasswordHashing.hash(DEFAULT_ADMIN_PASSWORD, salt);
+						defaultAdmin.setUsername(DEFAULT_ADMIN_USERNAME);
+						defaultAdmin.setSalt(salt);
+						defaultAdmin.setPassword(hashedPwd);
+						JPA.em().persist(defaultAdmin);
+					}
+					return null;
+				}
+			});
 		} catch (Throwable e) {
 			Logger.error(null, e);
 		}

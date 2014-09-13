@@ -1,6 +1,15 @@
+???
+tytul angielski
+zmiana numeru albumu w 1 str recenzji
+streszczenie po angielsku?
+spis rysunków?
+spis tabel?
+
 DO ZROBIENIA:
 httpOnly
 Secure
+application.outerBaseUrl="https://localhost:9443" dla maili
+application.outerBaseUrl="http://localhost:9000" wewnetrzna komunikacja
 
 
 http://dokumenty.rcl.gov.pl/DU/rok/2013/pozycja/1462
