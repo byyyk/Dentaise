@@ -145,7 +145,7 @@ Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę ga
 
 W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Cross-site Scripting} oraz \emph{SQL Injection}.
 
-Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
+Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z~prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
 
 \end{abstract}
 
@@ -197,9 +197,12 @@ Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy s
 \chapter{Projekt}
 \label{cha:dobor_technologii_i_narzedzi}
 
-Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu systemowi oraz przedstawienie interfejsów komponentów wchodzących w jego skład. Omówione zostaną również zadania charakterystyczne dla wszystkich głównych modułów aplikacji i~sposób integracji pomiędzy nimi. Opisane będą technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy jego poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która wyróżnia się bardzo bogatym ekosystemem, co sprzyja w dobieraniu bibliotek i~narzędzi wspomagających prace programistyczne.
+Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu systemowi oraz przedstawienie interfejsów komponentów wchodzących w~jego skład. Omówione zostaną również zadania charakterystyczne dla wszystkich głównych modułów aplikacji i~sposób integracji pomiędzy nimi. Opisane będą technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy jego poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która wyróżnia się bardzo bogatym ekosystemem, co sprzyja w dobieraniu bibliotek i~narzędzi wspomagających prace programistyczne.
 
 \section {Wymagania funkcjonalne aplikacji webowej}
+
+Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności przewidzianych w~systemie. Ze względu na większy komfort obsługi, spowodowany przeciętnie większym rozmiarem wyświetlaczy w~komputerach stacjonarnych niż w~telefonach komórkowych i~tabletach oraz możliwością skorzystania z~urządzeń wejściowych, takich jak klawiatura czy myszka, jest ona przewidziana jako docelowe narzędzie pracy wnoszonej przez użytkowników systemu. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla aplikacji webowej.
+
 \def\useCaseNazwa{Funkcja}
 \def\useCaseUzytkownik{Zarejestrowany użytkownik (lekarz)}
 \def\useCaseAktor{Aktor}
@@ -207,112 +210,610 @@ Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu sy
 \def\useCaseScenAlt{Scenariusz alternatywny}
 \def\useCaseScenBaz{Przebieg interakcji}
 \def\useCaseWarKonc{Warunki końcowe}
+\def\useCaseWyjatek{Wyjątek}
 \def\useCaseZdarzInicj{Zdarzenie inicjujące}
+\def\useCaseEnd{Scenariusz jest przerywany.}
 
 \newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
 \newcolumntype{L}{>{\raggedright\arraybackslash}X}%
+\newcommand{\useCaseContinue}[1]{Scenariusz jest kontynuowany od punktu #1.}
+
+\subsection{Logowanie się do systemu}	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			Użytkownik jest wylogowany.
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik wprowadza w przeglądarce internetowej adres aplikacji.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla formularz umożliwiający wprowadzenie danych uwierzytelniających, składających się z~nazwy użytkownika oraz hasła.
+			\item Użytkownik wpisuje swoją nazwę użytkownika i~hasło w formularzu.
+			\item Użytkownik zatwierdza operację klikając na przycisk ``Zaloguj''.
+			\item System weryfikuje dane i~stwierdza ich poprawność.
+			\item{Użytkownik jest przekierowany do strony głównej aplikacji.}
+			\end{enumerate}
+		\item[\useCaseScenAlt~1] \hfill \\
+			\begin{enumerate}[label=4a\arabic*.]
+			\item Dane przesłane przez użytkownika są niepoprawne.
+			\item System ponownie wyświetla formularz wraz z~informacją o~błędzie logowania.
+			\item \useCaseContinue{2}
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Sesja dla użytkownika została utworzona.
+	\end{description}
 
 
-\begin{tabularx}{\textwidth}{ |r|L| }
-	\hline
-	\textbf{\useCaseNazwa} & Logowanie się do systemu \\
-	\hline
-	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
-	\hline
-	\textbf{\useCaseWarPocz}  & Użytkownik jest wylogowany. \\
-	\hline
-	\textbf{\useCaseZdarzInicj} & Użytkownik wprowadza w przeglądarce internetowej adres aplikacji. \\
-	\hline
-	\textbf{\useCaseScenBaz}  & 
-		\begin{enumerate}
-		\item System wyświetla formularz umożliwiający wprowadzenie danych uwierzytelniających, składających się z nazwy użytkownika oraz hasła.
-		\item Użytkownik wpisuje swoją nazwę użytkownika i hasło w formularzu.
-		\item Użytkownik zatwierdza operację w klikając w przycisk ``Zaloguj''.
-		\item System weryfikuje dane i stwierdza ich poprawność.
-		\item{Użytkownik jest przekierowany do strony głównej aplikacji.}
-		\end{enumerate}
-		\\
-	\hline
-	\textbf{\useCaseScenAlt}  & 
-		\begin{enumerate}[label=4a\arabic*.]
-		\item Dane przesłane przez użytkownika są niepoprawne
-		\item System ponownie wyświetla formularz wraz z informacją o błędzie logowania.
-		\item Kontynuacja od punktu 2 scenariusza bazowego
-		\end{enumerate}
-		\\
-	\hline
-	\textbf{\useCaseWarKonc}  & 
+\subsection{Wylogowanie się z systemu}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			Użytkownik jest zalogowany.
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk wylogowania w~panelu głównym aplikacji.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System przetwarza żądanie.
+			\item Użytkownik jest przekierowany do strony logowania.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Sesja użytkownika została usunięta z systemu.
+	\end{description}
+
+\subsection{Zmiana zapomnianego hasła użytkownika}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			Użytkownik jest wylogowany.
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik wprowadza w~przeglądarce internetowej adres aplikacji.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla użytkownikowi formularz logowania.
+			\item Użytkownik klika w przycisk ``Resetuj hasło''.
+			\item System wyświetla formularz z~polem do wprowadzenia adresu e-mail powiązanego z~kontem użytkownika.
+			\item Użytkownik wprowadza swój adres e-mail.
+			\item System wyszukuje konto użytkownika powiązane z~otrzymanym adresem oraz generuje dla niego \emph{token} upoważniający do zmiany hasła.
+			\item System wysyła odnośnik z~tajnym identyfikatorem \emph{tokenu}.
+			\item Użytkownik wchodzi na swoją skrzynkę mailową i~klika w odnośnik.
+			\item System wyświetla użytkownikowi formularz z~dwoma polami do wprowadzenia nowego hasła.
+			\item Użytkownik wprowadza nowe hasło do obydwu pól formularza.
+			\item Użytkownik zatwierdza wprowadzone dane.
+			\item System analizuje zgodność wprowadzonych haseł oraz ważność tokenu i~stwierdza poprawność otrzymanych danych.
+			\item Użytkownik jest kierowany do strony z~komunikatem o~sukcesie operacji.
+			\end{enumerate}
+		\item[\useCaseScenAlt~1] \hfill \\
+			\begin{enumerate}[label=11a\arabic*.]
+			\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości.
+			\item System ponownie wyświetla formularz do podania nowego hasła z~informacją o~błędzie.
+			\item \useCaseContinue{9}
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Hasło użytkownika zostało zmienione.
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=11b\arabic*.]
+			\item Token stracił ważność lub jest niepoprawny.
+			\item System wyświetla komunikat o~błędzie operacji.
+			\item \useCaseEnd
+			\end{enumerate}
+			Hasło użytkownika nie zostaje zmienione.
+	\end{description}
+
+\subsection{Przeglądanie pacjentów}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
 		\begin{itemize}
-		\item{Została utworzona sesja dla użytkownika.}
+			\item Użytkownik jest zalogowany.
+			\item W~bazie istnieje przynajmniej jeden pacjent.
 		\end{itemize}
-	\\
-	\hline
-\end{tabularx}
+			
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na odnośnik do listy pacjentów w menu głównym.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla użytkownikowi listę pacjentów z~obsługą paginacji.
+			\item Użytkownik wpisuje fragment imienia, nazwiska lub numeru PESEL w~polu służącym do wyszukiwania.
+			\item Użytkownik zatwierdza wpisaną frazę.
+			\item System filtruje listę pacjentów pod kątem przekazanej frazy i~prezentuje ją użytkownikowi.
+			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukanego pacjenta.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Użytkownikowi zaprezentowane są podstawowe dane szukanego pacjenta (numer PESEL, imię, nazwisko, miasto, ulica, numer domu oraz mieszkania).
+	\end{description}
 
-\begin{tabularx}{\textwidth}{ |r|L| }
-	\hline
-	\textbf{\useCaseNazwa} & Wylogowanie się z systemu \\
-	\hline
-	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
-	\hline
-	\textbf{\useCaseWarPocz}  & Użytkownik jest zalogowany. \\
-	\hline
-	\textbf{\useCaseZdarzInicj} & Użytkownik klika na przycisk wylogowania w panelu głównym aplikacji. \\
-	\hline
-	\textbf{\useCaseScenBaz}  & 
-		\begin{enumerate}
-		\item System przetwarza żądanie.
-		\item Użytkownik jest przekierowany do strony logowania
-		\end{enumerate}
-		\\
-	\hline
-	\textbf{\useCaseWarKonc}  & 
-	Sesja użytkownika została usunięta z systemu.
-	\\
-	\hline
-\end{tabularx}
+\subsection{Dodawanie nowego pacjenta}
 
-\begin{tabularx}{\textwidth}{ |r|L| }
-	\hline
-	\textbf{\useCaseNazwa} & Zmiana zapomnianego hasła użytkownika \\
-	\hline
-	\textbf{\useCaseAktor} & \useCaseUzytkownik \\
-	\hline
-	\textbf{\useCaseWarPocz}  & Użytkownik jest wylogowany. \\
-	\hline
-	\textbf{\useCaseZdarzInicj} & Użytkownik wprowadza w przeglądarce internetowej adres aplikacji. \\
-	\hline
-	\textbf{\useCaseScenBaz}  & 
-		\begin{enumerate}
-		\item System wyświetla użytkownikowi formularz logowania.
-		\item Użytkownik klika w przycisk ``Resetuj hasło''.
-		\item System wyświetla formularz z polem do wprowadzenia adresu e-mail powiązanego z kontem użytkownika.
-		\item Użytkownik wprowadza swój adres e-mail.
-		\item System wyszukuje konto użytkownika powiązane z otrzymanym adresem oraz generuje dla niego \emph{token} upoważniający do zmiany hasła.
-		\item System wysyła odnośnik z tajnym identyfikatorem \emph{tokenu}.
-		\item Użytkownik wchodzi na swoją skrzynkę mailową i klika w odnośnik.
-		\item System wyświetla użytkownikowi formularz z dwoma polami do wprowadzenia nowego hasła.
-		\item Użytkownik wprowadza nowe hasło do obydwu pól formularza.
-		\item Użytkownik zatwierdza wprowadzone dane.
-		\item System analizuje zgodność wprowadzonych haseł oraz ważność tokenu i stwierdza poprawność otrzymanych danych.
-		\item Użytkownik jest kierowany do strony z komunikatem o sukcesie operacji.
-		\end{enumerate}
-		\\
-	\hline
-	\textbf{\useCaseScenAlt}  & 
-		\begin{enumerate}[label=4a\arabic*.]
-		\item Dane przesłane przez użytkownika są niepoprawne
-		\item System ponownie wyświetla formularz wraz z informacją o błędzie logowania.
-		\item Kontynuacja od punktu 2 scenariusza bazowego
-		\end{enumerate}
-		\\
-	\hline
-	\textbf{\useCaseWarKonc}  & 
-	Hasło użytkownika zostało zmienione.
-	\\
-	\hline
-\end{tabularx}
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie listy pacjentów.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Dodaj Pacjenta''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System tworzy nowego pacjenta.
+				\item Użytkownik jest przekierowany do podstrony edycji utworzonego pacjenta.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowy pacjent został dodany do systemu.
+	\end{description}
 
+\subsection{Edytowanie danych pacjenta}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie listy pacjentów.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na wiersz pacjenta, którego chce edytować.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi formularz edycji pacjenta zawierający dane: numer PESEL, imię, nazwisko, numer telefonu, nazwa ulicy, numer domu, numer mieszkania, kod pocztowy i~miejscowość.
+				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
+				\item Użytkownik zatwierdza wprowadzone zmiany.
+				\item Użytkownik zostaje przekierowany z~powrotem do listy pacjentów.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowe dane pacjenta zostały zapisane w systemie.
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=3a\arabic*.]
+				\item Użytkownik anuluje wprowadzone zmiany.
+				\item Użytkownik jest przekierowany do listy pacjentów.
+				\item \useCaseEnd
+			\end{enumerate}
+			Nowe dane pacjenta nie zostają zapisane.
+	\end{description}
+	
+\subsection{Usuwanie pacjenta}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie edycji pacjenta.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Usuń pacjenta''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System usuwa edytowanego pacjenta.
+				\item Użytkownik jest przekierowany do listy pacjentów.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Pacjent został usunięty z systemu.
+	\end{description}
+
+\subsection{Przeglądanie lekarzy}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+		\begin{itemize}
+			\item Użytkownik jest zalogowany.
+			\item W~bazie istnieje przynajmniej jeden lekarz.
+		\end{itemize}
+			
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na odnośnik do listy lekarzy w menu głównym.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla użytkownikowi listę lekarzy z~obsługą paginacji.
+			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukanego lekarza.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Użytkownikowi zaprezentowane zostały podstawowe dane szukanego lekarza (imię, nazwisko, nazwa użytkownika oraz adres e-mail).
+	\end{description}
+
+\subsection{Dodawanie nowego lekarza}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie listy lekarzy.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Dodaj lekarza''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System tworzy nowego lekarza.
+				\item Użytkownik jest przekierowany do podstrony edycji utworzonego lekarza.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowy lekarz został dodany do systemu.
+	\end{description}
+
+\subsection{Edytowanie danych lekarza}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie listy lekarzy.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na wiersz lekarza, którego chce edytować.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi formularz edycji lekarza zawierający dane: imię, nazwisko, nazwę użytkownika oraz adres e-mail.
+				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
+				\item Użytkownik zatwierdza wprowadzone zmiany.
+				\item Użytkownik zostaje przekierowany z~powrotem do listy lekarzy.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowe dane lekarza zostały zapisane w systemie.
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=3a\arabic*.]
+				\item Użytkownik anuluje wprowadzone zmiany.
+				\item Użytkownik jest przekierowany do listy lekarzy.
+				\item \useCaseEnd
+			\end{enumerate}
+			Nowe dane lekarza nie zostają zapisane.
+	\end{description}
+
+\subsection{Określenie i zmiana hasła lekarza}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie edycji swoich danych.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Zmień hasło''
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wysyła odnośnik z~tajnym identyfikatorem \emph{tokenu} na adres e-mail powiązany z kontem użytkownika.
+				\item Użytkownik wchodzi na swoją skrzynkę mailową i~klika w odnośnik.
+				\item System wyświetla użytkownikowi formularz z~dwoma polami do wprowadzenia nowego hasła.
+				\item Użytkownik wprowadza nowe hasło do obydwu pól formularza.
+				\item Użytkownik zatwierdza wprowadzone dane.
+				\item System analizuje zgodność wprowadzonych haseł oraz ważność tokenu i~stwierdza poprawność otrzymanych danych.
+				\item Użytkownik jest kierowany do strony z~komunikatem o~sukcesie operacji.
+			\end{enumerate}
+		\item[\useCaseScenAlt~1] \hfill \\
+			\begin{enumerate}[label=11a\arabic*.]
+				\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości.
+				\item System ponownie wyświetla formularz do podania nowego hasła z~informacją o~błędzie.
+				\item \useCaseContinue{9}
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Hasło użytkownika zostało zmienione.
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=11b\arabic*.]
+				\item Token stracił ważność lub jest niepoprawny.
+				\item System wyświetla komunikat o~błędzie operacji.
+				\item \useCaseEnd
+			\end{enumerate}
+			Hasło użytkownika nie zostaje zmienione.
+	\end{description}
+	
+\subsection{Usuwanie lekarza}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie edycji lekarza, którego chce usunąć.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Usuń lekarza''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System usuwa edytowanego lekarza.
+				\item Użytkownik jest przekierowany do listy lekarzy.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\
+			\begin{itemize}
+				\item Lekarz został usunięty z systemu.
+				\item Zalogowanie się przy pomocy danych uwierzytelniających usuniętego lekarza nie jest możliwe.
+			\end{itemize}
+	\end{description}
+
+\subsection{Przeglądanie wizyt}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+		\begin{itemize}
+			\item Użytkownik jest zalogowany.
+			\item W~bazie istnieje przynajmniej jedna wizyta.
+		\end{itemize}
+			
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na odnośnik do listy wizyt w menu głównym.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla użytkownikowi listę wizyt z~obsługą paginacji.
+			\item Użytkownik określa dane filtrowania w panelu listy (zakres daty oraz przełącznik do uwzględnienia w wyniku jedynie wizyt zalogowanego lekarza).
+			\item System przetwarza żądanie i wyświetla użytkownikowi listę z uwzględnieniem podanych kryteriów.
+			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukaną wizytę.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imiona i nazwiska pacjenta oraz lekarza powiązanych z wizytą, a także jej termin).
+	\end{description}
+
+\subsection{Dodawanie nowej wizyty}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie edycji pacjenta, dla którego chce zarejestrować wizytę.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Zaplanuj wizytę''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System tworzy nową wizytę i przypisuje ją do edytowanego pacjenta.
+				\item Użytkownik jest przekierowany do podstrony edycji utworzonej wizyty.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowa wizyta została dodana do systemu.
+	\end{description}
+
+\subsection{Edytowanie danych wizyty}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie listy wizyt.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na wiersz wizyty, którą chce edytować.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający termin wizyty, notatki oraz listę prac składających się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
+				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
+				\item Użytkownik usuwa wybrane prace z listy klikając na ikonę kosza.
+				\item Użytkownik klika na przycisk ``Dodaj pracę''.
+				\item System dodaje do listy nową pracę.
+				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu wartości z~rozwijanej listy.
+				\item Użytkownik zatwierdza wprowadzone zmiany.
+				\item Użytkownik zostaje przekierowany z~powrotem do listy wizyt.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			\begin{itemize}
+				\item Edytujący użytkownik zostaje automatycznie przypisany do wizyty jako lekarz.
+				\item Nowe dane wizyty zostały zapisane w systemie.
+			\end{itemize}
+			
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=3a\arabic*.]
+				\item Użytkownik anuluje wprowadzone zmiany.
+				\item Użytkownik jest przekierowany do listy wizyt.
+				\item \useCaseEnd
+			\end{enumerate}
+			Nowe dane wizyty nie zostają zapisane.
+	\end{description}
+	
+\subsection{Usuwanie wizyty}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na podstronie edycji wizyty.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Usuń wizytę''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System usuwa edytowaną wizytę.
+				\item Użytkownik jest przekierowany do listy wizyt.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Wizyta została usunięta z systemu.
+	\end{description}
+
+\section{Wymagania funkcjonalne aplikacji mobilnej}
+
+Aplikacja przeznaczona na telefon komórkowy powinna mieć mniejszy zakres działań od aplikacji webowej. Przeciętny rozmiar urządzeń mobilnych i~brak zewnętrznej klawiatury oraz myszki w~zestawie\footnote{Platformy mobilne pozwalają na podłączenie zewnętrznych urządzeń wejściowych poprzez technologię bluetooth lub USB, jednak nie jest to częsta praktyka.} ogranicza swobodę korzystania z~aplikacji, a~w~szczególności pisania długich tekstów czy też przełączania się pomiędzy różnymi oknami aplikacji, co w~przeglądarce internetowej da się łatwo osiągnąć przy pomocy kart.
+
+Głównym zadaniem aplikacji mobilnej powinno być umożliwienie wykonania szybkich akcji, nawet w~obecności pacjenta, bez konieczności podchodzenia do komputera. W~szczególności autor ma na myśli automatyczne filtrowanie wizyt dla zalogowanego lekarza i~aktualnego dnia oraz nie zanieczyszczanie interfejsu zbyt skomplikowanymi operacjami, takimi jak zarządzanie innymi lekarzami, które dużo wygodniej będzie zrealizować przy pomocy aplikacji webowej.
+
+Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizyt dla pacjentów powinny zostać wykonane po stronie aplikacji webowej. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla aplikacji webowej.
+%dodawanie wizyt nie może być zrobione, bo nie można ich będzie przeglądać chyba że będą na aktualny dzień
+
+\subsection{Logowanie się do systemu}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest wylogowany.
+				\item Użytkownik znajduje się na ekranie głównym aplikacji.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik wybiera opcję ``Ustawienia'' z~głównego menu.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla ustawienia konfiguracji połączenia z~serwerem \emph{Dentaise} (nazwa i hasło użytkownika oraz adres serwera).
+				\item Użytkownik wprowadza swoją nazwę użytkownika, hasło oraz adres serwera \emph{Dentaise}.
+				\item Użytkownik wykonuje akcję wymagająca połączenia z serwerem \emph{Dentaise} (np. przeglądanie listy pacjentów).
+				\item Akcja zwraca pozytywny wynik.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			\begin{itemize}
+				\item Ustawienia zostają trwale zapisane w~aplikacji.
+				\item Sesja dla użytkownika została utworzona (użytkownik może wykonywać wszystkie operacje wymagające połączenia z serwerem Dentaise).
+			\end{itemize}
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=2a\arabic*.]
+				\item Dane przesłane przez użytkownika są niepoprawne.
+				\item Użytkownik wykonuje akcję wymagającą połączenia z serwerem \emph{Dentaise}.
+				\item Akcja kończy się niepowodzeniem, o~czym system informuje użytkownika poprzez wyświetlenie stosownego komunikatu (np. ``Błąd uwierzytelniania -- niepoprawny login lub hasło'').
+				\item \useCaseEnd
+			\end{enumerate}
+			Ustawienia zostają trwale zapisane w~aplikacji, ale użytkownik nie może wykonywać operacji wymagających połączenia z serwerem \emph{Dentaise}.
+	\end{description}
+
+\subsection{Przeglądanie pacjentów}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item W~bazie istnieje przynajmniej jeden pacjent.
+				\item Użytkownik znajduje się na ekranie głównym aplikacji.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik wybiera opcję ``Pacjenci'' z~głównego menu.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi listę pacjentów.
+				\item Użytkownik wpisuje fragment imienia, nazwiska lub numeru PESEL w~polu służącym do wyszukiwania.
+				\item Użytkownik zatwierdza wpisaną frazę.
+				\item System filtruje listę pacjentów pod kątem przekazanej frazy i~prezentuje ją użytkownikowi.
+				\item Użytkownik odnajduje szukanego pacjenta.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Użytkownikowi zaprezentowane są podstawowe dane szukanego pacjenta (numer PESEL, imię i~nazwisko).
+	\end{description}
+
+\subsection{Dodawanie nowego pacjenta}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na ekranie listy pacjentów.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na przycisk ``Dodaj Pacjenta''.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System tworzy nowego pacjenta.
+				\item Użytkownik jest przekierowany do podstrony edycji utworzonego pacjenta.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowy pacjent został dodany do systemu.
+	\end{description}
+
+\subsection{Edytowanie danych pacjenta}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na ekranie listy pacjentów.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na wiersz pacjenta, którego chce edytować.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi formularz edycji pacjenta zawierający dane: numer PESEL, imię, nazwisko, numer telefonu, nazwa ulicy, numer domu, numer mieszkania, kod pocztowy i~miejscowość.
+				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
+				\item Użytkownik zatwierdza wprowadzone zmiany.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Nowe dane pacjenta zostały zapisane w systemie.
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=3a\arabic*.]
+				\item Użytkownik anuluje wprowadzone zmiany.
+				\item Użytkownik jest przekierowany do listy pacjentów.
+				\item \useCaseEnd
+			\end{enumerate}
+			Nowe dane pacjenta nie zostają zapisane.
+	\end{description}
+
+\subsection{Przeglądanie wizyt}
+	
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+		\begin{itemize}
+			\item Użytkownik jest zalogowany.
+			\item W~bazie istnieje przynajmniej jedna wizyta.
+		\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik wybiera opcję ``Wizyty'' z~głównego menu.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+			\item System wyświetla użytkownikowi listę jego wizyt na aktualny dzień.
+			\item Użytkownik odnajduje szukaną wizytę.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imię i nazwisko pacjenta oraz termin).
+	\end{description}
+
+\subsection{Edytowanie danych wizyty}
+
+	\begin{description}
+		\item[\useCaseAktor] \hfill \\
+			\useCaseUzytkownik
+		\item[\useCaseWarPocz] \hfill \\
+			\begin{itemize}
+				\item Użytkownik jest zalogowany.
+				\item Użytkownik znajduje się na ekranie listy wizyt.
+			\end{itemize}
+		\item[\useCaseZdarzInicj] \hfill \\
+			Użytkownik klika na wiersz wizyty, którą chce edytować.
+		\item[\useCaseScenBaz] \hfill \\ 
+			\begin{enumerate}
+				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający termin wizyty, notatki oraz listę prac składających się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
+				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
+				\item Użytkownik usuwa wybrane prace z listy klikając na przycisk ``Usuń powyższą wizytę''.
+				\item Użytkownik klika na przycisk ``Dodaj pracę''.
+				\item System dodaje do listy nową pracę.
+				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu wartości z~rozwijanej listy.
+				\item Użytkownik zatwierdza wprowadzone zmiany.
+			\end{enumerate}
+		\item[\useCaseWarKonc] \hfill \\ 
+			\begin{itemize}
+				\item Nowe dane wizyty zostały zapisane w systemie.
+			\end{itemize}
+			
+		\item[\useCaseWyjatek~1] \hfill \\
+			\begin{enumerate}[label=7a\arabic*.]
+				\item Użytkownik anuluje wprowadzone zmiany.
+				\item \useCaseEnd
+			\end{enumerate}
+			Nowe dane wizyty nie zostają zapisane.
+	\end{description}
 
 \section {Strona Serwerowa}
 
@@ -451,26 +952,9 @@ GET     /diagnoses                                               controllers.Dia
 GET     /treatments                                              controllers.TreatmentController.list()
 \end{lstlisting}
 
-\section{Aplikacja webowa}
+\section{Dobór technologii}
 
-Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności przewidzianych w~systemie. Ze względu na większy komfort obsługi, spowodowany przeciętnie większym rozmiarem wyświetlaczy w~komputerach stacjonarnych niż w~telefonach komórkowych i~tabletach oraz możliwością skorzystania z~urządzeń wejściowych, takich jak klawiatura czy myszka, jest ona przewidziana jako docelowe narzędzie pracy wnoszonej przez użytkowników systemu.
-
-W~zakres tej aplikacji powinno wchodzić:
-\begin{itemize}
-	\item przeglądanie bazy pacjentów z~opcją filtrowania po imieniu, nazwisku lub numerze PESEL
-	\item zarządzanie bazą pacjentów, tzn. ich dodawanie, usuwanie i~edycja
-	\item możliwość planowania wizyt z~poziomu widoku pacjenta
-	\item widok do przeglądania listy wizyt, umożliwiający filtrowanie po dacie oraz obecnie zalogowanym lekarzu
-	\item możliwość podglądu, edycji i~usunięcia wybranej wizyty
-	\item zarządzanie bazą lekarzy, czyli użytkownikami systemu, a~w~szczególności przeglądanie, edycja, usuwanie oraz możliwość zmiany hasła
-	\item udogodnienia pozwalające na realizację najczęściej wykonywanych operacji przy pomocy jednego kliknięcia, zamiast żmudnego powtarzania tych samych czynności, a~w~szczególności:
-	\begin{itemize}
-		\item możliwość przeglądania wszystkich wizyt danego pacjenta z poziomu jego widoku
-		\item skrót służący do przeglądania wizyt przypisanych do zalogowanego lekarza na aktualny dzień 
-	\end{itemize} 
-\end{itemize}
-
-\subsection{Dobór technologii}
+\subsection{Aplikacja webowa}
 
 Na platformę Java istnieje wiele kompleksowych narzędzi, takich jak Google Web Toolkit czy Vaadin, pozwalających na konstrukcję strony internetowej przy pomocy tego języka, bez konieczności zapoznawania się z~technologiami uruchamianymi po stronie klienta w~przeglądarce internetowej. Takie podejście niesie jednak ze sobą sporo ograniczeń wobec mnogości rozwiązań pokroju jQueryUI, czy Ext JS, niezależnych od strony serwerowej. Rozdzielenie tych dwóch warstw, choć wymaga większej wiedzy, zwykle jednak również skutkuje we wzroście wydajności w~stosunku do języka Java kompilowanego do JavaScript, co jest oferowane przez rozwiązania tego typu.
 
@@ -503,31 +987,9 @@ Jako baza dla witryny posłuży kod \emph{HTML}, wzbogacony przez następujące 
 \item[Glyphicons] jako pakiet ikon dostępny wraz z \emph{Twitter Bootstrap}
 \end{description}
 
-\section{Aplikacja mobilna}
+\subsection{Aplikacja mobilna}
 
-Aplikacja przeznaczona na telefon komórkowy powinna mieć mniejszy zakres działań od aplikacji webowej. Przeciętny rozmiar urządzeń mobilnych i~brak zewnętrznej klawiatury oraz myszki w~zestawie\footnote{Platformy mobilne pozwalają na podłączenie zewnętrznych urządzeń wejściowych poprzez technologię bluetooth lub USB, jednak nie jest to częsta praktyka.} ogranicza swobodę korzystania z~aplikacji, a~w~szczególności pisania długich tekstów czy też przełączania się pomiędzy różnymi oknami aplikacji, co w~przeglądarce internetowej da się łatwo osiągnąć przy pomocy kart.
-
-Głównym zadaniem aplikacji mobilnej powinno być umożliwienie wykonania szybkich akcji, nawet w~obecności pacjenta, bez konieczności podchodzenia do komputera. W~szczególności autor ma na myśli automatyczne filtrowanie wizyt dla zalogowanego lekarza i~aktualnego dnia, oraz nie zanieczyszczanie interfejsu zbyt skomplikowanymi operacjami, takimi jak zarządzanie innymi lekarzami, które dużo wygodniej będzie zrealizować przy pomocy aplikacji webowej.
-
-W zakres aplikacji mobilnej powinno więc wchodzić:
-
-\begin{itemize}
-	\item Przeglądanie bazy pacjentów
-	\item Dodawanie i~edycja pacjenta
-	\item Przeglądanie wizyt z~automatycznym ograniczeniem do aktualnego dnia i~zalogowanego lekarza
-	\item Edytowanie wizyt
-	\item Konfiguracja usługi klienta \emph{Web Service'u}, to znaczy możliwość określenia:
-	\begin{itemize}
-		\item adresu IP i~portu serwera
-		\item nazwy i~hasła użytkownika
-	\end{itemize}
-	Po poprawnej konfiguracji, logowanie w usłudze i~zarządzanie sesją powinno następować automatycznie, bez zmuszania użytkownika do ponownego podawania danych nawet po długim okresie bezczynności. Dane konfiguracyjne muszą być trwale zapisywane w~aplikacji, tzn. zapamiętane pomiędzy sesjami użytkowania.
-\end{itemize}
-
-Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizyt dla pacjentów powinny zostać wykonane po stronie aplikacji webowej.
-%dodawanie wizyt nie może być zrobione, bo nie można ich będzie przeglądać chyba że będą na aktualny dzień
-
-\subsection{Platforma}
+\subsubsection{Platforma}
 
 Dostępne na rynku mobilne systemy operacyjne nie pozwalają na przenośność aplikacji pomiędzy nimi, a~więc przy wyborze jednego z~nich warto skupić się na potrzebie potencjalnego klienta, a~nie wygodzie w~implementacji. Zgodnie z~danymi udostępnionymi w~\cite{AMS} platforma \emph{Android} w~roku 2014 zajmuje pierwsze miejsce na rynku europejskim z~udziałem \emph{73,3\%}, na drugim miejscu jest produkt \emph{Apple} z~wynikiem 16,6\%, a~na trzecim \emph{Windows} z~8,1\% udziałów. Na rynku amerykańskim sytuacja \emph{Apple} poprawia się wyrównując walkę z produktem \emph{Google}, jednak tworzona aplikacja dostosowana jest dla polskiego odbiorcy, więc statystyki zebrane w~Europie są tutaj bardziej znaczące.
 
@@ -535,11 +997,11 @@ Platforma \emph{Android} pozwala również na implementowanie aplikacji w~język
 
 Wydzielenie logiki w~postaci \emph{Web Service'u} pozwoli także w~przyszłości rozwinąć system o~inne platformy mobilne.
 
-\subsection{Klient WebService}
+\subsubsection{Klient WebService}
 
 Dzięki wybraniu RESTful jako sposobu implementacji \emph{Web Service'u}, komunikacja z~nim po stronie aplikacji mobilnej jest zadaniem znacznie ułatwionym. Problem konsumpcji usługi ogranicza się do wyboru odpowiedniego klienta protokołu HTTP. W implementowanym systemie zdecydowano się na wykorzystanie w tym celu klasy \emph{AndroidHttpClient} implementującej interfejs \emph{HttpClient} znanej w~świecie Javy organizacji \emph{Apache}.
 
-\section{Narzędzia programistyczne}
+\section{Dodatkowe narzędzia programistyczne}
 
 Realizowany system dzieli się na dwa główne projekty: aplikację mobilną oraz webową, zawierającą w~sobie stronę serwerową. \emph{Play Framework} jest niezależny od środowiska programistycznego, więc jako IDE przeznaczone do rozwoju drugiego z~wymienionych fragmentów wykorzystane zostanie środowisko Eclipse, używane na co dzień przez autora pracy.
 
@@ -1358,7 +1820,7 @@ Wartość parametru \emph{digest}, będącego potwierdzeniem autentyczności dan
 
 \cite{SeMa08} wymienia następujące zalety tego podejścia:
 \begin{itemize}
-\item Łatwiejsze w~realizacji równoważenie obciążenia pomiędzy serwerami, oraz wysoka dostępność.
+\item Łatwiejsze w~realizacji równoważenie obciążenia pomiędzy serwerami oraz wysoka dostępność.
 \item Mniejsze zużycie pamięci na serwerze.
 \item Szybsze odpowiedzi i~mniejszy koszt serwera, jako skutek braku potrzeby dedykowanego systemu równoważenia obciążenia.
 \item Mniejsza złożoność wdrożenia.
@@ -1553,6 +2015,18 @@ Po wywołaniu powyższej komendy usługa powinna być dostępna pod adresami \em
 Plik \emph{apk}, potrzebny do zainstalowania mobilnego klienta Dentaise na platformie Android, znajduje się w~katalogu \emph{Dentaise/dentaise-mobile/app/build/apk}. Po wgraniu na docelowe urządzenie wystarczy go uruchomić, aby rozpocząć proces instalacji. Należy przed tym w~ustawieniach telefonu zezwolić na instalowanie aplikacji ze źródeł innych niż ``Play Store''. Aplikację przetestowano na smartfonie \emph{Samsung Galaxy S2} z~systemem \emph{Android} w~wersji 4.1.2.
 
 Podczas konfiguracji z~usługą \emph{Web Service'u} należy mieć na uwadze, że aplikacja \emph{Dentaise Mobile} domyślnie dodaje przedrostek z~protokołem ``https://'' do adresu jeśli ten nie zaczyna się od ``http://'' lub ``https://''. W przypadku wpisania adresu z~pominięciem protokołu, serwer musi być więc uruchomiony z opcją \emph{-Dhttps.port} aby nawiązanie połączenia się powiodło.
+
+\chapter{Podsumowanie}
+
+Cel pracy został osiągnięty w~zadowalającym stopniu. Stworzony system pozwala na realizację zaplanowanych funkcji i~spełnia podstawowe wymagania niefunkcjonalne. Produkt jest również odporny na najpopularniejsze ataki (\emph{SQL Injection}, \emph{Replay}, \emph{Cross-site Scripting}) wymierzane zarówno w~stronę aplikacji klienckiej jak i~serwerowej. Ruch pomiędzy modułami systemu jest zabezpieczony przed podsłuchem poprzez zastosowanie szyfrowania, a~przygotowane skrypty generowania certyfikatów pozwalają na stosunkowo łatwą konfigurację środowiska produkcyjnego. Mimo wymienionych zalet, aplikacja posiada wiele możliwości poprawy i~dalszego rozwoju.
+
+System pozwala na dopasowanie bazy możliwych świadczeń lekarskich do potrzeb danego gabinetu. W~tym celu konieczne jest jednak przygotowanie skryptu modyfikującego bazę danych. Znacznie lepszym podejściem byłoby umożliwienie graficznego rozszerzania bazy z~poziomu aplikacji webowej.
+
+Większość komercyjnych produktów przeznaczonych do obsługi gabinetu lekarskiego oferuje znacznie bardziej rozbudowane funkcjonalności, takie jak prowadzenie rozliczeń z~Narodowym Funduszem Zdrowia, wystawianie recept czy generowanie raportów. Każdy z~tych punktów jest potencjalnym miejscem rozwoju utworzonego systemu.
+
+W~związku z~mało złożoną strukturą bazy danych oraz znacznie rosnącą popularnością baz typu \emph{NoSQL}, autor przy kolejnym projekcie tej klasy zdecydowałby się na użycie jej w~miejsce \emph{PostgreSQL Server}. Pozwoliłoby to uniknąć komplikacji płynących z~trudności odwzorowania modelu relacyjnego na obiektowy i przyspieszyłoby prace rozwojowe.
+
+W trakcie pisania niniejszej pracy autor znacznie poszerzył swoją wiedzę w~zakresie bezpieczeństwa, architektury i~protokołów wykorzystywanych w~aplikacjach internetowych. Nie ograniczono się do opisu wykorzystanych rozwiązań, ale także dokonano ich porównania na tle alternatyw, dzięki czemu praca może stanowić cenne źródło informacji na temat wymienionych dziedzin.
 
 % itd.
 % \appendix
