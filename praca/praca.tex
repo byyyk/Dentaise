@@ -118,38 +118,24 @@ literate={ą}{{\k{a}}}1
 
 %---------------------------------------------------------------------------
 \long\def\/*#1*/{}
-%Cytaty ``''
-%obrazki 
-\/*
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=\linewidth * 4/5]{MVC-MOBILE}
-	\caption{Schemat MVC z wyszczególnieniem platformy mobilnej}
-	\label{fig:mvc-mobile}
-\end{figure}
-*/
 
-%TODO sprawdzic zawartosc plytki z konf i uruchom. przed oddaniem
-%TODO sprawdzić czy admin zadziała na pustej bazie
-
-\setcounter{secnumdepth}{3}
+\setcounter{secnumdepth}{2}
 
 \begin{document}
-
 
 \titlepages
 
 \begin{abstract}
 
-Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego. Głównym podmiotem pracy nie jest stworzenie kompletnego rozwiązania dla lekarzy zgodnego z~obowiązującymi normami, a~przedstawienie sposobu implementacji systemu wielomodułowego, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę \emph{Android}. Ze względu na duże zróżnicowanie potrzeb w~zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
+Niniejsza praca opisuje etapy implementacji narzędzia wspomagającego pracę gabinetu lekarskiego, z~którego można korzystać przy pomocy przeglądarki internetowej oraz aplikacji dedykowanej na platformę \emph{Android}. Ze względu na duże zróżnicowanie potrzeb użytkownika w~zależności od dziedziny medycyny zdecydowano się na implementację narzędzia przeznaczonego dla gabinetu dentystycznego. 
 
-W pracy poruszane są kwestie projektowania aplikacji biznesowej pod kątem dostępnych obecnie technologii z~naciskiem na interfejsy poszczególnych warstw. Szczegółowo opisywane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas implementacji poszczególnych modułów takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Cross-site Scripting} oraz \emph{SQL Injection}.
+W pracy poruszane są różne aspekty projektowania i~implementacji aplikacji biznesowej z~wykorzystaniem popularnych obecnie technologii. Opisano w~niej architekturę systemu, proces projektowania warstw aplikacji wraz z~ich interfejsami, a~także niektóre ze szczegółów implementacji. Omawiane są również typowe problemy bezpieczeństwa z~jakimi trzeba się zmagać podczas wykonywania prac programistycznych, takie jak uwierzytelnianie, bezpieczny mechanizm resetu hasła czy ataki \emph{Cross-site Scripting} oraz \emph{SQL Injection}.
 
-Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z~prowadzeniem przychodni stomatologicznej i~może zostać dlań wykorzystany.
+Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczegółach projektowania i~implementacji, opisywany system realizuje w podstawowym stopniu potrzeby związane z~prowadzeniem przychodni stomatologicznej i~może zostać dla niej wykorzystany.
 
 \end{abstract}
 
-\setcounter{tocdepth}{3}
+\setcounter{tocdepth}{2}
 \tableofcontents
 \clearpage
 
@@ -158,39 +144,22 @@ Pomimo zawężenia problemu do wielkości pozwalającej skupieniu się na szczeg
 \chapter{Wstęp}
 \label{cha:wstep}
 
-Informatyka jest bardzo dynamicznie rozwijającą się dziedziną co skutkuje w~gwałtownym powstawaniu nowych urządzeń i~systemów, stopniowo zastępujących dotychczasowe standardy. Trend ten można zaobserwować również na rynku smartfonów, które według \cite{MG} w~pierwszym kwartale 2014 stanowiły 65\% wszystkich sprzedanych aparatów. Szacuje się również, że pod koniec 2019 roku liczba smartfonów w~Europie przekroczy 765 mln, a~więc przerośnie liczbę mieszkańców. Warto wykorzystać tę tendencję poprzez umożliwienie korzystania z systemów na różnych platformach mobilnych. Tworzony produkt, będący narzędziem wspomagającym pracę gabinetu dentystycznego o~nazwie ``Dentaise'', jest tego przykładem.
+Informatyka jest bardzo dynamicznie rozwijającą się dziedziną co skutkuje w~gwałtownym powstawaniu nowych urządzeń i~systemów, stopniowo zastępujących dotychczasowe standardy. Trend ten można zaobserwować również na rynku smartfonów, które według \cite{MG} w~pierwszym kwartale 2014 stanowiły 65\% wszystkich sprzedanych aparatów. Szacuje się również, że pod koniec 2019 roku liczba smartfonów w~Europie przekroczy 765 mln, a~więc przerośnie liczbę mieszkańców. Warto wykorzystać tę tendencję dodając możliwość użytkowania aplikacji przy pomocy platform mobilnych. Tworzony produkt, będący narzędziem wspomagającym pracę gabinetu dentystycznego o~nazwie ``Dentaise'', jest tego przykładem.
 
 \section{Cele pracy}
 \label{sec:cele_pracy}
 
-Celem pracy jest projekt i implementacja systemu wspomagającego pracę przychodni lekarskiej, który umożliwia interakcję z~nim przy pomocy dwóch aplikacji klienckich: webowej (poprzez przeglądarkę internetową) oraz mobilnej (na platformie Android). Na przykładzie realizacji systemu przeznaczonego dla gabinetu dentystycznego przedstawione zostaną różne alternatywy komunikacji między tymi modułami oraz problemy z~jakimi trzeba się zmierzyć przy projektowaniu i~implementacji produktów tego typu. Istotną częścią pracy jest również zapewnienie odpowiedniego bezpieczeństwa, które minimalizuje prawdopodobieństwo sukcesu najpopularniejszych ataków.
+Celem pracy jest projekt i implementacja systemu wspomagającego pracę przychodni lekarskiej. Głównym założeniem tworzonego produktu jest możliwość interakcji z~nim przy pomocy dwóch aplikacji klienckich: webowej (poprzez przeglądarkę internetową) oraz mobilnej (na platformie Android). Na podstawie realizowanego systemu przedstawione zostaną różne alternatywy komunikacji między tymi modułami a stroną serwerową. Poruszone zostaną również problemy z~jakimi trzeba się zmierzyć przy projektowaniu i~implementacji produktów tego typu. Istotną częścią pracy jest także opis podjętych środków bezpieczeństwa, minimalizujących prawdopodobieństwo sukcesu popularnych ataków.
 
 \section{Zawartość pracy}
 \label{sec:zawartosc_pracy}
 
 %TODO zaktualizować
-W~rozdziale \ref{cha:architektura} przedstawiono architekturę systemu, z~uwzględnieniem wszystkich głównych komponentów i~połączeń pomiędzy nimi. Szczegóły takie jak projektowanie interfejsów oraz dobór odpowiednich protokołów, technologii i~narzędzi programistycznych zawarte zostały w rozdziale \ref{cha:dobor_technologii_i_narzedzi}. Opisano w nim również problem dostosowania API możliwego do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej, a~także przedstawiono projekt bazy danych. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale poprzednim z~uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji oraz uruchomienia systemu.
+W~rozdziale \ref{cha:dobor_technologii_i_narzedzi} opisano projekt tworzonego systemu. Składa się on z wymagań funkcjonalnych, architektury systemu, schematu bazy danych oraz doboru odpowiednich protokołów, technologii i~narzędzi programistycznych. Opisano w nim również problem dostosowania interfejsu dla aplikacji klienckich, tak aby był on możliwy do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale \ref{cha:dobor_technologii_i_narzedzi} z~uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji systemu. Opisano w nim ustawienia serwera \emph{Dentaise} i sposób uruchomienia aplikacji klienckich. Rozdział \ref{cha:podsumowanie} zawiera podsumowanie wykonanych prac wraz z omówieniem możliwości rozwoju produktu.
 
 %----------------------------------------------------------------------------
 
-\chapter{Architektura}
-\label{cha:architektura}
 
-%TODO przeniesc do projektu
-
-Przed projektowaniem poszczególnych warstw aplikacji, należy określić z~jakich komponentów będzie się ona składać. Rysunek \ref{fig:architektura} przedstawia architekturę z~wydzielonymi modułami systemu, pomiędzy którymi może nastąpić komunikacja z~wykorzystaniem sieci internet.
-
-\fullWidthPicture{architektura}{Architektura tworzonego systemu}
-
-Na podstawie przedstawionego schematu można wyróżnić następujące komponenty wchodzące w~skład systemu:
-\begin{description}
-\item[DB] - baza danych
-\item[Dentaise Server] - serwer zawierający logikę aplikacji i~udostępniający ją klientom webowym oraz mobilnym
-\item[Dentaise Web] - klient webowy
-\item[Dentaise Mobile] - klient mobilny na platformę android
-\end{description}
-
-Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy serwerem a~relacyjną bazą danych odbędzie się przy pomocy protokołu JDBC. Dane niezbędne do wyświetlenia aplikacji webowej w~przeglądarce użytkownika otrzymywane będą przy użyciu protokołu \emph{HTTP} lub jego szyfrowanej wersji \emph{HTTPS}. Aplikacja kliencka \emph{Android} także musi korzystać z~podobnego zestawu danych, który będzie dla niej udostępniony poprzez \emph{Web Service}. Szczegóły doboru odpowiednich protokołów i~dostosowania interfejsów dla aplikacji klienckich zostaną przedstawione w~rozdziale \ref{cha:dobor_technologii_i_narzedzi}. 
 
 %----------------------------------------------------------------------------
 
@@ -815,22 +784,34 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 			Nowe dane wizyty nie zostają zapisane.
 	\end{description}
 
-\section {Strona Serwerowa}
+\section{Architektura systemu}
 
-Całość systemu powinna zostać wykonana w~sposób spełniający normy bezpieczeństwa charakterystyczne dla tego typu aplikacji biznesowych. Każdy zasób dostępny z~zewnątrz musi być chroniony, tzn. możliwy do interakcji tylko dla uwierzytelnionych użytkowników. Ochrona tych elementów i~dostarczenie bazującej na nich logiki biznesowej w~formie możliwej do użycia z~poziomu aplikacji mobilnej oraz przeglądarki internetowej będą głównymi zadaniami części serwerowej systemu.
+Przed projektowaniem poszczególnych warstw aplikacji, należy określić z~jakich komponentów będzie się ona składać. Rysunek \ref{fig:architektura} przedstawia architekturę z~wydzielonymi modułami systemu, pomiędzy którymi może nastąpić komunikacja z~wykorzystaniem sieci internet.
 
-\subsection{Baza Danych}
+\fullWidthPicture{architektura}{Architektura tworzonego systemu}
+
+Na podstawie przedstawionego schematu można wyróżnić następujące komponenty wchodzące w~skład systemu:
+\begin{description}
+\item[DB] - baza danych,
+\item[Dentaise Server] - serwer zawierający logikę aplikacji i~udostępniający ją klientom webowym oraz mobilnym,
+\item[Dentaise Web] - klient webowy,
+\item[Dentaise Mobile] - klient mobilny na platformę android.
+\end{description}
+
+Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy serwerem a~relacyjną bazą danych odbędzie się przy pomocy protokołu JDBC. Dane niezbędne do wyświetlenia aplikacji webowej w~przeglądarce użytkownika otrzymywane będą przy użyciu protokołu \emph{HTTP} lub jego szyfrowanej wersji \emph{HTTPS}. Aplikacja kliencka \emph{Android} także musi korzystać z~podobnego zestawu danych, który będzie dla niej udostępniony poprzez \emph{Web Service}. Szczegóły doboru odpowiednich protokołów i~dostosowania interfejsów dla aplikacji klienckich zostaną przedstawione w~dalszej części rozdziału. 
+
+\section{Baza Danych}
 \label{sec:bazaDanych}
 
 Charakter tworzonej aplikacji wymaga, aby dane jakie będą tworzyć i~modyfikować użytkownicy były zapamiętane pomiędzy sesjami klienta, a~także muszą być dostępne i~spójne, niezależnie od tego czy osoba korzystająca z~usługi łączy się z~nią każdorazowo przy pomocy tego samego komputera. Dane uzupełniane w~systemie muszą być również identyczne dla każdego użytkownika, to znaczy muszą oni mieć możliwość przeglądania treści dodawanych przez inne osoby. Z~tego powodu niezbędne jest przetrzymywanie ich po stronie serwera za pomocą bazy danych.
 
-\subsubsection{System zarządzania relacyjnymi bazami danych}
+\subsection{System zarządzania relacyjnymi bazami danych}
 
 Spośród różnych dostępnych typów baz danych zdecydowano się na relacyjną bazę \emph{PostgreSQL}. Cechuje się ona dużą niezawodnością i~jest w~pełni darmowa nawet w~przypadku użytku komercyjnego. Jej popularność, a~zatem i~duże wsparcie ze strony społeczności, będzie również zaletą w~razie wystąpienia nieoczekiwanych problemów.
 
 Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania o~nazwie \emph{pgadmin}. Przy jego pomocy nadzorowanie i~modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
 
-\subsubsection{Mapowanie obiektowo-relacyjne}
+\subsection{Mapowanie obiektowo-relacyjne}
 
 W~relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można porównać do postaci tabelarycznej, gdzie dane przetrzymywane są bez informacji o~typach innych, powiązanych z~nimi danych. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia, że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
 
@@ -840,7 +821,7 @@ Mapowanie obiektowo-relacyjne rozwiązuje ten problem poprzez automatyczne zarz�
 
 Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W~szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w~pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA} dostarczany wraz z~\emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów, co pozytywnie wpłynie na utrzymanie projektu. Więcej na temat mapowania obiektowo-relacyjnego można przeczytać w~\cite{HORM}.
 
-\subsubsection{Schemat bazy danych}
+\subsection{Schemat bazy danych}
 
 Dane najbardziej wrażliwe na zmiany to takie, które pochodzą z~zewnątrz. Zalecenia Narodowego Funduszu Zdrowia do definiowania wykonanych przez lekarza prac mogą ulegać zmianie, więc bardzo istotny jest przemyślany system aktualizacji. Aplikacja webowa nie stanowi tu problemu, ponieważ nie jest instalowana po stronie klienta, a~jedynie renderowana na podstawie danych uzyskiwanych z~serwera, wobec czego wystarczająca będzie jego aktualizacja. W~przypadku aplikacji mobilnych, logika interpretacji danych i~ich renderowanie będzie znajdować się po stronie telefonu komórkowego. Dobrym podejściem byłoby uniezależnienie się od statycznych wartości, możliwych do uzupełniania w~aplikacji, takich jak obszary leczenia, czy typ rozpoznania. Modyfikacja zbioru tych zasobów nie powinna zmuszać wszystkich, korzystających z~niej lekarzy do pobierania aktualizacji, zwłaszcza że nie jest to konieczne. Nie jest to również bez znaczenia w~utrzymaniu produktu - wprowadzanie takich aktualizacji w~kodzie aplikacji nie będzie wcale konieczne, ponieważ zostaną one zastąpione przez wykonanie prostego skryptu aktualizującego zawartość bazy danych po stronie serwera.
 
@@ -853,15 +834,15 @@ Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana 
 	\label{fig:dbschema}
 \end{figure}
 
-\subsection{Web Service}
+\section{Web Service}
 
 Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z~tego samego zbioru danych co aplikacja webowa. Warstwa trwałości, opisana w podrozdziale \ref{sec:bazaDanych}, znajdować się ma na serwerze, wobec czego należy opracować sposób dostępu do tych danych, osiągalny z~poziomu klienta mobilnego. Elementem udostępniającym te dane będzie Web Service.
 
-\subsubsection{Protokół}
+\subsection{Protokół}
 
 Istnieją dwa wiodące standardy tworzenia Web Service'ów: RESTful\footnote{REpresentational State Transfer} oraz SOAP\footnote{Simple Object Access Protocol}. Obydwa rozwiązania mają swoje wady i~zalety, jednak wybór odpowiedniego musi być ściśle dopasowany do potrzeb realizowanego projektu, w~czym pomoże krótkie wprowadzenie do ich koncepcji.
 
-\paragraph{RESTful}
+\subsubsection{RESTful}
 
 Web Service typu RESTful oparty jest na wzorcu architektury \emph{REST}, zaproponowanym przez jednego z~autorów protokołu HTTP - Roy'a Fieldinga. W~\cite{RFD} jego autorstwa czytamy, że główną abstrakcją informacji jest zasób, którym może być wszystko co da się nazwać: dokument, obrazek, usługa udzielająca informacji o pogodzie, kolekcja innych zasobów, obiekt rzeczywisty (np. osoba) itp. Wokół tych zasobów, tworzących zbiór nieskończony, zdefiniowany jest skończony zbiór akcji, określonych przez metody protokołu \emph{HTTP}. Taki styl architektury nosi nazwę \emph{Resource Oriented Architecture}.
 
@@ -869,7 +850,7 @@ Usługi tego typu są bardzo silnie powiązane z~protokołem HTTP, to znaczy wyk
 
 Dzięki takiemu podejściu jedyne co jest potrzebne do konsumpcji usługi \emph{RESTful} to klient protokołu \emph{HTTP}.
 
-\paragraph{SOAP}
+\subsubsection{SOAP}
 
 Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są używane w~celu opisania wyników operacji czy parametryzowania zapytań. Dane te zapisane są w~zawartości komunikatów przy pomocy języka \emph{XML}, a~wspomniane nagłówki służą jedynie do informacji o transporcie danych. Dla przykładu z~punktu widzenie protokołu \emph{HTTP} zapytanie o~nieistniejący zasób jest poprawne i powinno skutkować w odpowiedzi \emph{200 OK}, a informacja o~błędzie powinna zostać uwzględniona w~zawartości komunikatu. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
 
@@ -877,19 +858,19 @@ Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jes
 
 W odróżnieniu od podejścia \emph{REST}, protokół \emph{SOAP} jest zorientowany na usługę (\emph{Service Oriented Architecture}), czyli akcje możliwe do wykonania, a~nie zasoby.
 
-\paragraph{Wybór i uzasadnienie}
+\subsubsection{Wybór i uzasadnienie}
 
 Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług podążających tą drogą ma jasny interfejs nie wymagający tworzenia obszernej dokumentacji. Często wystarczające jest jedynie wymienienie dostępnych zasobów, ponieważ metody \emph{HTTP} wykorzystywane do definiowania możliwych operacji zwykle dobierane są w~sposób zgodny z~powszechnie znanymi standardami.
 
 W~przypadku implementowanego systemu zdecydowanie lepszą drogą będzie skorzystanie z~usługi typu \emph{RESTful}. Jest to również technologia oficjalnie zalecana do użycia na platformie Android. Ze względu na to, że opiera się ona na stylu architektury \emph{REST}, który jest sposobem definiowania zasobów przeznaczonym dla \emph{WWW}\footnote{World Wide Web}, taką usługę będzie można wykorzystać także dla drugiego tworzonego modułu klienckiego - strony internetowej, co byłoby znacznie trudniejsze do osiągnięcia przy użyciu \emph{SOAP}. Możliwość wykorzystania wspólnego interfejsu między tym dwoma modułami znacznie ułatwi prace rozwojowe i~utrzymanie projektu.
 
-\subsubsection{Serializacja}
+\subsection{Serializacja}
 
 Jedną z~zalet wykorzystania \emph{Web Service'ów} jest możliwość rozwijania produktu w~innych technologiach po dwóch różnych jego stronach - klienckiej i~serwerowej. Powoduje to jednak, że przesyłane dane muszą być zapisane w~notacji niezależnej od języka programowania. W~tym celu stosuje się serializację obiektów do jednego z~wybranych formatów - zwykle jest to \emph{JSON} lub \emph{XML}.
 
 W~języku Java istnieje wiele rozwiązań umożliwiających automatyczną konwersję obiektów typu \emph{POJO} do jednego z~nich. W~aplikacji tworzonej na potrzeby pracy zdecydowano się na bibliotekę \emph{Jackson}, obsługującą format \emph{JSON}.
 
-\subsubsection{API}
+\subsection{API}
 
 Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w~tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów \emph{RESTful} jest ich prostota, ponieważ elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta protokołu \emph{HTTP}. Dzięki temu nie sprawi to problemu w~użytkowaniu go również po stronie aplikacji mobilnej.
 
@@ -952,15 +933,13 @@ GET     /diagnoses                                               controllers.Dia
 GET     /treatments                                              controllers.TreatmentController.list()
 \end{lstlisting}
 
-\section{Dobór technologii}
-
-\subsection{Aplikacja webowa}
+\section{Aplikacja webowa}
 
 Na platformę Java istnieje wiele kompleksowych narzędzi, takich jak Google Web Toolkit czy Vaadin, pozwalających na konstrukcję strony internetowej przy pomocy tego języka, bez konieczności zapoznawania się z~technologiami uruchamianymi po stronie klienta w~przeglądarce internetowej. Takie podejście niesie jednak ze sobą sporo ograniczeń wobec mnogości rozwiązań pokroju jQueryUI, czy Ext JS, niezależnych od strony serwerowej. Rozdzielenie tych dwóch warstw, choć wymaga większej wiedzy, zwykle jednak również skutkuje we wzroście wydajności w~stosunku do języka Java kompilowanego do JavaScript, co jest oferowane przez rozwiązania tego typu.
 
 Zdecydowano się więc na oddzielenie strony serwerowej (Back end) od klienckiej (Front end) co pozwoli dokonać niezależnego wyboru technologii dla każdej z~nich, zwiększając wachlarz możliwości.
 
-\subsubsection{Back end}
+\subsection{Back end}
 
 Framework umożliwiający implementację strony serwerowej, powinien pozwalać na definiowanie szablonów stron HTML. Dzięki temu można będzie uniezależnić się od strony klienckiej, dla której wybierze się technologie wspomagające wyświetlanie treści użytkownikom w~ich przeglądarkach internetowych.
 
@@ -974,7 +953,7 @@ Jednym z~takich frameworków jest \emph{Play Framework}, który wpasowuje się r
 
 Z wymienionych wyżej powodów, zdecydowano że \emph{Play Framework} będzie dobrym wyborem dla serwerowej strony implementowanego systemu.
 
-\subsubsection{Front end}
+\subsection{Front end}
 Dzięki odseparowaniu strony klienckiej od \emph{Javy}, można dla niej dobrać technologie przeznaczone specjalnie do rozwoju stron WWW, będącego bardzo prężnie rozwijającą się dziedziną w~dobie internetu, co znacznie powiększa możliwości wyboru.
 
 Jako baza dla witryny posłuży kod \emph{HTML}, wzbogacony przez następujące frameworki, języki i~biblioteki:
@@ -987,9 +966,7 @@ Jako baza dla witryny posłuży kod \emph{HTML}, wzbogacony przez następujące 
 \item[Glyphicons] jako pakiet ikon dostępny wraz z \emph{Twitter Bootstrap}
 \end{description}
 
-\subsection{Aplikacja mobilna}
-
-\subsubsection{Platforma}
+\section{Aplikacja mobilna}
 
 Dostępne na rynku mobilne systemy operacyjne nie pozwalają na przenośność aplikacji pomiędzy nimi, a~więc przy wyborze jednego z~nich warto skupić się na potrzebie potencjalnego klienta, a~nie wygodzie w~implementacji. Zgodnie z~danymi udostępnionymi w~\cite{AMS} platforma \emph{Android} w~roku 2014 zajmuje pierwsze miejsce na rynku europejskim z~udziałem \emph{73,3\%}, na drugim miejscu jest produkt \emph{Apple} z~wynikiem 16,6\%, a~na trzecim \emph{Windows} z~8,1\% udziałów. Na rynku amerykańskim sytuacja \emph{Apple} poprawia się wyrównując walkę z produktem \emph{Google}, jednak tworzona aplikacja dostosowana jest dla polskiego odbiorcy, więc statystyki zebrane w~Europie są tutaj bardziej znaczące.
 
@@ -997,7 +974,7 @@ Platforma \emph{Android} pozwala również na implementowanie aplikacji w~język
 
 Wydzielenie logiki w~postaci \emph{Web Service'u} pozwoli także w~przyszłości rozwinąć system o~inne platformy mobilne.
 
-\subsubsection{Klient WebService}
+\subsection{Klient WebService}
 
 Dzięki wybraniu RESTful jako sposobu implementacji \emph{Web Service'u}, komunikacja z~nim po stronie aplikacji mobilnej jest zadaniem znacznie ułatwionym. Problem konsumpcji usługi ogranicza się do wyboru odpowiedniego klienta protokołu HTTP. W implementowanym systemie zdecydowano się na wykorzystanie w tym celu klasy \emph{AndroidHttpClient} implementującej interfejs \emph{HttpClient} znanej w~świecie Javy organizacji \emph{Apache}.
 
@@ -1996,8 +1973,8 @@ Zakres usług realizowanych przez różne gabinety stomatologiczne nie musi być
 
 Podczas rozwoju aplikacji wykorzystano \emph{Play Framework} w~wesji \emph{2.3.1} i~jest ona zalecana przy próbie uruchomienia systemu. Do poprawnego działania wszystkich funkcji niezbędna jest konfiguracja pliku \emph{Dentaise/dentaise-web/conf/application.conf}, a~w~szczególności parametrów:
 \begin{description}
-\item[application.baseUrl] - adres pod jakim aplikacja jest dostępna z~poziomu tej samej maszyny
-\item[application.outerBaseUrl] - adres pod jakim aplikacja jest dostępna z~zewnątrz
+\item[application.baseUrl] - adres pod jakim aplikacja jest dostępna z~poziomu tej samej maszyny (wykorzystywane do wewnętrznej komunikacji)
+\item[application.outerBaseUrl] - adres pod jakim aplikacja jest dostępna z~zewnątrz (podana wartość zostanie wykorzystana jako fragment hiperłącza z~tajnym tokenem do resetu hasła opisanym szerzej w~\ref{sec:resetHaslaBezp})
 \item[smtp.host] - adres serwera \emph{SMTP}, który jest konieczny do wysyłania maili z~tajnym tokenem zmiany hasła
 \end{description}
 Dodatkowo konfiguracja grupy \emph{db.default.*} umożliwia spersonalizowanie dostępu do bazy danych.
@@ -2014,9 +1991,14 @@ Po wywołaniu powyższej komendy usługa powinna być dostępna pod adresami \em
 
 Plik \emph{apk}, potrzebny do zainstalowania mobilnego klienta Dentaise na platformie Android, znajduje się w~katalogu \emph{Dentaise/dentaise-mobile/app/build/apk}. Po wgraniu na docelowe urządzenie wystarczy go uruchomić, aby rozpocząć proces instalacji. Należy przed tym w~ustawieniach telefonu zezwolić na instalowanie aplikacji ze źródeł innych niż ``Play Store''. Aplikację przetestowano na smartfonie \emph{Samsung Galaxy S2} z~systemem \emph{Android} w~wersji 4.1.2.
 
-Podczas konfiguracji z~usługą \emph{Web Service'u} należy mieć na uwadze, że aplikacja \emph{Dentaise Mobile} domyślnie dodaje przedrostek z~protokołem ``https://'' do adresu jeśli ten nie zaczyna się od ``http://'' lub ``https://''. W przypadku wpisania adresu z~pominięciem protokołu, serwer musi być więc uruchomiony z opcją \emph{-Dhttps.port} aby nawiązanie połączenia się powiodło.
+Podczas konfiguracji z~usługą \emph{Web Service'u} należy mieć na uwadze, że aplikacja \emph{Dentaise Mobile} domyślnie dodaje przedrostek z~protokołem ``https://'' do adresu jeśli ten nie zaczyna się od ``http://'' lub ``https://''. W przypadku wpisania adresu z~pominięciem protokołu, serwer musi być więc uruchomiony z~opcją \emph{-Dhttps.port} aby nawiązanie połączenia się powiodło.
+
+\subsection{Szyfrowanie komunikacji}
+
+W katalogu \emph{Dentaise/cert} zawarto skrypty pozwalające na wygenerowanie certyfikatów niezbędnych do nawiązania połączenia za pomocą protokołu \emph{HTTPS}. Certyfikat dla bezpieczeństwa powiązany jest z~adresem serwera na jakim hostowana jest usługa \emph{Dentaise Server}. Wygenerowanie ich jest niezbędne przy konfiguracji nowego środowiska. W~wyniku wykonania skryptu certyfikaty zostaną zapisane w podkatalogu \emph{out}, a repozytoria które je zawierają będą skopiowane w~odpowiednie miejsca aplikacji mobilnej oraz webowej, tak aby po ponownym zbudowaniu i~uruchomieniu zmiany zostały automatycznie uwzględnione.
 
 \chapter{Podsumowanie}
+\label{cha:podsumowanie}
 
 Cel pracy został osiągnięty w~zadowalającym stopniu. Stworzony system pozwala na realizację zaplanowanych funkcji i~spełnia podstawowe wymagania niefunkcjonalne. Produkt jest również odporny na najpopularniejsze ataki (\emph{SQL Injection}, \emph{Replay}, \emph{Cross-site Scripting}) wymierzane zarówno w~stronę aplikacji klienckiej jak i~serwerowej. Ruch pomiędzy modułami systemu jest zabezpieczony przed podsłuchem poprzez zastosowanie szyfrowania, a~przygotowane skrypty generowania certyfikatów pozwalają na stosunkowo łatwą konfigurację środowiska produkcyjnego. Mimo wymienionych zalet, aplikacja posiada wiele możliwości poprawy i~dalszego rozwoju.
 

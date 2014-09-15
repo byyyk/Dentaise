@@ -1,10 +1,15 @@
 ???
+podziekowania
 tytul angielski
 zmiana numeru albumu w 1 str recenzji
 streszczenie po angielsku?
 spis rysunków?
 spis tabel?
 1 zdanie < akapit < poł strony
+%TODO sprawdzic zawartosc plytki z konf i uruchom. przed oddaniem
+%TODO sprawdzić czy admin zadziała na pustej bazie
+wymagania pozafunkcjonalne?? Całość systemu powinna zostać wykonana w~sposób spełniający normy bezpieczeństwa charakterystyczne dla tego typu aplikacji biznesowych. Każdy zasób dostępny z~zewnątrz musi być chroniony, tzn. możliwy do interakcji tylko dla uwierzytelnionych użytkowników. Ochrona tych elementów i~dostarczenie bazującej na nich logiki biznesowej w~formie możliwej do użycia z~poziomu aplikacji mobilnej oraz przeglądarki internetowej będą głównymi zadaniami części serwerowej systemu.
+
 
 DO ZROBIENIA:
 httpOnly
