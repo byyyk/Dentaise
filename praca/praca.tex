@@ -155,7 +155,7 @@ Celem pracy jest projekt i implementacja systemu wspomagającego pracę przychod
 \label{sec:zawartosc_pracy}
 
 %TODO zaktualizować
-W~rozdziale \ref{cha:dobor_technologii_i_narzedzi} opisano projekt tworzonego systemu. Składa się on z wymagań funkcjonalnych, architektury systemu, schematu bazy danych oraz doboru odpowiednich protokołów, technologii i~narzędzi programistycznych. Opisano w nim również problem dostosowania interfejsu dla aplikacji klienckich, tak aby był on możliwy do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale \ref{cha:dobor_technologii_i_narzedzi} z~uwzględnieniem środków bezpieczeństwa takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarto opis konfiguracji systemu. Opisano w nim ustawienia serwera \emph{Dentaise} i sposób uruchomienia aplikacji klienckich. Rozdział \ref{cha:podsumowanie} zawiera podsumowanie wykonanych prac wraz z omówieniem możliwości rozwoju produktu.
+W~rozdziale \ref{cha:dobor_technologii_i_narzedzi} opisano projekt tworzonego systemu. Składa się on z wymagań funkcjonalnych, architektury systemu, schematu bazy danych oraz doboru odpowiednich protokołów, technologii i~narzędzi programistycznych. Opisano w nim również problem dostosowania interfejsu dla aplikacji klienckich, tak aby był on możliwy do użytku z~poziomu przeglądarki internetowej oraz platformy mobilnej. Rozdział \ref{cha:implementacja} składa się z~opisu implementacji poszczególnych warstw wzorca \emph{Model View Controller}, na którym oparta jest całość systemu. Przedstawiono w~nim sposób realizacji założeń postawionych w~rozdziale \ref{cha:dobor_technologii_i_narzedzi} z~uwzględnieniem środków bezpieczeństwa, takich jak mechanizm logowania, bezpieczny proces resetowania hasła, obsługa Cookies czy obrona przed popularnymi atakami \emph{SQL Injection}, \emph{Replay} oraz \emph{Cross-site Scripting}. W~rozdziale \ref{cha:konfiguracja_i_uruchomienie} zawarta jest konfiguracja systemu, w której opisano ustawienia serwera \emph{Dentaise} i przedstawiono sposób uruchomienia aplikacji klienckich. Rozdział \ref{cha:podsumowanie} zawiera podsumowanie wykonanych prac wraz z omówieniem możliwości rozwoju produktu.
 
 %----------------------------------------------------------------------------
 
@@ -166,11 +166,11 @@ W~rozdziale \ref{cha:dobor_technologii_i_narzedzi} opisano projekt tworzonego sy
 \chapter{Projekt}
 \label{cha:dobor_technologii_i_narzedzi}
 
-Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu systemowi oraz przedstawienie interfejsów komponentów wchodzących w~jego skład. Omówione zostaną również zadania charakterystyczne dla wszystkich głównych modułów aplikacji i~sposób integracji pomiędzy nimi. Opisane będą technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy jego poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która wyróżnia się bardzo bogatym ekosystemem, co sprzyja w dobieraniu bibliotek i~narzędzi wspomagających prace programistyczne.
+Głównym tematem tego rozdziału jest analiza wymagań stawianych tworzonemu systemowi oraz przedstawienie interfejsów komponentów wchodzących w~jego skład. Opisane będą technologie i~narzędzia użyte do implementacji każdej z~warstw aplikacji. Nie uwzględniono przy tym bibliotek zastosowanych do rozwiązania konkretnych problemów danej warstwy, a~jedynie elementy niezbędne do zrozumienia struktury systemu i~sposobu komunikacji pomiędzy jego poszczególnymi modułami. Projekt realizowany będzie w~głównej mierze z~wykorzystaniem technologii Java, która wyróżnia się bardzo bogatym ekosystemem, co sprzyja w dobieraniu bibliotek i~narzędzi wspomagających prace programistyczne.
 
 \section {Wymagania funkcjonalne aplikacji webowej}
 
-Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności przewidzianych w~systemie. Ze względu na większy komfort obsługi, spowodowany przeciętnie większym rozmiarem wyświetlaczy w~komputerach stacjonarnych niż w~telefonach komórkowych i~tabletach oraz możliwością skorzystania z~urządzeń wejściowych, takich jak klawiatura czy myszka, jest ona przewidziana jako docelowe narzędzie pracy wnoszonej przez użytkowników systemu. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla aplikacji webowej.
+Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności przewidzianych w~systemie. Ze względu na możliwość skorzystania z~dodatkowych urządzeń wejściowych (takich jak klawiatura czy myszka) oraz większy rozmiar wyświetlaczy od telefonów komórkowych i tabletów, komputer stacjonarny lub laptop z~aplikacją webową są przewidziane jako docelowe narzędzia pracy wnoszonej przez użytkowników systemu. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla aplikacji webowej.
 
 \def\useCaseNazwa{Funkcja}
 \def\useCaseUzytkownik{Zarejestrowany użytkownik (lekarz)}
@@ -222,7 +222,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 		\item[\useCaseWarPocz] \hfill \\
 			Użytkownik jest zalogowany.
 		\item[\useCaseZdarzInicj] \hfill \\
-			Użytkownik klika na przycisk wylogowania w~panelu głównym aplikacji.
+			Użytkownik klika na przycisk wylogowania znajdujący się w~panelu głównym aplikacji.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
 			\item System przetwarza żądanie.
@@ -258,7 +258,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			\end{enumerate}
 		\item[\useCaseScenAlt~1] \hfill \\
 			\begin{enumerate}[label=11a\arabic*.]
-			\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości.
+			\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości (co najmniej 6 znaków).
 			\item System ponownie wyświetla formularz do podania nowego hasła z~informacją o~błędzie.
 			\item \useCaseContinue{9}
 			\end{enumerate}
@@ -285,13 +285,13 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 		\end{itemize}
 			
 		\item[\useCaseZdarzInicj] \hfill \\
-			Użytkownik klika na odnośnik do listy pacjentów w menu głównym.
+			Użytkownik klika na odnośnik do listy pacjentów znajdujący się w głównym menu.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
 			\item System wyświetla użytkownikowi listę pacjentów z~obsługą paginacji.
 			\item Użytkownik wpisuje fragment imienia, nazwiska lub numeru PESEL w~polu służącym do wyszukiwania.
 			\item Użytkownik zatwierdza wpisaną frazę.
-			\item System filtruje listę pacjentów pod kątem przekazanej frazy i~prezentuje ją użytkownikowi.
+			\item System filtruje listę pacjentów na podstawie przekazanej frazy i~prezentuje ją użytkownikowi.
 			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukanego pacjenta.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
@@ -328,6 +328,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			\begin{itemize}
 				\item Użytkownik jest zalogowany.
 				\item Użytkownik znajduje się na podstronie listy pacjentów.
+				\item W~bazie istnieje przynajmniej jeden pacjent.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik klika na wiersz pacjenta, którego chce edytować.
@@ -382,14 +383,14 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 		\end{itemize}
 			
 		\item[\useCaseZdarzInicj] \hfill \\
-			Użytkownik klika na odnośnik do listy lekarzy w menu głównym.
+			Użytkownik klika na odnośnik do listy lekarzy znajdujący się w głównym menu.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
 			\item System wyświetla użytkownikowi listę lekarzy z~obsługą paginacji.
 			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukanego lekarza.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
-			Użytkownikowi zaprezentowane zostały podstawowe dane szukanego lekarza (imię, nazwisko, nazwa użytkownika oraz adres e-mail).
+			Użytkownikowi zaprezentowane są podstawowe dane szukanego lekarza (imię, nazwisko, nazwa użytkownika oraz adres e-mail).
 	\end{description}
 
 \subsection{Dodawanie nowego lekarza}
@@ -422,6 +423,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			\begin{itemize}
 				\item Użytkownik jest zalogowany.
 				\item Użytkownik znajduje się na podstronie listy lekarzy.
+				\item W~bazie istnieje przynajmniej jeden lekarz.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik klika na wiersz lekarza, którego chce edytować.
@@ -454,7 +456,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 				\item Użytkownik znajduje się na podstronie edycji swoich danych.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
-			Użytkownik klika na przycisk ``Zmień hasło''
+			Użytkownik klika na przycisk ``Zmień hasło''.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
 				\item System wysyła odnośnik z~tajnym identyfikatorem \emph{tokenu} na adres e-mail powiązany z kontem użytkownika.
@@ -466,15 +468,15 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 				\item Użytkownik jest kierowany do strony z~komunikatem o~sukcesie operacji.
 			\end{enumerate}
 		\item[\useCaseScenAlt~1] \hfill \\
-			\begin{enumerate}[label=11a\arabic*.]
-				\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości.
+			\begin{enumerate}[label=7a\arabic*.]
+				\item Hasła podane przez użytkownika nie są jednakowe lub nie spełniają wymagań długości (co najmniej 6 znaków).
 				\item System ponownie wyświetla formularz do podania nowego hasła z~informacją o~błędzie.
-				\item \useCaseContinue{9}
+				\item \useCaseContinue{4}
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
 			Hasło użytkownika zostało zmienione.
 		\item[\useCaseWyjatek~1] \hfill \\
-			\begin{enumerate}[label=11b\arabic*.]
+			\begin{enumerate}[label=7b\arabic*.]
 				\item Token stracił ważność lub jest niepoprawny.
 				\item System wyświetla komunikat o~błędzie operacji.
 				\item \useCaseEnd
@@ -518,16 +520,16 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 		\end{itemize}
 			
 		\item[\useCaseZdarzInicj] \hfill \\
-			Użytkownik klika na odnośnik do listy wizyt w menu głównym.
+			Użytkownik klika na odnośnik do listy wizyt znajdujący się w głównym menu.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
 			\item System wyświetla użytkownikowi listę wizyt z~obsługą paginacji.
-			\item Użytkownik określa dane filtrowania w panelu listy (zakres daty oraz przełącznik do uwzględnienia w wyniku jedynie wizyt zalogowanego lekarza).
+			\item Użytkownik określa dane filtrowania w panelu listy (zakres daty oraz przełącznik do uwzględnienia jedynie wizyt zalogowanego lekarza).
 			\item System przetwarza żądanie i wyświetla użytkownikowi listę z uwzględnieniem podanych kryteriów.
 			\item Użytkownik przechodząc po dostępnych stronach listy odnajduje szukaną wizytę.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
-			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imiona i nazwiska pacjenta oraz lekarza powiązanych z wizytą, a także jej termin).
+			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imię i nazwisko pacjenta oraz lekarza powiązanych z wizytą, a także jej termin).
 	\end{description}
 
 \subsection{Dodawanie nowej wizyty}
@@ -544,7 +546,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			Użytkownik klika na przycisk ``Zaplanuj wizytę''.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
-				\item System tworzy nową wizytę i przypisuje ją do edytowanego pacjenta.
+				\item System tworzy nową wizytę i przypisuje ją na stałe do edytowanego pacjenta.
 				\item Użytkownik jest przekierowany do podstrony edycji utworzonej wizyty.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
@@ -560,17 +562,18 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			\begin{itemize}
 				\item Użytkownik jest zalogowany.
 				\item Użytkownik znajduje się na podstronie listy wizyt.
+				\item W~bazie istnieje przynajmniej jedna wizyta.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik klika na wiersz wizyty, którą chce edytować.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
-				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający termin wizyty, notatki oraz listę prac składających się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
+				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający jej termin, notatki oraz listę prac, które składają się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
 				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
 				\item Użytkownik usuwa wybrane prace z listy klikając na ikonę kosza.
 				\item Użytkownik klika na przycisk ``Dodaj pracę''.
 				\item System dodaje do listy nową pracę.
-				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu wartości z~rozwijanej listy.
+				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu (obszar leczenia, diagnoza oraz wykonane leczenie) wartość z~rozwijanej listy.
 				\item Użytkownik zatwierdza wprowadzone zmiany.
 				\item Użytkownik zostaje przekierowany z~powrotem do listy wizyt.
 			\end{enumerate}
@@ -581,7 +584,7 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 			\end{itemize}
 			
 		\item[\useCaseWyjatek~1] \hfill \\
-			\begin{enumerate}[label=3a\arabic*.]
+			\begin{enumerate}[label=7a\arabic*.]
 				\item Użytkownik anuluje wprowadzone zmiany.
 				\item Użytkownik jest przekierowany do listy wizyt.
 				\item \useCaseEnd
@@ -612,11 +615,9 @@ Aplikacja webowa powinna pozwalać na zrealizowanie kompletu funkcjonalności pr
 
 \section{Wymagania funkcjonalne aplikacji mobilnej}
 
-Aplikacja przeznaczona na telefon komórkowy powinna mieć mniejszy zakres działań od aplikacji webowej. Przeciętny rozmiar urządzeń mobilnych i~brak zewnętrznej klawiatury oraz myszki w~zestawie\footnote{Platformy mobilne pozwalają na podłączenie zewnętrznych urządzeń wejściowych poprzez technologię bluetooth lub USB, jednak nie jest to częsta praktyka.} ogranicza swobodę korzystania z~aplikacji, a~w~szczególności pisania długich tekstów czy też przełączania się pomiędzy różnymi oknami aplikacji, co w~przeglądarce internetowej da się łatwo osiągnąć przy pomocy kart.
+Aplikacja przeznaczona na telefon komórkowy powinna mieć mniejszy zakres działań od aplikacji webowej. Przeciętny rozmiar urządzeń mobilnych i~brak zewnętrznej klawiatury oraz myszki w~zestawie\footnote{Platformy mobilne pozwalają na podłączenie zewnętrznych urządzeń wejściowych poprzez technologię bluetooth lub USB, jednak nie jest to częsta praktyka.} ograniczają swobodę korzystania z~aplikacji. Szczególnie kłopotliwe jest pisanie długich tekstów czy też przełączanie się pomiędzy różnymi oknami aplikacji, co w~przeglądarce internetowej da się łatwo osiągnąć z wykorzystaniem kart.
 
-Głównym zadaniem aplikacji mobilnej powinno być umożliwienie wykonania szybkich akcji, nawet w~obecności pacjenta, bez konieczności podchodzenia do komputera. W~szczególności autor ma na myśli automatyczne filtrowanie wizyt dla zalogowanego lekarza i~aktualnego dnia oraz nie zanieczyszczanie interfejsu zbyt skomplikowanymi operacjami, takimi jak zarządzanie innymi lekarzami, które dużo wygodniej będzie zrealizować przy pomocy aplikacji webowej.
-
-Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizyt dla pacjentów powinny zostać wykonane po stronie aplikacji webowej. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla aplikacji webowej.
+Głównym zadaniem aplikacji mobilnej powinno być umożliwienie wykonania szybkich operacji w~obecności pacjenta, bez konieczności podchodzenia do komputera. Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizyt dla pacjentów powinny zostać wykonane po stronie aplikacji webowej. W~kolejnych podrozdziałach przedstawione zostaną przypadki użycia dla klienta na platformę mobilną.
 %dodawanie wizyt nie może być zrobione, bo nie można ich będzie przeglądać chyba że będą na aktualny dzień
 
 \subsection{Logowanie się do systemu}
@@ -671,7 +672,7 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 				\item System wyświetla użytkownikowi listę pacjentów.
 				\item Użytkownik wpisuje fragment imienia, nazwiska lub numeru PESEL w~polu służącym do wyszukiwania.
 				\item Użytkownik zatwierdza wpisaną frazę.
-				\item System filtruje listę pacjentów pod kątem przekazanej frazy i~prezentuje ją użytkownikowi.
+				\item System filtruje listę pacjentów na podstawie przekazanej frazy i~prezentuje ją użytkownikowi.
 				\item Użytkownik odnajduje szukanego pacjenta.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
@@ -708,6 +709,7 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 			\begin{itemize}
 				\item Użytkownik jest zalogowany.
 				\item Użytkownik znajduje się na ekranie listy pacjentów.
+				\item W~bazie istnieje przynajmniej jeden pacjent.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik klika na wiersz pacjenta, którego chce edytować.
@@ -737,6 +739,7 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 		\begin{itemize}
 			\item Użytkownik jest zalogowany.
 			\item W~bazie istnieje przynajmniej jedna wizyta.
+			\item Użytkownik znajduje się na ekranie głównym aplikacji.
 		\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik wybiera opcję ``Wizyty'' z~głównego menu.
@@ -746,7 +749,7 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 			\item Użytkownik odnajduje szukaną wizytę.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
-			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imię i nazwisko pacjenta oraz termin).
+			Użytkownikowi zaprezentowane są podstawowe dane wizyty (imię i nazwisko pacjenta oraz lekarza, a także jej termin).
 	\end{description}
 
 \subsection{Edytowanie danych wizyty}
@@ -758,17 +761,18 @@ Pozostałe czynności, takie jak zarządzanie bazą lekarzy, czy planowanie wizy
 			\begin{itemize}
 				\item Użytkownik jest zalogowany.
 				\item Użytkownik znajduje się na ekranie listy wizyt.
+				\item W~bazie istnieje przynajmniej jedna wizyta.
 			\end{itemize}
 		\item[\useCaseZdarzInicj] \hfill \\
 			Użytkownik klika na wiersz wizyty, którą chce edytować.
 		\item[\useCaseScenBaz] \hfill \\ 
 			\begin{enumerate}
-				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający termin wizyty, notatki oraz listę prac składających się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
+				\item System wyświetla użytkownikowi formularz edycji wizyty zawierający jej termin, notatki oraz listę prac składających się z leczonego obszaru, diagnozy oraz wykonanego leczenia.
 				\item Użytkownik dokonuje modyfikacji na dowolnych, interesujących go polach.
-				\item Użytkownik usuwa wybrane prace z listy klikając na przycisk ``Usuń powyższą wizytę''.
+				\item Użytkownik usuwa wybrane prace z listy klikając na przycisk ``Usuń powyższą pracę''.
 				\item Użytkownik klika na przycisk ``Dodaj pracę''.
 				\item System dodaje do listy nową pracę.
-				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu wartości z~rozwijanej listy.
+				\item Użytkownik edytuje dodaną pracę wybierając dla każdego jej elementu (obszar leczenia, diagnoza oraz wykonane leczenie) wartość z~rozwijanej listy.
 				\item Użytkownik zatwierdza wprowadzone zmiany.
 			\end{enumerate}
 		\item[\useCaseWarKonc] \hfill \\ 
@@ -792,124 +796,122 @@ Przed projektowaniem poszczególnych warstw aplikacji, należy określić z~jaki
 
 Na podstawie przedstawionego schematu można wyróżnić następujące komponenty wchodzące w~skład systemu:
 \begin{description}
-\item[DB] - baza danych,
-\item[Dentaise Server] - serwer zawierający logikę aplikacji i~udostępniający ją klientom webowym oraz mobilnym,
-\item[Dentaise Web] - klient webowy,
+\item[DB] - baza danych;
+\item[Dentaise Server] - serwer zawierający logikę aplikacji, która zostanie udostępniona klientom webowym oraz mobilnym;
+\item[Dentaise Web] - klient webowy;
 \item[Dentaise Mobile] - klient mobilny na platformę android.
 \end{description}
 
-Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy serwerem a~relacyjną bazą danych odbędzie się przy pomocy protokołu JDBC. Dane niezbędne do wyświetlenia aplikacji webowej w~przeglądarce użytkownika otrzymywane będą przy użyciu protokołu \emph{HTTP} lub jego szyfrowanej wersji \emph{HTTPS}. Aplikacja kliencka \emph{Android} także musi korzystać z~podobnego zestawu danych, który będzie dla niej udostępniony poprzez \emph{Web Service}. Szczegóły doboru odpowiednich protokołów i~dostosowania interfejsów dla aplikacji klienckich zostaną przedstawione w~dalszej części rozdziału. 
+Całość systemu opiera się na technologii Java, więc komunikacja pomiędzy serwerem a~relacyjną bazą danych odbędzie się przy pomocy protokołu \emph{JDBC}. Dane niezbędne do wyświetlenia aplikacji webowej w~przeglądarce użytkownika otrzymywane będą przy użyciu protokołu \emph{HTTP} lub jego szyfrowanej wersji (\emph{HTTPS}). Aplikacja kliencka na platformę \emph{Android} także musi korzystać z~podobnego zestawu danych, a więc zostaną one udostępnione poprzez \emph{Web Service}. Szczegóły doboru odpowiednich protokołów i~dostosowania interfejsów dla aplikacji klienckich zostaną przedstawione w~dalszej części rozdziału. 
 
 \section{Baza Danych}
 \label{sec:bazaDanych}
 
-Charakter tworzonej aplikacji wymaga, aby dane jakie będą tworzyć i~modyfikować użytkownicy były zapamiętane pomiędzy sesjami klienta, a~także muszą być dostępne i~spójne, niezależnie od tego czy osoba korzystająca z~usługi łączy się z~nią każdorazowo przy pomocy tego samego komputera. Dane uzupełniane w~systemie muszą być również identyczne dla każdego użytkownika, to znaczy muszą oni mieć możliwość przeglądania treści dodawanych przez inne osoby. Z~tego powodu niezbędne jest przetrzymywanie ich po stronie serwera za pomocą bazy danych.
+Charakter tworzonej aplikacji wymaga, aby dane jakie będą tworzyć i~modyfikować użytkownicy były zapamiętane pomiędzy sesjami klienta. Dane te muszą także być dostępne i~spójne, niezależnie od tego czy osoba korzystająca z~usługi łączy się z~nią każdorazowo przy pomocy tego samego komputera, czy wykorzystuje kilka stacji roboczych. Dane uzupełniane w~systemie muszą być również identyczne dla każdego użytkownika, to znaczy muszą oni mieć możliwość przeglądania treści dodawanych przez inne osoby. Z~tego powodu niezbędne jest przetrzymywanie ich po stronie serwera za pomocą bazy danych.
 
 \subsection{System zarządzania relacyjnymi bazami danych}
 
 Spośród różnych dostępnych typów baz danych zdecydowano się na relacyjną bazę \emph{PostgreSQL}. Cechuje się ona dużą niezawodnością i~jest w~pełni darmowa nawet w~przypadku użytku komercyjnego. Jej popularność, a~zatem i~duże wsparcie ze strony społeczności, będzie również zaletą w~razie wystąpienia nieoczekiwanych problemów.
 
-Baza danych PostgreSQL udostępnia również graficzny interfejs do zarządzania o~nazwie \emph{pgadmin}. Przy jego pomocy nadzorowanie i~modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
+Baza danych \emph{PostgreSQL} udostępnia także graficzny interfejs \emph{pgadmin}, który pozwala na zarządzanie i monitorowanie systemu. Przy jego pomocy nadzorowanie i~modyfikacja danych testowych będzie znacznie ułatwionym zadaniem.
 
 \subsection{Mapowanie obiektowo-relacyjne}
 
-W~relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można porównać do postaci tabelarycznej, gdzie dane przetrzymywane są bez informacji o~typach innych, powiązanych z~nimi danych. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia, że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
+W~relacyjnej bazie danych, jak jej nazwa wskazuje, wartości przetrzymywane są w~sposób relacyjny, podczas gdy w~języku Java oprogramowanie tworzy się w~sposób obiektowy. Model relacyjny można porównać do postaci tabelarycznej, gdzie dane przetrzymywane są bez informacji o~typach innych, powiązanych z~nimi wartości. W~odróżnieniu model obiektowy pozwala na tworzenie ścisłych powiązań pomiędzy różnymi obiektami, co sprawia, że przemieszczanie się po ich grafie jest dużo prostsze i~bardziej naturalne.
 
-Dostęp do bazy danych w~języku Java zapewniony jest przez technologię JDBC\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań SQL, będących z~punktu widzenia kompilatora jedynie ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~poprawności zapytań co może doprowadzić do nieobliczalnych błędów oraz trudności w~rozwoju i~utrzymaniu kodu.
+Dostęp do bazy danych w~języku Java zapewniony jest przez technologię \emph{JDBC}\footnote{Java DataBase Connectivity}, która pozwala na wykonywanie skomponowanych przez siebie zapytań \emph{SQL}, będących dla kompilatora jedynie zwyczajnym ciągiem znaków. Z~tego powodu bez dodatkowych narzędzi nie jest możliwa kontrola typów i~poprawności zapytań, co może doprowadzić do nieobliczalnych błędów oraz trudności w~rozwoju i~utrzymaniu kodu.
 
-Mapowanie obiektowo-relacyjne rozwiązuje ten problem poprzez automatyczne zarządzanie niższą warstwą trwałości na podstawie zdefiniowanego przez programistę interfejsu obiektowego. Narzędzia generowania schematów baz danych tworzą całą strukturę, którą konfiguruje się przy pomocy adnotacji encji, będących zwykle prostymi obiektami POJO\footnote{Plain Old Java Object}. Tak utworzone API jest gotowe do wykorzystania jako warstwa trwałości danych.
+Mapowanie obiektowo-relacyjne rozwiązuje ten problem poprzez automatyczne zarządzanie niższą warstwą trwałości na podstawie zdefiniowanego przez programistę interfejsu obiektowego. Narzędzia generowania schematów baz danych tworzą całą jej strukturę, którą konfiguruje się poprzez adnotowanie encji, będących zwykle prostymi obiektami \emph{POJO}\footnote{Plain Old Java Object}. Tak utworzone \emph{API} jest gotowe do wykorzystania jako warstwa trwałości danych.
 
-Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W~szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w~pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA} dostarczany wraz z~\emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów, co pozytywnie wpłynie na utrzymanie projektu. Więcej na temat mapowania obiektowo-relacyjnego można przeczytać w~\cite{HORM}.
+Odwzorowanie modelu relacyjnego na obiektowy nie jest prostym zadaniem, ze względu na duże różnice między nimi. W~szczególności największą trudność sprawiają problemy odwzorowania dziedziczenia, identyczności danych oraz powiązań między obiektami. Dlatego też bardzo istotne jest wybranie odpowiedniego rozwiązania, które w~pełny sposób obsługuje wymienione przypadki. Zdecydowano się na bibliotekę Hibernate, która oprócz własnego interfejsu implementuje również standard \emph{JPA}, dostarczany wraz z~\emph{Java EE}. Wykorzystując tę bibliotekę jako jego implementację, podmiana jej na inną nie przyniesie żadnych problemów, co pozytywnie wpłynie na utrzymanie projektu. Więcej na temat mapowania obiektowo-relacyjnego można przeczytać w~\cite{HORM}.
 
 \subsection{Schemat bazy danych}
 
-Dane najbardziej wrażliwe na zmiany to takie, które pochodzą z~zewnątrz. Zalecenia Narodowego Funduszu Zdrowia do definiowania wykonanych przez lekarza prac mogą ulegać zmianie, więc bardzo istotny jest przemyślany system aktualizacji. Aplikacja webowa nie stanowi tu problemu, ponieważ nie jest instalowana po stronie klienta, a~jedynie renderowana na podstawie danych uzyskiwanych z~serwera, wobec czego wystarczająca będzie jego aktualizacja. W~przypadku aplikacji mobilnych, logika interpretacji danych i~ich renderowanie będzie znajdować się po stronie telefonu komórkowego. Dobrym podejściem byłoby uniezależnienie się od statycznych wartości, możliwych do uzupełniania w~aplikacji, takich jak obszary leczenia, czy typ rozpoznania. Modyfikacja zbioru tych zasobów nie powinna zmuszać wszystkich, korzystających z~niej lekarzy do pobierania aktualizacji, zwłaszcza że nie jest to konieczne. Nie jest to również bez znaczenia w~utrzymaniu produktu - wprowadzanie takich aktualizacji w~kodzie aplikacji nie będzie wcale konieczne, ponieważ zostaną one zastąpione przez wykonanie prostego skryptu aktualizującego zawartość bazy danych po stronie serwera.
+Dane najbardziej wrażliwe na zmiany to takie, które pochodzą z~zewnątrz. Zalecenia Narodowego Funduszu Zdrowia do definiowania wykonanych przez lekarza prac mogą ulegać zmianie, więc bardzo istotny jest przemyślany proces aktualizacji. Aplikacja webowa nie stanowi tu problemu, ponieważ nie jest instalowana po stronie klienta, a~jedynie renderowana na podstawie danych uzyskiwanych z~serwera, wobec czego wystarczająca będzie jego aktualizacja. W~przypadku aplikacji mobilnych, logika interpretacji danych i~ich renderowanie będzie znajdować się po stronie telefonu komórkowego. Dobrym podejściem byłoby uniezależnienie się od statycznych wartości możliwych do uzupełniania w~aplikacji (np. obszary leczenia czy typ rozpoznania) poprzez umieszczenie ich w bazie danych. Modyfikacja zbioru tych zasobów nie powinna zmuszać wszystkich korzystających z~systemu lekarzy do pobierania aktualizacji. Nie jest to również bez znaczenia w~utrzymaniu produktu, ponieważ wprowadzanie takich zmian w~kodzie aplikacji nie będzie wcale konieczne -- zostaną one zastąpione wykonaniem prostego skryptu aktualizującego zawartość bazy danych.
 
-Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana zostanie w~logice biznesowej aplikacji, wygenerowano schemat bazy danych przedstawiony na rysunku \ref{fig:dbschema}. Ukazane na nim tabele mają swoje odwzorowanie w~obiektach modelu, które zostały bardziej przybliżone w~podrozdziale \ref{sec:modele} przy okazji omawiania szczegółów implementacji.
+Na podstawie zaprojektowanej obiektowo warstwy trwałości, która wykorzystana zostanie w~logice biznesowej aplikacji, wygenerowano schemat bazy danych przedstawiony na rysunku \ref{fig:dbschema}. Ukazane na nim tabele mają swoje odwzorowanie w~obiektach modelu, które zostały przedstawione w~podrozdziale \ref{sec:modele} przy okazji omawiania szczegółów implementacji.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[height=\textheight * 4/5]{dbschema}
-	\caption{Graficzna reprezentacja schematu bazy danych wygenerowana przy pomocy aplikacji \emph{SchemaSpy}}.
+	\caption{Graficzna reprezentacja schematu bazy danych wygenerowana przy pomocy aplikacji \emph{SchemaSpy}.}
 	\label{fig:dbschema}
 \end{figure}
 
 \section{Web Service}
 
-Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z~tego samego zbioru danych co aplikacja webowa. Warstwa trwałości, opisana w podrozdziale \ref{sec:bazaDanych}, znajdować się ma na serwerze, wobec czego należy opracować sposób dostępu do tych danych, osiągalny z~poziomu klienta mobilnego. Elementem udostępniającym te dane będzie Web Service.
+Implementowany system wymaga stworzenia aplikacji mobilnej, która będzie korzystać z~tego samego zbioru danych co aplikacja webowa. Warstwa trwałości i logika aplikacji będą znajdować się po stronie serwera, wobec czego należy opracować sposób dostępu do niego z~poziomu klienta mobilnego, co zostanie zrealizowane przy pomocy \emph{Web Service'u}.
 
 \subsection{Protokół}
 
-Istnieją dwa wiodące standardy tworzenia Web Service'ów: RESTful\footnote{REpresentational State Transfer} oraz SOAP\footnote{Simple Object Access Protocol}. Obydwa rozwiązania mają swoje wady i~zalety, jednak wybór odpowiedniego musi być ściśle dopasowany do potrzeb realizowanego projektu, w~czym pomoże krótkie wprowadzenie do ich koncepcji.
+Istnieją dwa wiodące standardy tworzenia \emph{Web Service'ów}: \emph{RESTful}\footnote{REpresentational State Transfer} oraz \emph{SOAP}\footnote{Simple Object Access Protocol}. Obydwa rozwiązania mają swoje wady i~zalety, jednak wybór odpowiedniego musi być ściśle dopasowany do potrzeb realizowanego projektu, w~czym pomoże krótkie wprowadzenie do ich koncepcji.
 
 \subsubsection{RESTful}
 
-Web Service typu RESTful oparty jest na wzorcu architektury \emph{REST}, zaproponowanym przez jednego z~autorów protokołu HTTP - Roy'a Fieldinga. W~\cite{RFD} jego autorstwa czytamy, że główną abstrakcją informacji jest zasób, którym może być wszystko co da się nazwać: dokument, obrazek, usługa udzielająca informacji o pogodzie, kolekcja innych zasobów, obiekt rzeczywisty (np. osoba) itp. Wokół tych zasobów, tworzących zbiór nieskończony, zdefiniowany jest skończony zbiór akcji, określonych przez metody protokołu \emph{HTTP}. Taki styl architektury nosi nazwę \emph{Resource Oriented Architecture}.
+Web Service typu \emph{RESTful} oparty jest na wzorcu architektury \emph{REST}, zaproponowanym przez jednego z~autorów protokołu \emph{HTTP} - Roy'a Fieldinga. Zgodnie z~pracą \cite{RFD} jego autorstwa główną abstrakcją informacji jest zasób, którym może być wszystko co da się nazwać: dokument, obrazek, usługa udzielająca informacji o pogodzie, kolekcja innych zasobów, obiekt rzeczywisty (np. osoba) itp. Wokół tych zasobów, tworzących zbiór nieskończony, zdefiniowany jest skończony zbiór akcji, określonych przez metody protokołu \emph{HTTP}. Taki styl architektury nosi nazwę \emph{Resource Oriented Architecture}.
 
-Usługi tego typu są bardzo silnie powiązane z~protokołem HTTP, to znaczy wykorzystują jego pola do przesyłania danych charakterystycznych dla usługi, a~nie jedynie do transportu protokołu zagnieżdżonego. Dla przykładu zapytanie pobierające dane pewnego zasobu o~określonym identyfikatorze, może skutkować w~odpowiedzi \emph{HTTP 404 Not Found}, jeśli odpytywany zasób nie istnieje. W przypadku gdyby protokół \emph{HTTP} był wykorzystywany jedynie do komunikacji, odpowiedzią byłoby \emph{200 OK}, a~status błędu zakodowany zostałby wewnątrz transportowanych danych.
-
-Dzięki takiemu podejściu jedyne co jest potrzebne do konsumpcji usługi \emph{RESTful} to klient protokołu \emph{HTTP}.
+Usługi tego typu są bardzo silnie powiązane z~protokołem \emph{HTTP}, ponieważ wykorzystują jego nagłówki do przesyłania danych charakterystycznych dla usługi. Dla przykładu zapytanie pobierające dane pewnego zasobu o~określonym identyfikatorze, może skutkować w~odpowiedzi \emph{HTTP 404 Not Found}, jeśli odpytywany zasób nie istnieje. W przypadku gdyby protokół \emph{HTTP} był wykorzystywany jedynie do komunikacji, odpowiedzią byłoby \emph{200 OK}, a~status błędu zakodowany zostałby wewnątrz transportowanych danych.
 
 \subsubsection{SOAP}
 
-Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są używane w~celu opisania wyników operacji czy parametryzowania zapytań. Dane te zapisane są w~zawartości komunikatów przy pomocy języka \emph{XML}, a~wspomniane nagłówki służą jedynie do informacji o transporcie danych. Dla przykładu z~punktu widzenie protokołu \emph{HTTP} zapytanie o~nieistniejący zasób jest poprawne i powinno skutkować w odpowiedzi \emph{200 OK}, a informacja o~błędzie powinna zostać uwzględniona w~zawartości komunikatu. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
+Protokół \emph{SOAP} według \cite{W3Soap} zaprojektowany został mając na uwadze prostotę i~rozszerzalność. Do transportu danych zwykle wykorzystywany jest protokół \emph{HTTP}, ale jego nagłówki nie są używane w~celu opisania wyników operacji czy parametryzowania zapytań. Dane te zapisane są w~zawartości komunikatów przy pomocy języka \emph{XML}, a~wspomniane nagłówki służą jedynie do informacji o transporcie danych. Dla przykładu zapytanie o~nieistniejący zasób jest poprawne i powinno skutkować w odpowiedzi \emph{200 OK}, a informacja o~błędzie powinna zostać uwzględniona w~zawartości komunikatu. Należy jednak podkreślić, że \emph{SOAP} nie jest silnie powiązany z~protokołem \emph{HTTP} i~do komunikacji mogą zostać wykorzystane inne standardy.
 
-Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jest plikiem \emph{WSDL} zapisanym w formacie \emph{XML}. Kontrakt ten musi zostać opublikowany lub przesłany do osób zainteresowanych konsumpcją usługi. Ręczne użytkowanie, wbrew temu co sugeruje nazwa i~założenia, jest na tyle skomplikowane, że w~większości przypadków do efektywnej pracy niezbędne są narzędzia pozwalające na generowanie kodu strony klienckiej lub serwerowej na podstawie wspomnianego kontraktu. W~przeciwnym wypadku, aby móc parsować i~tworzyć wiadomości \emph{SOAP}, konieczne jest dogłębne zapoznanie się ze standardem.
+Interfejs \emph{Web Service'u SOAP} opisywany jest według kontraktu, który jest plikiem \emph{WSDL} zapisanym w formacie \emph{XML}. Kontrakt ten musi zostać opublikowany lub przesłany do osób zainteresowanych konsumpcją usługi. Ręczne użytkowanie, wbrew temu co sugeruje nazwa i~założenia protokołu, jest na tyle skomplikowane, że w~większości przypadków do efektywnej pracy niezbędne są narzędzia pozwalające na generowanie kodu strony klienckiej lub serwerowej na podstawie wspomnianego kontraktu. W~przeciwnym wypadku, aby móc parsować i~tworzyć wiadomości \emph{SOAP}, konieczne jest dogłębne zapoznanie się ze standardem.
 
 W odróżnieniu od podejścia \emph{REST}, protokół \emph{SOAP} jest zorientowany na usługę (\emph{Service Oriented Architecture}), czyli akcje możliwe do wykonania, a~nie zasoby.
 
 \subsubsection{Wybór i uzasadnienie}
 
-Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług podążających tą drogą ma jasny interfejs nie wymagający tworzenia obszernej dokumentacji. Często wystarczające jest jedynie wymienienie dostępnych zasobów, ponieważ metody \emph{HTTP} wykorzystywane do definiowania możliwych operacji zwykle dobierane są w~sposób zgodny z~powszechnie znanymi standardami.
+Nakład pracy potrzebny do użycia \emph{SOAP} jako usługi dedykowanej dla klienta mobilnego jest niewspółmiernie wyższy od wykorzystania \emph{RESTful}. Styl architektury zorientowany na zasoby narzuca pewne ramy, aby wpasować się w~możliwości protokołu \emph{HTTP}, ale dzięki temu każdy Web Service, który ich przestrzega jest osiągalny przy pomocy zwykłego klienta \emph{HTTP}. Większość usług tego typu ma jasny interfejs nie wymagający tworzenia obszernej dokumentacji. Często wystarczające jest jedynie wymienienie dostępnych zasobów, ponieważ metody \emph{HTTP} wykorzystywane do definiowania możliwych operacji zwykle dobierane są w~sposób zgodny z~powszechnie znanymi standardami.
 
-W~przypadku implementowanego systemu zdecydowanie lepszą drogą będzie skorzystanie z~usługi typu \emph{RESTful}. Jest to również technologia oficjalnie zalecana do użycia na platformie Android. Ze względu na to, że opiera się ona na stylu architektury \emph{REST}, który jest sposobem definiowania zasobów przeznaczonym dla \emph{WWW}\footnote{World Wide Web}, taką usługę będzie można wykorzystać także dla drugiego tworzonego modułu klienckiego - strony internetowej, co byłoby znacznie trudniejsze do osiągnięcia przy użyciu \emph{SOAP}. Możliwość wykorzystania wspólnego interfejsu między tym dwoma modułami znacznie ułatwi prace rozwojowe i~utrzymanie projektu.
+W~przypadku implementowanego systemu zdecydowanie lepszą drogą będzie skorzystanie z~usługi typu \emph{RESTful}. Jest to również technologia oficjalnie zalecana do użycia na platformie \emph{Android}. Ze względu na to, że opiera się ona na stylu architektury \emph{REST}, który jest sposobem definiowania zasobów przeznaczonym dla \emph{WWW}\footnote{World Wide Web}, taką usługę będzie można wykorzystać także dla drugiego tworzonego modułu klienckiego -- strony internetowej. Możliwość wykorzystania wspólnego interfejsu między tymi dwoma modułami znacznie ułatwi prace rozwojowe i~utrzymanie projektu, a byłoby to znacznie trudniejsze do osiągnięcia przy użyciu protokołu \emph{SOAP}.
 
 \subsection{Serializacja}
 
-Jedną z~zalet wykorzystania \emph{Web Service'ów} jest możliwość rozwijania produktu w~innych technologiach po dwóch różnych jego stronach - klienckiej i~serwerowej. Powoduje to jednak, że przesyłane dane muszą być zapisane w~notacji niezależnej od języka programowania. W~tym celu stosuje się serializację obiektów do jednego z~wybranych formatów - zwykle jest to \emph{JSON} lub \emph{XML}.
+Jedną z~zalet wykorzystania \emph{Web Service'ów} jest możliwość rozwijania produktu w~innych technologiach po dwóch różnych jego stronach -- klienckiej i~serwerowej. Powoduje to jednak, że przesyłane dane muszą być zapisane w~notacji niezależnej od wykorzystywanego języka programowania. W~tym celu stosuje się serializację obiektów do jednego z~wybranych formatów -- zwykle jest to \emph{JSON} lub \emph{XML}.
 
-W~języku Java istnieje wiele rozwiązań umożliwiających automatyczną konwersję obiektów typu \emph{POJO} do jednego z~nich. W~aplikacji tworzonej na potrzeby pracy zdecydowano się na bibliotekę \emph{Jackson}, obsługującą format \emph{JSON}.
+W~języku Java istnieje wiele rozwiązań umożliwiających automatyczną serializację i deserializację obiektów typu \emph{POJO}. W~aplikacji tworzonej na potrzeby pracy zdecydowano się na bibliotekę \emph{Jackson}, obsługującą format \emph{JSON}.
 
 \subsection{API}
 
-Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby wszystkie elementy, które do tej warstwy należą, czyli w~tym wypadku klient webowy i~mobilny, miały możliwość wygodnego korzystania z~interfejsu RESTowego. Zaletą Web Service'ów \emph{RESTful} jest ich prostota, ponieważ elementem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta protokołu \emph{HTTP}. Dzięki temu nie sprawi to problemu w~użytkowaniu go również po stronie aplikacji mobilnej.
+Web Service jest elementem, który będzie oddzielał warstwę prezentacji od logiki. Należy wobec tego zadbać, aby aplikacje klienckie miały możliwość wygodnego korzystania z~interfejsu \emph{REST}. Zaletą \emph{Web Service'ów} \emph{RESTful} jest ich prostota, ponieważ warunkiem wystarczającym do ich konsumpcji jest możliwość wykorzystania klienta protokołu \emph{HTTP}. Dzięki temu nie sprawi to problemu w~użytkowaniu go również po stronie aplikacji mobilnej.
 
-Interfejsy RESTful zorientowane są na zasoby. Odpowiednim podejściem będzie więc zaczęcie od ich identyfikacji. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Interfejs nie musi być wersjonowany, ponieważ jest on tylko do zastosowania wewnętrznego i~nie będzie upubliczniony. Moduł webowy oraz mobilny są jego jedynymi klientami i~stanowią integralną część aplikacji. Z~tego względu pierwszy człon adresu URL będzie od razu jednym z~zasobów, któremu zwykle przydziela się formę liczby mnogiej:
+Interfejsy RESTful zorientowane są na zasoby. W~tworzonej aplikacji są to wszelkie klasy danych, do których dostęp udzielony zostanie użytkownikowi. Pierwszym członem adresu \emph{URL} będzie jeden z~zasobów, któremu zwykle przydziela się formę liczby mnogiej, na przykład:
 \begin{itemize}
-	\item /patients
-	\item /doctors
-	\item /visits
-	\item /areas
-	\item /diagnoses
-	\item /treatments
+	\item /patients,
+	\item /doctors,
+	\item /visits,
+	\item /areas,
+	\item /diagnoses,
+	\item /treatments.
 \end{itemize}
 
 Zgodnie z~ogólnie przyjętą praktyką, o~której można przeczytać w \cite{WApiD}, do zróżnicowania typów operacji na zasobach wykorzystuje się następujące metody \emph{HTTP}:
 \begin{description}
-	\item[GET] odczytywanie
-	\item[PUT] tworzenie nowej instancji
-	\item[POST] aktualizowanie
-	\item[DELETE] usuwanie
+	\item[GET] -- odczytywanie,
+	\item[PUT] -- tworzenie nowej instancji,
+	\item[POST] -- aktualizowanie,
+	\item[DELETE] -- usuwanie.
 \end{description}
 
-Posługując się zasobem pacjenta jako przykładem, wyróżnić można następujące zapytania:
+Przykładowo, dla zasobu pacjenta wyróżnić można następujące zapytania:
 \begin{description}
-\item[GET /patients] odczyt listy pacjentów
-\item[GET /patients/\{id\}] odczyt pacjenta o~identyfikatorze \emph{\{id\}}
-\item[POST /patients] stworzenie nowego pacjenta
-\item[PUT /patients/\{id\}] aktualizacja pacjenta o~identyfikatorze \emph{\{id\}}
-\item[DELETE /patients/\{id\}] usunięcie pacjenta o~identyfikatorze \emph{\{id\}}
+\item[GET /patients] -- odczyt listy pacjentów,
+\item[GET /patients/\{id\}] -- odczyt pacjenta o~identyfikatorze \emph{\{id\}},
+\item[POST /patients] -- stworzenie nowego pacjenta,
+\item[PUT /patients/\{id\}] -- aktualizacja pacjenta o~identyfikatorze \emph{\{id\}},
+\item[DELETE /patients/\{id\}] -- usunięcie pacjenta o~identyfikatorze \emph{\{id\}}.
 \end{description}
 
-Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje uściślające sposób wykonania operacji powinny być przekazywane w~parametrach URL, aby nie zanieczyszczać nimi API. Przykładowo, filtrowanie listy wizyt dla dnia 22.08.2014 i~aktualnie zalogowanego lekarza przybierze następującą postać:
+Jak dalej zaleca \cite{WApiD} wszelkie dodatkowe informacje uściślające sposób wykonania operacji powinny być przekazywane w~parametrach \emph{URL}, aby nie zanieczyszczać nimi \emph{API}. Przykładowo, filtrowanie listy wizyt dla dnia 22.08.2014 i~aktualnie zalogowanego lekarza przybierze następującą postać:
 \begin{lstlisting}
 GET /visits?showOnlyMine=true&fromDate=22.08.2014&toDate=22.08.2014
 \end{lstlisting}
 
-Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Dla aplikacji mobilnej nie stanowi to problemu, jednak warto zachować wspólne API dla obydwu modułów, więc adaptacja interfejsu dla potrzeb WWW wpłynie również na klienta dedykowanego dla telefonów komórkowych. Problematycznymi metodami są \emph{PUT} oraz \emph{DELETE}, więc zostaną zastąpione metodą \emph{GET}. Do nazw zasobów dla tych operacji dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
-Ostateczny interfejs przedstawia listing \ref{lst:routes} zawierający fragment pliku \emph{routes} stosowanego frameworka.
+Niestety nie wszystkie z~wymienionych metod \emph{HTTP} są zawsze implementowane w~przeglądarkach. Problematycznymi operacjami są \emph{PUT} oraz \emph{DELETE}, więc zostaną one zastąpione metodą \emph{GET}. Do nazw zasobów dla tych operacji dodano sufiksy \emph{-create} oraz \emph{-delete}, aby móc rozróżnić intencje klienta.
+Ostateczny interfejs przedstawiony został na listingu \ref{lst:routes}, zawierającym fragment pliku \emph{routes} stosowanego frameworka.
 
-\begin{lstlisting}[caption={Fragment pliku \emph{routes} zawierającego mapowanie wzorców URL interfejsu RESTful do wywoływanych metod kontrolerów w \emph{Play Framework}}, label={lst:routes}]
+\begin{lstlisting}[caption={Fragment pliku zawierającego mapowanie wzorców URL do wywoływanych metod kontrolerów.}, label={lst:routes}]
 GET     /patients                                               controllers.PatientController.list(page: Int ?= 0, query: String ?= null)
 GET     /patients/:id                                           controllers.PatientController.get(id: Long)
 GET     /patients-create                                        controllers.PatientController.create()
@@ -935,74 +937,66 @@ GET     /treatments                                              controllers.Tre
 
 \section{Aplikacja webowa}
 
-Na platformę Java istnieje wiele kompleksowych narzędzi, takich jak Google Web Toolkit czy Vaadin, pozwalających na konstrukcję strony internetowej przy pomocy tego języka, bez konieczności zapoznawania się z~technologiami uruchamianymi po stronie klienta w~przeglądarce internetowej. Takie podejście niesie jednak ze sobą sporo ograniczeń wobec mnogości rozwiązań pokroju jQueryUI, czy Ext JS, niezależnych od strony serwerowej. Rozdzielenie tych dwóch warstw, choć wymaga większej wiedzy, zwykle jednak również skutkuje we wzroście wydajności w~stosunku do języka Java kompilowanego do JavaScript, co jest oferowane przez rozwiązania tego typu.
-
-Zdecydowano się więc na oddzielenie strony serwerowej (Back end) od klienckiej (Front end) co pozwoli dokonać niezależnego wyboru technologii dla każdej z~nich, zwiększając wachlarz możliwości.
+Istnieje wiele narzędzi, takich jak \emph{Google Web Toolkit} czy \emph{Vaadin}, pozwalających na konstrukcję całej strony internetowej wykorzystując głównie język Java, bez konieczności zapoznawania się z~technologiami uruchamianymi w~przeglądarce internetowej po stronie klienta. Takie podejście niesie jednak ze sobą sporo ograniczeń wobec mnogości rozwiązań pokroju \emph{jQueryUI}, czy \emph{Ext JS}, które są niezależne od strony serwerowej. Rozdzielenie tych dwóch warstw, choć wymaga większej wiedzy, zwykle skutkuje we wzroście wydajności w~stosunku do wykorzystania języka \emph{Java} kompilowanego do \emph{JavaScript}. Wobec tego zdecydowano się na oddzielenie strony serwerowej (Back end) od klienckiej (Front end), co pozwoli dokonać niezależnego wyboru technologii dla każdej z~nich, zwiększając wachlarz możliwości.
 
 \subsection{Back end}
 
-Framework umożliwiający implementację strony serwerowej, powinien pozwalać na definiowanie szablonów stron HTML. Dzięki temu można będzie uniezależnić się od strony klienckiej, dla której wybierze się technologie wspomagające wyświetlanie treści użytkownikom w~ich przeglądarkach internetowych.
-
-Jednym z~takich frameworków jest \emph{Play Framework}, który wpasowuje się również w~inne założenia postawione w~tym rozdziale, a~w~szczególności:
+Framework umożliwiający implementację strony serwerowej powinien pozwalać na definiowanie szablonów stron \emph{HTML}. Dzięki temu będzie można uniezależnić stronę kliencką od serwerowej i wybrać dla niej technologie (inne niż \emph{Java}) wspomagające wyświetlanie użytkownikom treści w~ich przeglądarkach internetowych. Jednym z~takich frameworków jest \emph{Play Framework}, który wpasowuje się również w~inne założenia postawione w~tym rozdziale, a~w~szczególności:
 
 \begin{itemize}
-	\item umożliwia wykorzystanie \emph{Hibernate} jako implementacji \emph{JPA}
-	\item \emph{Jackson} jest domyślną biblioteką do serializacji w~notacji \emph{JSON}, ale istnieje również możliwość skorzystania z~innych
-	\item pozwala na proste mapowanie wzorców \emph{URL} do metod kontrolerów, tzn. ułatwi w~znaczny sposób implementację \emph{Web Service'u} typu \emph{RESTful}
+	\item umożliwia on wykorzystanie \emph{Hibernate} jako implementacji \emph{JPA};
+	\item \emph{Jackson} jest jego domyślną biblioteką do serializacji w~notacji \emph{JSON}, ale istnieje również możliwość skorzystania z~innych alternatyw;
+	\item pozwala na proste mapowanie wzorców \emph{URL} do metod kontrolerów, tzn. ułatwi w~znaczny sposób implementację \emph{Web Service'u} typu \emph{RESTful}.
 \end{itemize}
 
-Z wymienionych wyżej powodów, zdecydowano że \emph{Play Framework} będzie dobrym wyborem dla serwerowej strony implementowanego systemu.
+Z wymienionych wyżej powodów, zdecydowano że \emph{Play Framework} będzie dobrym wyborem dla strony serwerowej implementowanego systemu.
 
 \subsection{Front end}
-Dzięki odseparowaniu strony klienckiej od \emph{Javy}, można dla niej dobrać technologie przeznaczone specjalnie do rozwoju stron WWW, będącego bardzo prężnie rozwijającą się dziedziną w~dobie internetu, co znacznie powiększa możliwości wyboru.
-
-Jako baza dla witryny posłuży kod \emph{HTML}, wzbogacony przez następujące frameworki, języki i~biblioteki:
+Dzięki odseparowaniu strony klienckiej od języka \emph{Java}, można dla niej dobrać technologie przeznaczone specjalnie do rozwoju stron \emph{WWW}, co znacznie powiększa możliwości wyboru. Kod \emph{HTML} tworzonego serwisu wzbogacony zostanie poprzez wykorzsytanie następujących frameworków, języków i~bibliotek:
 
 \begin{description}
-\item[JavaScript] do zapewnienia dynamicznej zawartości
-\item[CSS] jako język definiujący styl strony
-\item[jQuery] pomagające w konstruowaniu zapytań \emph{AJAX}, obsłudze zdarzeń oraz modyfikacji struktury dokumentu
-\item[Twitter Bootstrap] do strukturyzacji strony i ujednoliconego wyglądu komponentów
-\item[Glyphicons] jako pakiet ikon dostępny wraz z \emph{Twitter Bootstrap}
+\item[JavaScript] do zapewnienia dynamicznej zawartości;
+\item[CSS] jako język definiujący styl strony;
+\item[jQuery] pomagające w konstruowaniu zapytań \emph{AJAX}, obsłudze zdarzeń oraz modyfikacji struktury dokumentu;
+\item[Twitter Bootstrap] do strukturyzacji strony i ujednolicenia wyglądu komponentów;
+\item[Glyphicons] jako pakiet ikon dostępny wraz z \emph{Twitter Bootstrap}.
 \end{description}
 
 \section{Aplikacja mobilna}
 
 Dostępne na rynku mobilne systemy operacyjne nie pozwalają na przenośność aplikacji pomiędzy nimi, a~więc przy wyborze jednego z~nich warto skupić się na potrzebie potencjalnego klienta, a~nie wygodzie w~implementacji. Zgodnie z~danymi udostępnionymi w~\cite{AMS} platforma \emph{Android} w~roku 2014 zajmuje pierwsze miejsce na rynku europejskim z~udziałem \emph{73,3\%}, na drugim miejscu jest produkt \emph{Apple} z~wynikiem 16,6\%, a~na trzecim \emph{Windows} z~8,1\% udziałów. Na rynku amerykańskim sytuacja \emph{Apple} poprawia się wyrównując walkę z produktem \emph{Google}, jednak tworzona aplikacja dostosowana jest dla polskiego odbiorcy, więc statystyki zebrane w~Europie są tutaj bardziej znaczące.
 
-Platforma \emph{Android} pozwala również na implementowanie aplikacji w~języku Java. Ze względu na dużą popularność, co sprawi że gotowy produkt będzie mógł trafić do jak największej liczby lekarzy oraz zachowanie spójności z~technologią Java, będzie ona odpowiednim wyborem dla tworzonej aplikacji.
-
-Wydzielenie logiki w~postaci \emph{Web Service'u} pozwoli także w~przyszłości rozwinąć system o~inne platformy mobilne.
+Platforma \emph{Android} pozwala również na implementowanie aplikacji w~języku Java. Ze względu na zachowanie spójności z~obraną technologią oraz jej dużą popularność, która sprawi że gotowy produkt będzie mógł trafić do jak największej liczby lekarzy, jest ona odpowiednim wyborem dla tworzonej aplikacji.
 
 \subsection{Klient WebService}
 
-Dzięki wybraniu RESTful jako sposobu implementacji \emph{Web Service'u}, komunikacja z~nim po stronie aplikacji mobilnej jest zadaniem znacznie ułatwionym. Problem konsumpcji usługi ogranicza się do wyboru odpowiedniego klienta protokołu HTTP. W implementowanym systemie zdecydowano się na wykorzystanie w tym celu klasy \emph{AndroidHttpClient} implementującej interfejs \emph{HttpClient} znanej w~świecie Javy organizacji \emph{Apache}.
+Dzięki implementacji \emph{Web Service'u} z wykorzystaniem podejścia \emph{REST}, komunikacja z~nim po stronie aplikacji mobilnej jest zadaniem znacznie ułatwionym. Problem konsumpcji usługi ogranicza się do wyboru odpowiedniego klienta protokołu HTTP. W tworzonym systemie wykorzystana zostanie w tym celu klasa \emph{AndroidHttpClient}, implementująca interfejs \emph{HttpClient} znanej w~świecie Javy organizacji \emph{Apache}.
 
 \section{Dodatkowe narzędzia programistyczne}
 
-Realizowany system dzieli się na dwa główne projekty: aplikację mobilną oraz webową, zawierającą w~sobie stronę serwerową. \emph{Play Framework} jest niezależny od środowiska programistycznego, więc jako IDE przeznaczone do rozwoju drugiego z~wymienionych fragmentów wykorzystane zostanie środowisko Eclipse, używane na co dzień przez autora pracy.
+Realizowany system dzieli się na dwa główne projekty: aplikację mobilną oraz webową, która obejmuje także stronę serwerową. \emph{Play Framework} jest niezależny od środowiska programistycznego, więc jako \emph{IDE} przeznaczone do rozwoju strony internetowej i części serwerowej systemu wykorzystane zostanie środowisko Eclipse, używane na co dzień przez autora pracy.
 
-Platforma \emph{Android} również nie narzuca wyboru środowiska, ale ze względu na rozdzielenie tych dwóch fragmentów abstrakcyjną warstwą Web Service'u, korzyść z~użytkowania wspólnego IDE byłaby niewielka, ze względu na brak bezpośredniego połączenia pomiędzy projektami programistycznymi. Zalety z~użytkowania środowiska dedykowanego tej platformie, tzn. Android Studio opartego na środowisku IntelliJ, przewyższają ujednolicenie projektu, oferując między innymi automatyczną integrację z~Android SDK i~zaawansowane narzędzia refaktoryzacji, dostosowane do projektów tego typu.
+Platforma \emph{Android} również nie narzuca wyboru środowiska, ale ze względu na rozdzielenie tych dwóch fragmentów abstrakcyjną warstwą \emph{Web Service'u}, korzyść z~użytkowania wspólnego \emph{IDE} byłaby niewielka. Zalety z~użytkowania środowiska dedykowanego tej platformie, tzn. \emph{Android Studio} opartego na środowisku \emph{IntelliJ}, przewyższają ujednolicenie projektu, oferując między innymi automatyczną integrację z~\emph{Android SDK} i~zaawansowane narzędzia refaktoryzacji, dostosowane do projektów tego typu.
 
-Ręczne zarządzanie bibliotekami programistycznymi bywa bardzo kłopotliwym zadaniem oraz zwiększa zapotrzebowanie miejsca na dysku w~systemie kontroli wersji. Dodatkowo wymusza wybór środowiska programistycznego przy projekcie kolaboracyjnym, co jednak tutaj nie stanowi problemu ze względu na jednego autora. Niemniej jednak zdecydowano się na wykorzystanie systemów zarządzania zależnościami, w~celu zwiększenia wygody programowania. Niestety \emph{Play Framework} oraz \emph{Android} mają różne zalecenia jeśli chodzi o ich wybór. Dzięki całkowitemu oddzieleniu tych projektów od siebie nie przyniesie to jednak kłopotu, więc wybranymi systemami będą odpowiednio \emph{Sbt} oraz \emph{Gradle}.
+Ręczne zarządzanie bibliotekami programistycznymi bywa bardzo kłopotliwym zadaniem oraz zwiększa zapotrzebowanie miejsca na dysku w~systemie kontroli wersji. Wobec tego zdecydowano się na wykorzystanie systemu zarządzania zależnościami. Niestety \emph{Play Framework} i \emph{Android} mają różne zalecenia co do jego wyboru, jednak dzięki całkowitemu oddzieleniu od siebie tych projektów nie będzie to kłopotliwe, więc wybranymi systemami będą proponowane rozwiązania \emph{Sbt} oraz \emph{Gradle}.
 
 %----------------------------------------------------------------------------
 
 \chapter{Implementacja}
 \label{cha:implementacja}
 
-Podczas implementacji systemu tworzonego w~ramach pracy dołożono starań, aby był on zgodny z~obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W~dalszej części rozdziału przedstawione zostaną najważniejsze praktyki wraz z~motywacją ich użycia, dotyczące różnego rodzaju aplikacji, ale dopasowane do realizowanego projektu.
+Podczas implementacji systemu tworzonego w~ramach pracy dołożono starań, aby był on zgodny z~obowiązującymi normami bezpieczeństwa oraz praktykami ułatwiającymi rozwój i~utrzymanie produktu. W~tworzeniu aplikacji biznesowych istnieje wiele problemów i~pułapek, z~którymi zwykle można poradzić sobie na więcej niż jeden sposób. W~dalszej części rozdziału przedstawione zostaną najważniejsze zastosowane praktyki wraz z~motywacją ich użycia.
 
 \section{Wzorzec MVC}
 \label{sec:wzorzecMVC}
 
-W~celu zwiększenia czytelności i~elastyczności projektu warto zastosować wzorzec projektowy \emph{Model View Controller}. Jego głównym celem jest odseparowanie warstwy danych od prezentacji, aby zwiększyć możliwości ponownego wykorzystania komponentów w~innym kontekście. \emph{Model} w~\cite{GoF} tłumaczony jest jako obiekt aplikacji, \emph{widok} jako jego reprezentacja w~graficznym interfejsie użytkownika, a~\emph{kontroler} to spójnik definiujący sposób reakcji na akcje użytkownika z~poziomu interfejsu.
+W~celu zwiększenia czytelności i~elastyczności projektu warto zastosować wzorzec projektowy \emph{Model View Controller}. Jego głównym celem jest odseparowanie warstwy danych od prezentacji, aby zwiększyć możliwości ponownego wykorzystania komponentów w~innym kontekście. W~pracy\cite{GoF} \emph{Model} tłumaczony jest jako obiekt aplikacji, \emph{widok} jako jego reprezentacja w~graficznym interfejsie użytkownika, a~\emph{kontroler} to spójnik definiujący sposób reakcji na operacje wykonywane z~poziomu interfejsu.
 
 Do aktualizacji widoku na podstawie modyfikacji wprowadzanych do modelu, \emph{MVC} wykorzystuje wzorzec \emph{Obserwator}. Kiedy zmienią się dane modelu, informuje on o~tym obserwujące go obiekty, na przykład różne widoki.
 
-W aplikacjach webowych przypadek jest o~tyle szczególny, że to klient, któremu renderowany jest widok odpytuje serwer o~aktualizacje, a~model nie ma możliwości wpływać na wyświetlane dane. Zastosowanie obserwatorów nie będzie więc miało miejsca w~adaptacji wzorca do potrzeb WWW.
+W aplikacjach webowych przypadek jest o~tyle szczególny, że to klient, któremu renderowany jest widok odpytuje serwer o~aktualizacje, a~model nie ma możliwości wpływać na wyświetlane dane. Zastosowanie obserwatorów nie będzie więc miało miejsca w~adaptacji wzorca do potrzeb środowiska \emph{WWW}.
 
-\emph{Play Framework} z~góry narzuca stosowanie \emph{Model View Controller} tworząc pakiety odpowiadające składowym wzorca. Tworzony system składa się z~części webowej i~mobilnej, więc możliwość wykorzystania tych samych składników dla obydwu modułów będzie dużą zaletą. Schematy zaprezentowane w~dalszej części, dopasowane do charakterystyki projektu bazując na \cite{PfMC}, przedstawiają rozdzielenie poszczególnych elementów wzorca \emph{Model View Controller} pomiędzy tymi platformami.
+\emph{Play Framework} z~góry narzuca stosowanie \emph{Model View Controller} tworząc pakiety odpowiadające składowym wzorca. Tworzony system składa się z~dwóch aplikacji klienckich, więc możliwość wykorzystania tych samych składników dla obydwu modułów będzie dużą zaletą. Schematy zaprezentowane w~dalszej części zostały dopasowane do charakterystyki projektu bazując na przykładach ukazanych w \cite{PfMC} i przedstawiają rozdzielenie poszczególnych elementów wzorca \emph{Model View Controller} pomiędzy tymi platformami.
 
 \begin{figure}[h!]
 	\centering
@@ -1011,7 +1005,7 @@ W aplikacjach webowych przypadek jest o~tyle szczególny, że to klient, którem
 	\label{fig:mvc-web}
 \end{figure}
 
-Na rysunku \ref{fig:mvc-web} przedstawiono sposób komunikacji pomiędzy warstwami najwyższego poziomu dla aplikacji webowej. Użytkownik wpisując w~przeglądarce adres URL, pod którym upubliczniona jest aplikacja lub klikając w~odnośniki wysyła żądania HTTP do serwera. Przed przekazaniem ich do kontrolera, następuje sprawdzenie autentyczności użytkownika opisane szerzej w~rozdziałach \ref{sec:uwierzytelnianie} oraz \ref{sec:ochronaWybranychZasobow}. Jeśli dane uwierzytelniające są niepoprawne, użytkownik przekierowywany jest do strony logowania. W~przeciwnym wypadku żądanie trafia do kontrolera, który je analizuje i~w~razie potrzeby aktualizuje model. Następnie na podstawie szablonów, które wypełniane są danymi modelu, renderowany jest widok w~postaci dokumentu \emph{HTML}. Wynik przekazywany jest z~powrotem do klienta w~odpowiedzi \emph{HTTP}, na podstawie której przeglądarka wyświetla stronę i~pozwala użytkownikowi na podjęcie kolejnych akcji.
+Na rysunku \ref{fig:mvc-web} przedstawiono sposób komunikacji pomiędzy warstwami najwyższego poziomu dla aplikacji webowej. Użytkownik dokonując interakcji ze stroną internetową wysyła żądania HTTP do serwera. Przed przekazaniem ich do kontrolera, następuje sprawdzenie autentyczności użytkownika opisane szerzej w~rozdziałach \ref{sec:uwierzytelnianie} oraz \ref{sec:ochronaWybranychZasobow}. Jeśli dane uwierzytelniające są niepoprawne, użytkownik przekierowywany jest do strony logowania. W~przeciwnym wypadku żądanie trafia do kontrolera, który je analizuje i~w~razie potrzeby aktualizuje model. Następnie na podstawie szablonów, które wypełniane są danymi modelu, renderowany jest widok w~postaci dokumentu \emph{HTML}. Wynik przekazywany jest z~powrotem do klienta w~odpowiedzi \emph{HTTP}, na podstawie której przeglądarka wyświetla stronę i~pozwala użytkownikowi na podjęcie kolejnych akcji.
 
 \begin{figure}[h!]
 	\centering
@@ -1021,72 +1015,72 @@ Na rysunku \ref{fig:mvc-web} przedstawiono sposób komunikacji pomiędzy warstwa
 \end{figure}
 
 %TODO? Odnośnik do bib z WebView?
-Aplikacje Android nie wykorzystują dokumentów \emph{HTML} do prezentacji\footnote{Platforma Android pozwala na wyświetlenie dokumentów HTML przy pomocy klasy \emph{WebView}, jednak nie jest to standardowe podejście projektowania aplikacji}, więc widoki, które wyświetlane będą na telefonie komórkowym muszą zostać zaprojektowane od nowa, wykorzystując rozwiązania dostępne na tę platformę. Rysunek \ref{fig:mvc-mobile} przedstawia komunikację pomiędzy aplikacją mobilną a~serwerem. Jak widać na schemacie, widok przeznaczony dla aplikacji webowych nie bierze już udziału w~wyświetlaniu treści. Aplikacja mobilna zawiera jego własną wersję, która odwzorowuje funkcjonalności osiągalne za pomocą strony internetowej, ale jest zrealizowana przy pomocy \emph{Android SDK}. Ze względu na to, że cała warstwa prezentacji musi znajdować się po stronie klienta w~postaci aplikacji mobilnej, odpowiedzi zwracane przez kontroler powinny zwracać jedynie czystą reprezentację danych, dlatego zdecydowano się na format \emph{JSON}. Innymi słowy, dane, które w~przypadku klienta webowego były przekazywane do widoku celem przygotowania gotowego do wyświetlenia dokumentu i~zwrócenia go w~odpowiedzi, w~tym przypadku są przekazywane bezpośrednio do klienta mobilnego, który samodzielnie wypełnia nimi własne widoki.
+Aplikacje systemu \emph{Android} nie wykorzystują dokumentów \emph{HTML} do prezentacji\footnote{Platforma Android pozwala na wyświetlenie dokumentów HTML przy pomocy klasy \emph{WebView}, jednak nie jest to standardowe podejście projektowania aplikacji}. Widoki wyświetlane na telefonie komórkowym muszą zostać zaprojektowane od nowa, wykorzystując rozwiązania dostępne na tej platformie. Rysunek \ref{fig:mvc-mobile} przedstawia komunikację pomiędzy aplikacją mobilną a~serwerem. Jak widać na schemacie, widok przeznaczony dla aplikacji webowych nie bierze już udziału w~wyświetlaniu treści. Aplikacja mobilna zawiera jego własną wersję, która odwzorowuje funkcjonalności osiągalne za pomocą strony internetowej, ale jest zrealizowana przy pomocy \emph{Android SDK}. Ze względu na to, że cała warstwa prezentacji musi znajdować się po stronie klienta w~postaci aplikacji mobilnej, odpowiedzi zwracane przez kontroler powinny zwracać jedynie czystą reprezentację danych, dlatego zdecydowano się na wykorzystanie formatu \emph{JSON}. Innymi słowy, dane które w~przypadku klienta webowego były przekazywane do widoku celem przygotowania gotowego do wyświetlenia dokumentu i~zwrócenia go w~odpowiedzi, w~tym przypadku są przekazywane bezpośrednio do klienta mobilnego, który samodzielnie wypełnia nimi własne widoki.
 
-Na przedstawionych schematach widać, że rozdwojenie usługi na platformę mobilną i~webową zaczyna się dopiero za warstwą kontrolera, który razem z~modelem jest dla nich częścią wspólną. Jedyną różnicą pomiędzy obydwoma interfejsami stanowią widoki, co było celem, który udało się osiągnąć.
+Na przedstawionych schematach widać, że rozdwojenie usługi na platformę mobilną i~webową zaczyna się dopiero za warstwą kontrolera. Jedyną różnicę pomiędzy obydwoma modułami klienckimi stanowią widoki, co było celem, który udało się osiągnąć.
 
 \section{Modele}
 \label{sec:modele}
 
-W~tworzonej aplikacji można wyróżnić następujące modele:
+Model stanowi reprezentację danych, na których oparta jest logika aplikacji. W dalszej części tego podrozdziału przedstawione zostaną modele zaimplementowane w systemie \emph{Dentaise}.
 \begin{description}
 \item[Patient]
 	Model pacjenta przychodni, składający się z~następujących danych:
 	\begin{itemize}
-		\item imię
-		\item nazwisko
-		\item numer PESEL
-		\item numer telefonu kontaktowego
-		\item nazwa ulicy adresu zamieszkaniu
-		\item numer domu
-		\item numer mieszkania
-		\item miejscowość
-		\item kod pocztowy
+		\item imię,
+		\item nazwisko,
+		\item numer PESEL,
+		\item numer telefonu kontaktowego,
+		\item nazwa ulicy adresu zamieszkaniu,
+		\item numer domu,
+		\item numer mieszkania,
+		\item miejscowość,
+		\item kod pocztowy.
 	\end{itemize}
 \item[Doctor]
 	Model lekarza, czyli docelowego użytkownika aplikacji, agregujący następujące dane:
 	\begin{itemize}
-		\item imię 
-		\item nazwisko
-		\item nazwa użytkownika
-		\item hasło
-		\item sól hasła (patrz \ref{sec:sol})
-		\item adres e-mail
+		\item imię,
+		\item nazwisko,
+		\item nazwa użytkownika,
+		\item hasło,
+		\item sól hasła (patrz \ref{sec:sol}),
+		\item adres e-mail.
 	\end{itemize}
 \item[Visit]
 	Model wizyty, składający się z:
 	\begin{itemize}
-		\item lekarza wykonującego leczenie
-		\item pacjenta poddawanego leczeniu
-		\item daty i~czasu wizyty
-		\item listy wykonanych prac
-		\item dodatkowych informacji w~postaci notatek
+		\item lekarza wykonującego leczenie,
+		\item pacjenta poddawanego leczeniu,
+		\item daty i~czasu wizyty,
+		\item listy wykonanych prac,
+		\item dodatkowych informacji w~postaci notatek.
 	\end{itemize}
 \item[Work]
 	Praca wykonana w~ramach wizyty, w~której istnieje możliwość określenia:
 	\begin{itemize}
-		\item obszaru w~jamie ustnej dotyczącego wykonanej pracy
-		\item rozpoznania
-		\item podjętego leczenia
+		\item obszaru w~jamie ustnej na jakim dokonano pracy,
+		\item rozpoznania,
+		\item podjętego leczenia.
 	\end{itemize}
-	W~aplikacji zawarto jedynie przykładowe wartości odpowiadające powyższym składnikom wykonanej pracy, ale dzięki wydzieleniu obszaru w~bazie danych, służącemu do ich przetrzymywania, istnieje możliwość aktualizacji dopasowując się do potrzeb danego gabinetu bez konieczności wprowadzania zmian w~kodzie źródłowym. Przykładowe wartości zgodne z~zaleceniami NFZ znaleźć można w~\cite{DzU13} oraz \cite{ICD9}.
+	W~aplikacji zawarto jedynie przykładowe wartości odpowiadające powyższym składnikom wykonanej pracy. Dzięki wydzieleniu w~bazie danych obszaru służącego do ich przetrzymywania, istnieje możliwość aktualizacji systemu dostosowując się do potrzeb danego gabinetu bez konieczności wprowadzania zmian w~kodzie źródłowym. Przykładowe wartości zgodne z~zaleceniami NFZ znaleźć można w~\cite{DzU13} oraz \cite{ICD9}.
 \item[Area]
-	Lista możliwych obszarów leczenia.
+	lista możliwych obszarów leczenia;
 \item[Diagnosis]
-	Lista możliwych rozpoznań.
+	lista możliwych rozpoznań;
 \item[Treatment]
-	Lista możliwych leczeń.
+	lista możliwych leczeń;
 \item[Token]
-	Token czasowy umożliwiający reset hasła, w którego skład wchodzą:
+	Czasowy token umożliwiający reset hasła, w którego skład wchodzą:
 	\begin{itemize}
-		\item lekarz, będący użytkownikiem, który chce zmienić hasło
-		\item czas utworzenia żądania, który posłuży do sprawdzenia ważności tokenu
+		\item lekarz, będący użytkownikiem, który chce zmienić hasło;
+		\item czas utworzenia żądania, który posłuży do sprawdzenia ważności tokenu.
 	\end{itemize}
 \item[Session]
-	Sesja, jaką nawiązuje użytkownik podczas logowania, składająca się z:
+	Sesja, jaką nawiązuje użytkownik podczas logowania, która składa się z:
 	\begin{itemize}
-		\item zalogowanego w~sesji lekarza
-		\item daty i~czasu ostatniej aktywności w~sesji (do obsługi funkcji automatycznego wylogowania w przypadku zbyt długiej przerwy od ostatnio otrzymanego żądania)
+		\item zalogowanego w~sesji lekarza;
+		\item daty i~czasu ostatniej aktywności w~sesji (do obsługi funkcji automatycznego wylogowania w przypadku zbyt długiej przerwy od ostatnio otrzymanego żądania).
 	\end{itemize}
 \end{description}
 
@@ -1099,13 +1093,13 @@ Dla potrzeb aplikacji stworzono logotyp przedstawiony na rysunku \ref{fig:logo},
 \begin{figure}[h!]
 	\centering
 	\includegraphics{logo}
-	\caption{Logotyp przedstawiający ząb, wykorzystywany w~aplikacjach.}
+	\caption{Logotyp przedstawiający ząb.}
 	\label{fig:logo}
 \end{figure}
 
 \subsection{Aplikacja webowa}
 
-Aplikacja webowa, zgodnie z~projektem pozwala na wykonanie wszystkich funkcjonalności uwzględnionych w~systemie.
+Aplikacja webowa, zgodnie z zakresem określonym podczas fazy projektowania, stanowi docelowe narzędzie pracy dla lekarzy. Pozwala ona na wykonanie wszystkich funkcjonalności uwzględnionych w~systemie.
 
 \subsubsection{Logowanie do systemu}
 
@@ -1117,7 +1111,7 @@ Aplikacja webowa, zgodnie z~projektem pozwala na wykonanie wszystkich funkcjonal
 	\label{fig:logowanie}
 \end{wrapfigure}
 
-Po wpisaniu w~przeglądarce adresu strony WWW, użytkownikowi wyświetlony zostaje ekran logowania przedstawiony na rysunku \ref{fig:logowanie}, w~którym może podać swoją nazwę użytkownika i~hasło. Jeśli para podanych danych nie jest zgodna, wyświetlony zostaje komunikat o~błędzie i~użytkownik może ponowić próbę. Kliknięcie w~odnośnik ``Reset hasła'' spowoduje przejście do formularza zgłoszenia zapomnianego hasła.
+Po wpisaniu w~przeglądarce adresu strony \emph{WWW}, użytkownikowi wyświetlony zostaje ekran logowania przedstawiony na rysunku \ref{fig:logowanie}, w~którym może podać swoją nazwę użytkownika i~hasło. Jeśli para podanych wartości jest niepoprawna, wyświetlony zostaje komunikat o~błędzie i~użytkownik może ponowić próbę. Kliknięcie w~odnośnik ``Reset hasła'' spowoduje przejście do formularza zgłoszenia zapomnianego hasła.
 
 \subsubsection{Resetowanie hasła}
 \label{sec:resetowanieHaslaWidok}
@@ -1138,48 +1132,48 @@ Proces zmiany hasła rozpoczyna się od podania adresu e-mail. Formularz jaki je
 	\label{fig:resetHasla}
 \end{figure}
 
-Po kliknięciu przycisku ``Resetuj'', użytkownikowi wyświetlany jest komunikat przedstawiony w~punkcie \emph{b} rysunku \ref{fig:resetHasla}. W~międzyczasie otrzymuje on wiadomość e-mail z~odnośnikiem zawierającym tajny token (patrz \ref{sec:resetHaslaBezp}, który pozwala przejść do właściwego formularza zmiany hasła.
+Po kliknięciu przycisku ``Resetuj'', użytkownikowi wyświetlony zostanie komunikat przedstawiony w~punkcie \emph{b} rysunku \ref{fig:resetHasla}. W~międzyczasie otrzymuje on wiadomość e-mail z~odnośnikiem zawierającym tajny \emph{token} (patrz \ref{sec:resetHaslaBezp}), który pozwala przejść do właściwego formularza zmiany hasła.
 
-Kiedy użytkownik klika na odnośnik zawarty w~wiadomości, jest on skierowany do formularza \emph{c} rysunku \ref{fig:resetHasla}, gdzie dwukrotnie wpisuje swoje nowe hasło. Po kliknięciu ``Zmień'', jeśli token jest ważny i~pola wypełnione w~formularzu są zgodne, nowe dane zostają zatwierdzone i~użytkownik może ich użyć do zalogowania się w~systemie.
+Kiedy użytkownik klika na odnośnik zawarty w~wiadomości, jest on skierowany do formularza \emph{c} rysunku \ref{fig:resetHasla}, gdzie dwukrotnie wpisuje swoje nowe hasło. Po kliknięciu ``Zmień'', jeśli token jest ważny oraz~wartości w polach formularza są zgodne, nowe dane zostają zatwierdzone i~użytkownik może ich użyć do zalogowania się w~systemie.
 
 \subsubsection{Strona główna}
 
-Pierwszą stroną jaką widzi użytkownik po zalogowaniu jest strona główna, przedstawiona na rysunku \ref{fig:home}. Zawiera ona proste powitanie, pod którym znajduje się odnośnik kierujący lekarza do widoku wizyt, filtrującego je pod kątem aktualnego dnia i~zalogowanego użytkownika. Przeglądanie własnych wizyt jest najczęściej wykonywaną akcją, gdyż pozwala na dotarcie do innych podstron, takich jak dane pacjenta, który właśnie wszedł do gabinetu. Tak małe udogodnienie jest więc w~rzeczywistości bardzo istotne, biorąc pod uwagę szacowaną częstotliwość wykonywania tej operacji.
+Pierwszą stroną jaka ukazuje się użytkownikowi po zalogowaniu jest strona główna, przedstawiona na rysunku \ref{fig:home}. Zawiera ona proste powitanie, pod którym znajduje się odnośnik kierujący lekarza do widoku wizyt, filtrującego je na podstawie aktualnego dnia i~zalogowanego użytkownika. Przeglądanie własnych wizyt jest najczęściej wykonywaną akcją, gdyż pozwala na dotarcie do innych podstron, takich jak dane pacjenta, który właśnie wszedł do gabinetu. Tak małe udogodnienie jest więc w~rzeczywistości bardzo istotne, biorąc pod uwagę szacowaną częstotliwość wykonywania tej operacji.
 
 \fullWidthPicture{home}{Strona główna aplikacji.}
 
-Nad zwartością strony widoczne jest menu, umożliwiające nawigację po aplikacji. Klikając w~logo, użytkownik jest kierowany do omawianej strony głównej. Kolejne trzy elementy prowadzą do widoków przedstawionych kolejno w~podrozdziałach \ref{sec:pacjenci}, \ref{sec:wizyty} i \ref{sec:lekarze}, a~ostatni umożliwia wylogowanie się z~usługi.
+Nad zawartością strony widoczne jest menu, umożliwiające nawigację po aplikacji. Klikając w~logo, użytkownik jest kierowany do omawianej strony głównej. Kolejne trzy elementy prowadzą do widoków przedstawionych kolejno w~podrozdziałach \ref{sec:pacjenci}, \ref{sec:wizyty} i \ref{sec:lekarze}, a~ostatni umożliwia wylogowanie się z~usługi.
 
 \subsubsection{Pacjenci}
 \label{sec:pacjenci}
 
-Jednym z~głównych widoków, do którego można dostać się z~poziomu menu nawigacji jest ``Lista pacjentów'' przedstawiona na rysunku \ref{fig:pacjenci}. Menu podstrony widoczne pod tytułem umożliwia dodawanie nowych pozycji do listy oraz filtrowanie jej pod kątem imienia, nazwiska lub numeru PESEL, po dowolnej ilości tych danych na raz. Dla przykładu wpisując frazę ``Bo Ko 81'' zwrócone zostać mogą następujące wiersze:
+Jednym z~głównych widoków, do którego można dostać się z~poziomu menu nawigacji jest ``Lista pacjentów'', która została przedstawiona na rysunku \ref{fig:pacjenci}. Menu podstrony widoczne pod tytułem umożliwia dodawanie nowych pozycji do listy oraz filtrowanie jej pod kątem imienia, nazwiska lub numeru PESEL po dowolnej ilości tych danych na raz. Dla przykładu wpisując frazę ``Bo Ko 81'' zwrócone zostać mogą następujące wiersze:
 \begin{itemize}
-	\item \textbf{81}043012034, \textbf{Bo}gdan \textbf{Ko}za
-	\item \textbf{81}012184392, \textbf{Bo}rys \textbf{Ko}gut
-	\item \textbf{81}110938293, \textbf{Bo}lesława \textbf{Ko}była
-	\item \textbf{81}080712983, \textbf{Ko}nrad \textbf{Bo}cian
+	\item \textbf{81}043012034, \textbf{Bo}gdan \textbf{Ko}za;
+	\item \textbf{81}012184392, \textbf{Bo}rys \textbf{Ko}gut;
+	\item \textbf{81}110938293, \textbf{Bo}lesława \textbf{Ko}była;
+	\item \textbf{81}080712983, \textbf{Ko}nrad \textbf{Bo}cian.
 \end{itemize}
 Kolejność podawanych danych nie ma znaczenia.
 
 \fullWidthPicture{pacjenci}{Widok umożliwiający przeglądanie listy pacjentów.}
 
-Widok ten, podobnie jak pozostałe służące do przeglądania danych, obsługuje paginację, do czego służy element widoczny pod listą pacjentów.
+Podobnie jak pozostałe widoki służące do przeglądania danych, ``Lista pacjentów'' obsługuje paginację. Służy do tego panel widoczny pod listą pacjentów.
 
-Klikając w dowolny element listy, użytkownik kierowany jest do widoku danego pacjenta, który został przedstawiony na rysunku \ref{fig:pacjent}. W~jego tytule widnieje imię i~nazwisko, a~pod nim znajdują się wszystkie możliwe do edycji dane pacjenta. Korzystając z~przycisków akcji, oznaczonych kolorem niebieskim, użytkownik ma możliwość usunąć pacjenta, zaplanować dla niego wizytę przechodząc do widoku jej edycji oraz wyświetlić listę jego wszystkich wizyt. Kliknięcie ostatniej pozycji spowoduje przejście do widoku ``Lista wizyt'', omówionego w~podrozdziale \ref{sec:wizyty}, gdzie tytuł strony podmieniony zostanie na ``Lista wizyt pacjenta <Imię> <Nazwisko>'' i~dodany będzie ukryty warunek filtrowania po identyfikatorze wybranego pacjenta.
+Klikając w dowolny element listy, użytkownik kierowany jest do widoku danego pacjenta, który został przedstawiony na rysunku \ref{fig:pacjent}. W~jego tytule widnieje imię i~nazwisko, a~pod nim znajdują się wszystkie możliwe do edycji dane pacjenta. Korzystając z~przycisków akcji (oznaczonych kolorem niebieskim) użytkownik ma możliwość usunąć pacjenta, zaplanować dla niego wizytę oraz wyświetlić listę wszystkich jego wizyt. Kliknięcie ostatniej pozycji spowoduje przejście do widoku ``Lista wizyt'', omówionego w~podrozdziale \ref{sec:wizyty}, gdzie tytuł strony podmieniony zostanie na ``Lista wizyt pacjenta <Imię> <Nazwisko>'' i~dodany będzie ukryty warunek filtrowania po identyfikatorze wybranego pacjenta.
 
 \fullWidthPicture{pacjent}{Zrzut ekranu przedstawiający widok edycji pacjenta.}
 
-Na samym dole strony znajdują się przyciski umożliwiające zapis lub anulowanie zmodyfikowanych danych.
+Na samym dole strony znajdują się przyciski umożliwiające zatwierdzenie lub anulowanie zmodyfikowanych danych.
 
 \subsubsection{Wizyty}
 \label{sec:wizyty}
 
-Kolejnym widokiem dostępnym z~poziomu głównej nawigacji jest ``Lista wizyt'' przedstawiona na rysunku \ref{fig:wizyty}. Menu tej podstrony pozwala na filtrowanie wyświetlanych wizyt po kryteriach zalogowanego lekarza i~okresu czasu. Podobnie jak pozostałe widoki spełniające funkcjonalność przeglądania danych, podstrona ``Lista wizyt'' obsługuje paginację przy pomocy panelu znajdującego się pod wyświetlanymi wizytami.
+Kolejnym widokiem dostępnym z~poziomu głównej nawigacji jest ``Lista wizyt'' przedstawiona na rysunku \ref{fig:wizyty}. Menu tej podstrony pozwala na filtrowanie wyświetlanych wizyt po kryteriach zalogowanego lekarza i~okresu czasu.
 
 \fullWidthPicture{wizyty}{Widok umożliwiający przeglądanie listy wizyt.}
 
-Klikając jedną z~pozycji listy, użytkownik zostaje przekierowany do podstrony edytowania wizyty,   przedstawionej na rysunku \ref{fig:wizyta}. Pierwszym jej elementem jest pole do określenia terminu. Klikając w~ikonkę kalendarza widoczną po jego prawej stronie, pojawia się pomocnicze okienko graficznego wybierania daty, jak pokazano w~punkcie \emph{a} rysunku \ref{fig:datepicker}. Poprzez kliknięcie w ikonkę zegara umieszczoną na jego spodzie przechodzi się do określania czasu (punkt \emph{b} rysunku \ref{fig:datepicker}). Przy każdym wyborze wartość pola terminu wizyty jest na bieżąco aktualizowana.
+Klikając jedną z~pozycji na liście, użytkownik zostaje przekierowany do podstrony edytowania wizyty, która została przedstawiona na rysunku \ref{fig:wizyta}. Pierwszym jej elementem jest pole do określenia terminu. Po kliknięciu w~ikonę kalendarza widoczną po jego prawej stronie, pojawia się pomocnicze okienko graficznego wybierania daty ukazane w~punkcie \emph{a} rysunku \ref{fig:datepicker}. Poprzez kliknięcie w ikonę zegara przechodzi się do określania czasu (punkt \emph{b} rysunku \ref{fig:datepicker}). Przy każdym wyborze wartość pola terminu wizyty jest na bieżąco aktualizowana.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -1193,11 +1187,9 @@ Klikając jedną z~pozycji listy, użytkownik zostaje przekierowany do podstrony
 
 \fullWidthPicture{wizyta}{Zrzut ekranu przedstawiający widok edycji wizyty.}
 
-Poniżej pola terminu znajduje się lista wykonanych prac, których wartości zdefiniowane są przez modele \emph{Area}, \emph{Diagnosis} oraz \emph{Treatment}. Przycisk ``Dodaj pracę'' pozwala na dodawanie prac do listy. Nowe elementy zawierają pola możliwe do edycji, w~postaci rozwijanych list. Pozostałe są statyczne i~nie można ich modyfikować, co ma zapobiec pomyłkowym nadpisaniom zatwierdzonych już treści. W razie popełnienia błędu w definicji pracy, można ją jednak usunąć, klikając w~ikonkę kosza, znajdującą się po jej prawej stronie. Operacje dodawania i~usuwania na całych elementach listy, podobnie jak reszta widoku edycji, są zatwierdzane dopiero po kliknięciu przycisku ``Zapisz''.
+Poniżej pola terminu znajduje się lista wykonanych prac. Przycisk ``Dodaj pracę'' pozwala na dodawanie do listy nowych elementów, które zawierają pola możliwe do edycji w~postaci rozwijanych list. Pozostałe prace są statyczne i~nie można ich modyfikować, co ma zapobiec pomyłkowym nadpisaniom treści, które zostały już zatwierdzone w systemie. W razie popełnienia błędu w definicji pracy można ją jednak usunąć klikając w~ikonę kosza, znajdującą się po prawej stronie. Operacje dodawania i~usuwania na całych elementach listy, podobnie jak reszta wartości formularza edycji wizyt, są zatwierdzane dopiero po kliknięciu przycisku ``Zapisz''.
 
-Pod listą wizyt znajduje się pole ``Notatki''. Można je wykorzystać do zapamiętania wszystkich informacji, których nie da się zapisać przy pomocy przygotowanego widoku.
-
-Panel akcji pozwala na usunięcie wizyty, oraz przejście do podstrony powiązanego z~nią pacjenta.
+Pod listą wizyt znajduje się pole ``Notatki''. Można je wykorzystać do zapamiętania wszystkich informacji, których nie da się zapisać przy pomocy przygotowanego widoku. Panel akcji pozwala na usunięcie wizyty, oraz przejście do podstrony powiązanego z~nią pacjenta.
 
 
 \subsubsection{Lekarze}
@@ -1207,13 +1199,13 @@ Podstrona ``Lista lekarzy'', przedstawiona na rysunku \ref{fig:lekarze}, jest os
 
 \fullWidthPicture{lekarze}{Widok umożliwiający przeglądanie listy lekarzy.}
 
-Pod panelem znajduje się lista lekarzy, a~jeszcze niżej zaobserwować można panel paginacji. Klikając w~jeden z elementów listy, przechodzi się do widoku edycji lekarza, który został ukazany na rysunku \ref{fig:lekarz}. Jego tytuł składa się z~imienia i~nazwiska edytowanego lekarza, pod którym widnieją dane możliwe do edycji. Panel akcji pozwala na usunięcie lekarza i~zmianę jego hasła. Proces zmiany hasła w~tym wypadku jest zbliżony do opisanego w~podrozdziale o resecie zapomnianego hasła (\ref{sec:resetowanieHaslaWidok}), jednakże w~tym wypadku e-mail lekarza jest już znany, więc zaczyna się on od punktu \emph{b} z~rysunku \ref{fig:resetHasla}.
+Pod panelem znajduje się lista lekarzy, a~jeszcze niżej zaobserwować można panel paginacji. Klikając na element listy, przechodzi się do widoku edycji lekarza, który został ukazany na rysunku \ref{fig:lekarz}. Jego tytuł składa się z~imienia i~nazwiska edytowanego lekarza, pod którym widnieją dane możliwe do edycji. Panel akcji pozwala na usunięcie lekarza i~zmianę jego hasła. Proces zmiany hasła w~tym wypadku jest zbliżony do opisanego w~podrozdziale \ref{sec:resetowanieHaslaWidok}, jednakże w~tym wypadku e-mail lekarza jest już znany, więc zaczyna się on od punktu \emph{b} z~rysunku \ref{fig:resetHasla}.
 
 \fullWidthPicture{lekarz}{Zrzut ekranu przedstawiający widok edycji lekarza.}
 
 \subsection{Aplikacja mobilna}
 
-Aplikacja mobilna, z~powodów wyjaśnionych podczas opisu projektowania systemu, implementuje jedynie podzbiór operacji możliwych do wykonania w~aplikacji webowej.
+Aplikacja mobilna, z~powodów przedstawionych w projekcie systemu, implementuje jedynie podzbiór operacji możliwych do wykonania w~systemie.
 
 \subsubsection{Ekran główny}
 \label{sec:ekranGlownyMobile}
@@ -1224,9 +1216,9 @@ Po uruchomieniu aplikacji, użytkownikowi ukazuje się jej główny ekran, któr
 
 Z~ekranu głównego istnieje możliwość przejścia do następujących widoków:
 \begin{itemize}
-\item Pacjenci (podrozdział \ref{sec:pacjenciMobile})
-\item Wizyty (podrozdział \ref{sec:wizytyMobile})
-\item Ustawienia (podrozdział \ref{sec:ustawieniaMobile})
+\item ``Pacjenci'' (podrozdział \ref{sec:pacjenciMobile}),
+\item ``Wizyty'' (podrozdział \ref{sec:wizytyMobile}),
+\item ``Ustawienia'' (podrozdział \ref{sec:ustawieniaMobile}).
 \end{itemize}
 
 
@@ -1267,49 +1259,49 @@ Widok listy wizyt, przedstawiony w~punkcie \emph{a} rysunku \ref{fig:wizytyMobil
 \subsubsection{Ustawienia}
 \label{sec:ustawieniaMobile}
 
-Widok ustawień pozwala na konfigurację połączenia z~serwerem Dentaise, poprzez wprowadzenie jego adresu oraz nazwy i~hasła użytkownika. Dane są zapamiętane do kolejnego uruchomienia aplikacji dzięki wykorzystaniu \emph{Preference} API. Widok został przedstawiony na rysunku \ref{fig:ustawieniaMobile}.
+Widok ustawień pozwala na konfigurację połączenia z~serwerem Dentaise, poprzez wprowadzenie jego adresu oraz nazwy i~hasła użytkownika. Dane są zapamiętane do kolejnego uruchomienia aplikacji dzięki wykorzystaniu \emph{Preference API}. Widok ten został przedstawiony na rysunku \ref{fig:ustawieniaMobile}.
 
 \customWidthPicture{.3}{ustawieniaMobile}{Zrzut ekranu przedstawiający widok ustawień w aplikacji mobilnej.}
 
 \section{Kontrolery}
 
-W \emph{Play Framework} kontrolery stanowią jednocześnie interfejs \emph{Web Service'u} typu \emph{REST}. Jest to również jedyne miejsce, gdzie możliwe jest użycie adnotacji \emph{@Transactional}, która jak wskazuje nazwa służy do oznaczenia zakresu transakcji bazodanowych. W~związku z~tym, wszystkie metody kontrolerów, które zostały udostępnione za pośrednictwem \emph{Web Service'u} zostały oznaczone tą adnotacją, aby w~razie wystąpienia problemu nastąpił \emph{rollback} obejmujący wszystkie działania na bazie danych od początku wywołania metody przez klienta.
+W \emph{Play Framework} kontrolery stanowią jednocześnie interfejs \emph{Web Service'u} typu \emph{REST}. Jest to również jedyne miejsce, gdzie możliwe jest użycie adnotacji \emph{@Transactional}, która jak wskazuje nazwa służy do oznaczenia zakresu transakcji bazodanowych. W~związku z~tym, wszystkie metody kontrolerów, które zostały udostępnione za pośrednictwem \emph{Web Service'u} zostały oznaczone tą adnotacją, aby w~razie wystąpienia problemu nastąpiło wycofanie transakcji, obejmujące wszystkie działania na bazie danych od początku wywołania metody przez klienta.
 
 Głównym zadaniem większości ze stworzonych kontrolerów jest umożliwienie aktualizacji i~prezentacji modeli. Implementują one metody pozwalające na:
 
 \begin{itemize}
-	\item Wyświetlenie pojedynczego zasobu
-	\item Wyświetlenie listy zasobów
-	\item Aktualizację lub utworzenie zasobu
-	\item Usunięcie zasobu
+	\item wyświetlenie pojedynczego zasobu,
+	\item wyświetlenie listy zasobów,
+	\item aktualizację lub utworzenie zasobu,
+	\item usunięcie zasobu.
 \end{itemize}
 
-Wymienione funkcjonalności dotyczą następujących kontrolerów, których nazewnictwo odpowiada modelom na jakich operują:
+Wymienione funkcjonalności dotyczą następujących kontrolerów:
 
 \begin{itemize}
-	\item DoctorController
-	\item PatientController
-	\item VisitController
+	\item DoctorController,
+	\item PatientController,
+	\item VisitController.
 \end{itemize}
 
 Szczególnym przypadkiem są \emph{AreaController}, \emph{DiagnosisController} oraz \emph{TreatmentController}, które umożliwiają jedynie zwrócenie listy zasobów, czyli możliwych wyborów, którymi wypełnione zostaną kontrolki rozwijanej listy (\emph{Combo box}). Takie podejście pozwoli na wprowadzenie aktualizacji zwiększających lekarzom możliwości wyboru leczeń i~diagnoz, bez potrzeby ingerencji w~kod źródłowy aplikacji. Wyjątkowym przypadkiem jest również kontroler \emph{Application} realizujący usługi z~zakresu uwierzytelniania, zarządzania sesją i~resetu hasła.
 
-Zgodnie z~ustaleniami omówionymi w~podrozdziale \ref{sec:wzorzecMVC} wymienione kontrolery muszą zwracać dane w~różnych formatach odpowiednich dla klienta mobilnego (obiekt \emph{JSON}) oraz webowego (dokument \emph{HTML}). Obydwie strony klienckie korzystają z~tego samego interfejsu \emph{REST}, więc wybór zwracanego typu musi być zaimplementowany we wnętrzu kontrolera. Każda ze stron ma możliwość określenia jakiego typu dane chce otrzymać w~nagłówku protokołu \emph{HTTP} o~nazwie \emph{Accept}, który zostanie przeanalizowany wewnątrz metody kontrolera mającej bezpośredni dostęp do żądania otrzymanego przez serwer. Opisane podejście nosi nazwę \emph{Content Negotiation}. Przeglądarka internetowa ma możliwość wyświetlania wielu typów danych i~często ogłasza chęć akceptowania wszystkich przy pomocy wartości \emph{*/*}. W aplikacji mobilnej istnieje możliwość własnej konfiguracji tego nagłówka i~w~tym przypadku ustawiono tylko wartość \emph{application/json}. Kontroler, po wykonaniu logiki, ma więc przygotowany wynik w~postaci danych, które należy zwrócić i jeśli zawartość nagłówka \emph{Accept} zawiera wpis \emph{text/html} (wliczając grupy, takie jak \emph{text/*} czy \emph{*/*}) decyduje się na wysłanie wyrenederowanego na ich podstawie dokumentu \emph{HTML} lub obiektu w formacie \emph{JSON} w przeciwnym wypadku.
+Zgodnie z~ustaleniami opisanymi w~podrozdziale \ref{sec:wzorzecMVC}, wymienione kontrolery muszą zwracać dane w~różnych formatach, które będą odpowiednie dla klienta mobilnego (obiekt \emph{JSON}) oraz webowego (dokument \emph{HTML}). Obydwie strony klienckie korzystają z~tego samego interfejsu \emph{REST}, więc wybór zwracanego typu musi być zaimplementowany we wnętrzu kontrolera. Każda ze stron ma możliwość określenia jakiego typu dane chce otrzymać w~nagłówku protokołu \emph{HTTP} o~nazwie \emph{Accept}. Zostanie on przeanalizowany wewnątrz metod kontrolerów, które mają bezpośredni dostęp do żądania otrzymanego przez serwer. Opisane podejście nosi nazwę \emph{Content Negotiation}. Przeglądarka internetowa ma możliwość wyświetlania wielu typów danych i~często ogłasza chęć akceptowania wszystkich przy pomocy wartości \emph{*/*}. W aplikacji mobilnej istnieje możliwość własnej konfiguracji tego nagłówka i~w~tym przypadku ustawiono jedynie wartość \emph{application/json}. Kontroler po wykonaniu logiki przygotowuje wynik w~postaci danych, które należy zwrócić. Jeśli zawartość nagłówka \emph{Accept} zawiera wpis \emph{text/html} (wliczając grupy, takie jak \emph{text/*} czy \emph{*/*}) następuje wysłanie wyrenederowanego na ich podstawie dokumentu \emph{HTML}. W przeciwnym wypadku wysyłany jest obiekt w formacie \emph{JSON}.
 
 \section{Mobilny klient WebService}
 
-Na platformie Android czasochłonne operacje powinny być uruchamiane spoza wątku interfejsu użytkownika (UI). Do tego celu służy klasa \emph{AsyncTask}, dziedziczenie po której pozwoli na ujednolicenie zachowania wszystkich wywołań \emph{Web Service'u} w~aplikacji. Do realizacji tego celu potrzebne było nadpisanie funkcjonalności trzech z~jej metod:
-
-\customWidthPicture{.3}{mobileLadowanie}{Zrzut ekranu prezentujący widok ładowania podczas nawiązywania komunikacji z~usługą Web Service'u.}
+Na platformie \emph{Android} czasochłonne operacje powinny być uruchamiane poza wątkiem interfejsu użytkownika (\emph{UI}), do czego wykorzystuje się klasę \emph{AsyncTask}. Stworzenie jej klasy pochodnej pozwoliło na ujednolicenie zachowania wszystkich wywołań \emph{Web Service'u} w~aplikacji. Do realizacji tego celu potrzebne było nadpisanie funkcjonalności trzech z~jej metod:
 
 \begin{description}
 	\item[onPreExecute] \hfill \\
-	Metoda wywoływana jako pierwsza, jeszcze z~poziomu wątku interfejsu użytkownika. Pozwala na wyświetlenie informacji przed rozpoczęcie wykonania właściwej pracy. W~klasie pochodnej zaimplementowany został w~niej ekran ładowania ukazany na rysunku \ref{fig:mobileLadowanie}.
+	Metoda wywoływana jako pierwsza, jeszcze z~poziomu wątku interfejsu użytkownika. Pozwala na wyświetlenie informacji przed rozpoczęciem wykonywania właściwej pracy. W~klasie pochodnej zaimplementowany został w~niej ekran ładowania ukazany na rysunku \ref{fig:mobileLadowanie}.
+	\customWidthPicture{.3}{mobileLadowanie}{Zrzut ekranu prezentujący widok ładowania podczas nawiązywania komunikacji z~usługą Web Service'u.}
 	\item[doInBackground] \hfill \\
-	Praca wykonywana w~tle, poza wątkiem UI. Zrealizowano w~niej szablon wywołujący funkcję abstrakcyjną (\emph{makeRestCall()}), której implementacje będą korzystać z~różnych metod \emph{Web Service'u}, aby umożliwić wykorzystanie tego samego zachowania dla różnych typów wywołań. Szablon rejestruje wyjątki rzucane w~warstwie połączenia z~Web Servicem, aby na ich podstawie móc wyświetlić stosowne informacje na ekranie, takie jak komunikat o problemie nawiązania połączenia z~serwerem.
+	Praca wykonywana w~tle, poza wątkiem UI. Zrealizowano w~niej szablon wywołujący metodę abstrakcyjną (\emph{makeRestCall()}), której implementacje będą korzystać z~różnych metod \emph{Web Service'u}, aby umożliwić wykorzystanie tego samego zachowania dla wywołań różnego typu. Szablon rejestruje wyjątki rzucane w~warstwie połączenia z~Web Servicem, aby na ich podstawie móc wyświetlić stosowne informacje na ekranie, takie jak komunikat o problemie nawiązania połączenia z~serwerem.
 	\item[onPostExecute] \hfill \\
-	Metoda wywoływana po wykonaniu \emph{doInBackground}, ponownie na wątku UI. Zwykle wykorzystywana jest w~celu aktualizacji interfejsu na podstawie danych uzyskanych przez metodę wykonującą się w~tle. We własnej implementacji zrealizowano w~niej wyświetlenie predefiniowanych komunikatów na podstawie błędów zarejestrowanych w~metodzie \emph{doInBackground}. W~przypadku pomyślnego wykonania operacji nastąpi wywołanie kolejnej metody abstrakcyjnej, służącej do przetworzenia uzyskanego wyniku (\emph{handleResult()}) oraz funkcji wyświetlającej wiadomość o~sukcesie (\emph{onSuccessMessage()}), którą również w~razie zaistnienia potrzeby można nadpisać.
+	Metoda wywoływana po wykonaniu \emph{doInBackground}, ponownie na wątku \emph{UI}. Zwykle wykorzystywana jest w~celu aktualizacji interfejsu na podstawie danych uzyskanych przez metodę wykonującą się w~tle. We własnej implementacji zrealizowano w~niej wyświetlenie predefiniowanych komunikatów na podstawie błędów zarejestrowanych w~metodzie \emph{doInBackground}. W~przypadku pomyślnego wykonania operacji nastąpi wywołanie kolejnej metody abstrakcyjnej, służącej do przetworzenia uzyskanego wyniku (\emph{handleResult()}) oraz funkcji wyświetlającej wiadomość o~sukcesie (\emph{onSuccessMessage()}), którą również w~razie zaistnienia potrzeby można nadpisać.
 \end{description}
+
 
 Omawiana klasa nosi nazwę \emph{RestCallAsyncTask} i~przedstawiona została na listingu \ref{lst:restCallAsyncTask}.
 
@@ -1391,8 +1383,9 @@ public abstract class RestCallAsyncTask<T> extends AsyncTask<Void, Void, T> {
 
 \end{lstlisting}
 
+\clearpage %TODO UWAGA NA TO!
 \wrappedPicture{r}{mobileUnauthorized}{Zrzut ekranu przedstawiający komunikat błędu uwierzytelniania.\label{fig:mobileUnauthorized}}{
-Graficzną obsługę wywołań \emph{Web Service'u} zrealizowano dziedzicząc po zaprezentowanej klasie i~nadpisując metody \emph{makeRestCall}, \emph{handleResult} oraz \emph{onSuccessMessage}. W~pierwszej z~nich wykorzystuje się klasę obsługującą warstwę połączenia z~usługą, która udostępnia metody potrzebne do wykonywania operacji na zasobach. W~bezpośredniej komunikacji z~\emph{Web Servicem} uczestniczy klasa \emph{AndroidHttpClient}, która pozwala na zarządzanie \emph{Cookies}, dzięki czemu proces uwierzytelniania w~przeglądarce oraz kliencie mobilnym może przebiegać w~identyczny sposób. Obsługę procesu logowania zautomatyzowano poprzez analizowanie odpowiedzi serwera. Jeśli żądanie spowoduje otrzymanie komunikatu \emph{401 Unauthorized}, następuje próba logowania i~ponowienie wysłania żądania. Jeżeli status odpowiedzi nie zmienił się, oznacza to, że dane uwierzytelniania są niepoprawne i~rzucany jest wyjątek AuthenticationFailedException, który może zostać obsłużony w~omówionej klasie \emph{RestCallAsyncTask} poprzez wyświetlenie odpowiedniego komunikatu, co zostało ukazane na rysunku \ref{fig:mobileUnauthorized}. Dzięki temu użytkownik podczas pracy nie musi martwić się o~utrzymanie połączenia z~serwerem -- jego jedynym zadaniem jest wpisanie odpowiednich danych uwierzytelniających w~oknie ustawień. Dane te muszą być zapamiętane pomiędzy różnymi sesjami użytkowania, co zrealizowano przy pomocy \emph{Preference} API. W~przypadku wystąpienia innych błędów połączenia, aby umożliwić zróżnicowanie wyświetlanych użytkownikowi wiadomości, rzucany jest oddzielny wyjątek \emph{IOException}.
+Graficzną obsługę wywołań \emph{Web Service'u} zrealizowano dziedzicząc po zaprezentowanej klasie i~nadpisując metody \emph{makeRestCall}, \emph{handleResult} oraz \emph{onSuccessMessage}. W~pierwszej z~nich wykorzystuje się klasę obsługującą warstwę połączenia z~usługą, która udostępnia metody potrzebne do wykonywania operacji na zasobach. W~bezpośredniej komunikacji z~\emph{Web Servicem} uczestniczy klasa \emph{AndroidHttpClient}, która pozwala na zarządzanie \emph{Cookies}, dzięki czemu proces uwierzytelniania w~przeglądarce oraz kliencie mobilnym może przebiegać w~identyczny sposób. Obsługę procesu logowania zautomatyzowano poprzez analizowanie odpowiedzi serwera. Jeśli żądanie spowoduje otrzymanie komunikatu \emph{401 Unauthorized}, następuje próba logowania i~ponowienie wysłania żądania. Jeżeli status odpowiedzi nie zmienił się, oznacza to, że dane uwierzytelniania są niepoprawne i~rzucany jest wyjątek \emph{AuthenticationFailedException}, który może zostać obsłużony w~omówionej klasie \emph{RestCallAsyncTask} poprzez wyświetlenie odpowiedniego komunikatu, co zostało ukazane na rysunku \ref{fig:mobileUnauthorized}. Dzięki temu użytkownik podczas pracy nie musi martwić się o~utrzymanie połączenia z~serwerem -- jego jedynym zadaniem jest wpisanie odpowiednich danych uwierzytelniających w~oknie ustawień. Dane te muszą być zapamiętane pomiędzy różnymi sesjami użytkowania, co zrealizowano przy pomocy \emph{Preference API}. W~przypadku wystąpienia innych błędów połączenia, aby umożliwić zróżnicowanie wyświetlanych użytkownikowi wiadomości, rzucany jest oddzielny wyjątek o typie \emph{IOException}.
 }
 
 \section{Bezpieczeństwo}
@@ -1404,23 +1397,23 @@ Graficzną obsługę wywołań \emph{Web Service'u} zrealizowano dziedzicząc po
 
 Uwierzytelnianie jest pojęciem powszechnie rozumianym jako potwierdzenie tożsamości deklarowanej przez podmiot. W~informatyce proces ten wykorzystywany jest kiedy zależy nam na uniemożliwieniu dostępu do danych treści osobom nieupoważnionym, a~więc jest nieodłącznym elementem wszelkich usług (m.in. stron internetowych), przechowujących prywatne dane, przeznaczone dla każdego użytkownika z~osobna.
 
-W wypadku aplikacji tworzonej w~ramach pracy, proces uwierzytelniania musi zostać zaimplementowany po stronie serwera Dentaise i~być jednakowo stosowany przez strony klienckie - webową oraz mobilną. Należy więc tak dobrać metodę, aby była możliwa do realizacji na tych dwóch różnych platformach.
+W wypadku aplikacji tworzonej w~ramach pracy, proces uwierzytelniania musi zostać zaimplementowany po stronie serwera Dentaise i~być jednakowo stosowany przez strony klienckie -- webową oraz mobilną. Należy więc tak dobrać metodę, aby była możliwa do realizacji na tych dwóch różnych platformach.
 
 \subsubsection{Różne podejścia}
 
-Istnieją różne podejścia pozwalające potwierdzić autentyczność podmiotu, najpopularniejsze z~których zostaną zaprezentowane w~dalszej części tego podrozdziału. Każde z~nich będzie opierać się na podobnym schemacie. 
+Istnieją różne podejścia pozwalające potwierdzić autentyczność podmiotu. Najpopularniejsze z~których zostaną zaprezentowane w~dalszej części tego podrozdziału. Wszystkie przedstawione techniki będą opierać się na podobnym schemacie. 
 
-Pierwszym krokiem jest podanie przez użytkownika pary danych - jego nazwy oraz hasła - a~następnie przesłanie ich i~potwierdzenie zgodności z~danymi przetrzymywanymi w~bazie po stronie serwera. Należy przy tym pamiętać, aby dane te były przechowywane w~sposób nie narażający użytkownika na wyciek ich czytelnej postaci, w~przypadku uzyskania nieautoryzowanego dostępu do bazy przez osoby trzecie. Więcej informacji na ten temat można przeczytać w~podrozdziale \ref{sec:hashowanie}. 
+Pierwszym krokiem jest podanie przez użytkownika pary danych -- jego nazwy oraz hasła -- a~następnie przesłanie ich i~potwierdzenie zgodności z~danymi przetrzymywanymi po stronie serwera. Należy przy tym pamiętać, aby dane te były przechowywane w~sposób nie narażający użytkownika na wyciek ich czytelnej postaci w~przypadku uzyskania nieautoryzowanego dostępu do bazy przez osoby trzecie. Więcej informacji na ten temat można przeczytać w~podrozdziale \ref{sec:hashowanie}. 
 
 Następnie na podstawie dostarczonych danych, w~wypadku ich pozytywnego rozpatrzenia, nawiązywana jest sesja (podrozdział \ref{sec:sesja}), którą użytkownik identyfikuje się podczas wysyłania kolejnych żądań do serwera. Identyfikacja przy pomocy sesji jest zautomatyzowana i~niewidoczna dla użytkownika. Czas trwania sesji zwykle jest ograniczony i~wygasa ona po dłuższym okresie nieaktywności, zmuszając do powtórzenia procesu uwierzytelnienia w celu ponownego uzyskania dostępu do treści.
 
 \paragraph{Basic Access Authentication}
 
-Jest to podstawowa metoda uwierzytelniania, gdzie wymagane dane uzupełniane są w~specjalnych nagłówkach protokołu HTTP, a~więc może być wykorzystywany między innymi przez strony internetowe oraz \emph{Web Service'y}. Uwierzytelnianie tą metodą przebiega w~sposób przedstawiony poniżej. Do lepszego zobrazowania wymiany komunikatów pomiędzy serwerem a~klientem (przeglądarką) posłuży przechwycona sesja próby dostępu do menadżera aplikacji na kontenerze Tomcat.
+Jest to podstawowa metoda uwierzytelniania, gdzie wymagane dane uzupełniane są w~specjalnych nagłówkach protokołu HTTP, a~więc może być wykorzystywana między innymi przez strony internetowe oraz \emph{Web Service'y}. Uwierzytelnianie tą metodą przebiega w~sposób przedstawiony poniżej. Do lepszego zobrazowania wymiany komunikatów pomiędzy serwerem a~klientem (przeglądarką) posłuży przechwycona sesja próby dostępu do menadżera aplikacji na kontenerze Tomcat.
 
 %Użytkownik wysyła żądanie HTTP, przykładowo celem wyświetlenia zawartości strony internetowej, które jak się okazuje podczas jego analizy po stronie serwera dotyczy chronionego zasobu. Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z \cite{BDA99} nazwa strefy może być dowolna i jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
 
-Celem wyświetlenia zawartości strony internetowej, a~w~tym wypadku menedżera aplikacji znajdującego się na lokalnym kontenerze tomcat, użytkownik wprowadza w przeglądarce internetowej adres \emph{http://localhost:8080/manager/html}. Przeglądarka wysyła następujące żądanie.
+Celem wyświetlenia zawartości strony internetowej, a~w~tym wypadku menedżera aplikacji znajdującego się na lokalnym kontenerze tomcat, użytkownik wprowadza w przeglądarce internetowej adres \emph{http://localhost:8080/manager/html}. Przeglądarka wysyła następujące żądanie:
 \begin{lstlisting}
 GET /manager/html HTTP/1.1
 Host: localhost:8080
@@ -1433,9 +1426,9 @@ Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4
 Cookie: JSESSIONID=589E30C58F80986353A1C6A6B9BC02ED
 \end{lstlisting}
 
-Jak się okazuje podczas analizy żądania po stronie serwera, dotyczy ono chronionego zasobu. Sposób w~jaki określa się, które zasoby są chronione przybliżony został w~podrozdziale \ref{sec:ochronaWybranychZasobow}. W~tym momencie wystarczy wiedzieć, że w~wypadku \emph{Basic Access Authentication}, dzięki temu że należy do standardu HTTP, większość serwerów WWW i~kontenerów aplikacji pozwala na jego wygodną konfigurację poprzez wpisanie adresów URL mających być pokrytymi ochroną oraz sprecyzowanie listy użytkowników wraz z~hasłami dostępu. Ewidentną wadą tego podejścia jest statyczna baza użytkowników\footnote{Niektóre kontenery, na przykład \emph{Tomcat}, pozwalają również na zdefiniowanie połączenia z~bazą danych z~poziomu pliku konfiguracyjnego, celem uwierzytelniania użytkowników}, nic jednak nie stoi na przeszkodzie, aby utworzyć własną implementację opisywanego schematu po stronie aplikacji webowej.
+Jak się okazuje podczas analizy żądania po stronie serwera, dotyczy ono chronionego zasobu. Sposób w~jaki określa się, które zasoby są chronione przybliżony został w~podrozdziale \ref{sec:ochronaWybranychZasobow}. Dzięki temu że \emph{Basic Access Authentication} należy do standardu HTTP, większość serwerów WWW i~kontenerów aplikacji pozwala na jego wygodną konfigurację poprzez wpisanie adresów URL mających być pokrytymi ochroną oraz sprecyzowanie listy użytkowników wraz z~hasłami dostępu.
 
-Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w~tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z~\cite{BDA99} nazwa strefy może być dowolna i~jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}), musi być dostępny za pomocą tych samych danych uwierzytelniających.
+Serwer zwraca odpowiedź o statusie \emph{401 Unauthorized}, która zawiera w nagłówku \emph{WWW-Authenticate} schemat uwierzytelniania (w~tym wypadku \emph{Basic}) oraz nazwę strefy (\emph{realm}), do której należy treść jaką chce pozyskać użytkownik. Zgodnie z~\cite{BDA99} nazwa strefy może być dowolna i~jest ustalana po stronie serwera. Każdy zasób chroniony pod tą samą strefą (zwracający ten sam \emph{realm} w odpowiedzi \emph{Unauthorized}) musi być dostępny za pomocą tych samych danych uwierzytelniających.
 \begin{lstlisting}
 HTTP/1.1 401 Unauthorized
 Server: Apache-Coyote/1.1
@@ -1451,7 +1444,8 @@ Date: Tue, 12 Aug 2014 15:58:57 GMT
 
 W odpowiedzi na otrzymany komunikat przeglądarka reaguje wyświetlając okno logowania. Nie jest ono częścią strony, do której dostęp chce uzyskać użytkownik -- jego obsługa zaimplementowana jest w~całości po stronie przeglądarki. Kolejną zaletą tej metody jest więc brak konieczności implementacji formularza logowania.
 
-Po wypełnieniu danych użytkownik ponawia próbę żądania, tym razem jednak załączone zostaną dane potwierdzające jego tożsamość w~nagłówku \emph{Authenticate}. Wartość nagłówka również zawiera wykorzystywany schemat (\emph{Basic}), ale oprócz tego zapisaną w~kodowaniu Base64 nazwę użytkownika oraz jego hasło, oddzielone znakiem dwukropka (\emph{:}). Aby umożliwić stronie serwerowej poprawne oddzielenie danych po ich zdekodowaniu, nazwa użytkownika nie może zawierać tego znaku.
+Po wypełnieniu danych użytkownik ponawia próbę żądania, tym razem jednak załączone zostaną dane potwierdzające jego tożsamość w~nagłówku \emph{Authenticate}. Wartość nagłówka również zawiera wykorzystywany schemat (\emph{Basic}), ale oprócz tego zapisaną w~kodowaniu Base64 nazwę i hasło użytkownika.
+
 \begin{lstlisting}
 GET /manager/html HTTP/1.1
 Host: localhost:8080
@@ -1481,13 +1475,11 @@ Date: Tue, 12 Aug 2014 15:59:02 GMT
 
 Kolejne żądania do tej samej strefy nie wymagają ponownego wypełnienia formularza, ponieważ dane zostają zapamiętane w~przeglądarce i~są załączane automatycznie. Użytkownik nie musi dbać o~ponowne podawanie swoich danych na czas trwania sesji. Niestety standard ten nie pozwala w~prosty sposób obsłużyć opcji wylogowania się (zakończenia sesji przed czasem).
 
-Warto zauważyć, że dane przesyłane są w~niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy poprzez zdekodowanie zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania, czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę mogącą przechwycić pakiet z~wysyłanym żądaniem. Zwykle w~tym celu stosuje się szyfrowaną wersję protokołu \emph{HTTP} czyli \emph{HTTPS}.
+Warto zauważyć, że dane przesyłane są w~niezaszyfrowanej postaci (\emph{clear text}), więc mogą zostać przywrócone do swojej oryginalnej formy poprzez zdekodowanie zawartości nagłówka \emph{Authorization} przy pomocy tego samego algorytmu, który został użyty do ich zakodowania, czyli \emph{Base64}. \emph{Basic access authentication} dla zapewnienia bezpieczeństwa wymaga zastosowania dodatkowego protokołu szyfrującego, ponieważ dane uwierzytelniające mogą zostać odczytane przez każdą osobę będącą w stanie przechwycić pakiet z~wysyłanym żądaniem. Zwykle w~tym celu stosuje się protokół \emph{HTTPS}.
 
 \paragraph{Digest Access Authentication}
 
-Ze względu na to, że w~schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w~postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z~dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych.
-
-Schemat komunikacji wygląda podobnie jak w~poprzednim przypadku. Do prześledzenia wymiany komunikatów pomocny będzie przykład z~\cite{BDA99}.
+Ze względu na to, że w~schemacie \emph{Basic Access Authentication} dane uwierzytelniające użytkownika są przesyłane w~postaci niezaszyfrowanej, nie można go uznać za bezpieczny jeśli nie skorzysta się z~dodatkowej warstwy zapewniającej szyfrowanie komunikacji. \emph{Digest Access Authentication} jest jego usprawnieniem pod kątem bezpieczeństwa przesyłanych danych. Schemat komunikacji wygląda podobnie jak w~poprzednim przypadku. Do prześledzenia wymiany komunikatów pomocny będzie przykład z~\cite{BDA99}.
 
 Pierwsze żądanie nie różni się niczym od tego zawartego w~przykładzie z~\emph{Basic Access Authentication}, poza zmianą zasobu, który chcemy uzyskać. W tym wypadku serwer również odsyła odpowiedź \emph{401 Unauthorized}, jednak zawiera ona znacznie więcej danych.
 
@@ -1496,21 +1488,21 @@ Oprócz parametru \emph{realm} omówionego wcześniej, w~odpowiedzi zwrotnej mog
 \item[domain] \hfill \\
 Lista adresów przypadających pod strefę określoną w~\emph{realm}. Te same dane uwierzytelniające powinny pozwolić klientowi uzyskać dostęp do wszystkich wymienionych w~tym polu zasobów.
 \item[nonce] \hfill \\
-Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W~tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Parametr \emph{nonce} zwykle jest ciągiem znaków zakodowanym w~Base64 lub zapisanym w~systemie heksadecymalnym, który zawiera między innymi aktualny czas, aby umożliwić sprawdzenie, czy odpowiedź klienta nie przyszła po zbyt długim czasie.
+Wartość ustalana przez serwer. Jest użyta jako unikalny fragment hashowanych ciągów znaków, aby uniemożliwić przeprowadzenie ataku przez powtórzenie. W~tym celu serwer powinien zwracać unikalną wartość dla każdej odpowiedzi \emph{401 Unauthorized}. Parametr \emph{nonce} zwykle jest ciągiem znaków zakodowanym w~Base64 lub zapisanym w~systemie heksadecymalnym. Może on zawierać między innymi aktualny czas, aby umożliwić sprawdzenie, czy odpowiedź klienta nie jest przeterminowana.
 \item[opaque] \hfill \\
-Ciąg znaków ustalany przez serwer, który powinien być zwrócony w~niezmienionej postaci przez klienta. Może zostać użyty do przesyłania dodatkowych informacji, na przykład kiedy za uwierzytelnianie odpowiada serwer inny niż hostujący zasób, do którego klient chce uzyskać dostęp. W~tym celu można jednak również wykorzystać pole \emph{nonce}.
+Ciąg znaków ustalany przez serwer. Powinien być zwrócony w~niezmienionej postaci przez klienta. Może zostać użyty do przesyłania dodatkowych informacji, na przykład kiedy za uwierzytelnianie odpowiada serwer inny niż hostujący zasób, do którego klient chce uzyskać dostęp. W~tym celu można jednak również wykorzystać pole \emph{nonce}.
 %TODO? hash? z ang. hash?
 \item[stale] \hfill \\
 Flaga ustawiana na \emph{TRUE} jeżeli otrzymane żądanie zawierało przeterminowany \emph{nonce}, ale dane uwierzytelniające tworzą wraz z~nim poprawny skrót\footnote{Wynik funkcji skrótu (hash)}. Umożliwia to powtórzenie żądania z~nowym \emph{nonce}, bez ponownego angażowania użytkownika końcowego w~podawanie loginu i~hasła.
 \item[algorithm] 
 \hfill \\Wybrany algorytm funkcji skrótu (domyślnie \emph{MD5}).
 \item[qop] \hfill \\
-Pole opcjonalne (\emph{quality of protection}). W~celu zapewnienia kompatybilności wstecznej może zostać pominięte. W~zależności od wyboru skrót będzie komponowany na podstawie innego zestawu danych. Dozwolone wartości to \emph{auth} i~\emph{auth-int}, spośród których serwer może wysłać dowolną kombinację. Na podstawie zwróconych możliwości strona kliencka będzie mogła dokonać wyboru odsyłając jedną z~nich lub całkowicie je pomijając. Jeżeli jednak odpowiedź serwera zawiera to pole, zaleca się, aby klient również je uwzględnił.
+Opcjonalne pole, które wpływa na zestaw danych użytych do komponowania skrótu (\emph{quality of protection}). Dozwolone wartości to \emph{auth} i~\emph{auth-int}, spośród których serwer może wysłać dowolną kombinację. Na podstawie zwróconych możliwości strona kliencka będzie mogła dokonać wyboru odsyłając jedną z~otrzymanych wartości lub całkowicie je pomijając. Jeżeli jednak odpowiedź serwera zawiera to pole, zaleca się, aby klient również je uwzględnił.
 \item[auth-param] \hfill \\
 Pole służące do przyszłych rozszerzeń.
 \end{description}
 
-Przykładowa odpowiedź serwera będzie wyglądać następująco.
+Przykładowa odpowiedź serwera wygląda następująco.
 \begin{lstlisting}
 HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Digest
@@ -1520,7 +1512,7 @@ nonce="dcd98b7102dd2f0e8b11d0f600bfb0c093",
 opaque="5ccc069c403ebaf9f0171e9517f40e41"
 \end{lstlisting}
 
-Podobnie jak w~przykładzie dotyczącym \emph{Basic Access Authentication} klient musi na nie odpowiedzieć, umieszczając dane uwierzytelniające w~nagłówku \emph{Authenticate}. Użytkownikowi wyświetli się okno logowania obsługiwane przez przeglądarkę, gdzie może podać swój login i~hasło. Następnie dane te zostaną przetworzone, dając w~wyniku nagłówek, który zostanie przesłany w~powtórzonym żądaniu do serwera.
+Podobnie jak w~przykładzie dotyczącym \emph{Basic Access Authentication} klient musi na nie odpowiedzieć umieszczając dane uwierzytelniające w~nagłówku \emph{Authenticate}. Użytkownikowi wyświetli się okno logowania obsługiwane przez przeglądarkę, gdzie może podać swój login i~hasło. Następnie dane te zostaną przetworzone, dając w~wyniku nagłówek, który zostanie przesłany w~powtórzonym żądaniu do serwera.
 \begin{lstlisting}
 Authorization: Digest username="Mufasa",
 realm="testrealm@host.com",
@@ -1541,22 +1533,22 @@ Nazwa strefy przesłana przez serwer wraz z~odpowiedzią \emph{401 Unauthorized}
 \item[nonce] \hfill \\
 Unikalna wartość przesłana przez serwer wraz z~odpowiedzią \emph{401 Unauthorized}.
 \item[uri] \hfill \\
-URI zasobu, który chce uzyskać klient. Ta sama wartość (\emph{Request-URI})znajduje się w~pierwszej linijce żądania (\emph{Request-Line}), ale jest duplikowana, ponieważ jej oryginalna wartość może zostać zmieniona przez serwery pośredniczące.
+URI zasobu, który chce uzyskać klient. Ta sama wartość (\emph{Request-URI}) znajduje się w~pierwszej linijce żądania (\emph{Request-Line}), ale jest duplikowana, ponieważ jej oryginalna wartość może zostać zmieniona przez serwery pośredniczące.
 \item[qop] \hfill \\
-Wartość pola jest wybierana na podstawie możliwości oferowanych przez serwer w~tym samym polu. Tym razem jednak odsyłana jest pojedyncza wartość, na którą ostatecznie zdecydowała się strona kliencka. Pole jest opcjonalne, ale powinno zostać załączone do żądania jeśli serwer również zwrócił je w~odpowiedzi.
+Wartość pola jest wybierana na podstawie możliwości oferowanych przez serwer. Tym razem jednak odsyłana jest pojedyncza wartość, na którą ostatecznie zdecydowała się strona kliencka. Pole jest opcjonalne, ale powinno zostać załączone do żądania jeśli serwer również zwrócił je w~odpowiedzi.
 \item[nc] \hfill \\
-Liczba żądań (łącznie z~tym), które zostały dotychczas wysłane z~załączoną wartością \emph{nonce} (\emph{nonce count}). Umożliwia to sprawdzenie powtórzeń żądań poprzez trzymanie ich własnego licznika po stronie serwera i~porównywanie go z~tą wartością.
+Liczba żądań (łącznie z~obecnym), które zostały wysłane z~załączoną wartością \emph{nonce} (\emph{nonce count}). Umożliwia to sprawdzenie powtórzeń żądań poprzez trzymanie ich własnego licznika po stronie serwera i~porównywanie go z~tą wartością.
 \item[cnonce] \hfill \\
-Wartość ustalana przez stronę kliencką, która również może być wykorzystywana do obliczenia finalnego skrótu. Ma to zapobiec atakom typu \emph{Man In The Middle}, który mógłby mieć miejsce jeśli osoba przechwytująca transmisję miałaby pełną kontrolę nad sposobem tworzenia skrótów. Atakujący mógłby preparować wartość \emph{nonce} w~taki sposób, aby za każdym razem była ona taka sama. Dzięki temu będzie można zebrać duży zbiór skrótów od użytkowników, gdzie niewiadoma jest zawsze tylko jedna - ich hasła. Wykorzystując ten fakt atakujący może przygotować tablice tęczowe ze skrótami zbudowanymi na spreparowanej wartości \emph{nonce}, co znacznie ułatwi zadanie znalezienia hasła użytkownika. Dodanie kolejnej niewiadomej, która tym razem pochodzi od klienta, zabezpiecza przed opisaną sytuacją, znacznie zwiększając nakład obliczeń potrzebny do odgadnięcia wielu haseł z~bazy użytkowników atakowanej usługi.
+Wartość ustalana przez stronę kliencką, która również może być wykorzystywana do obliczenia finalnego skrótu. Ma ona zapobiec atakom typu \emph{Man In The Middle}, który mógłby mieć miejsce jeśli osoba przechwytująca transmisję miałaby pełną kontrolę nad sposobem tworzenia skrótów. Atakujący mógłby preparować wartość \emph{nonce} w~taki sposób, aby za każdym razem była ona taka sama. Dzięki temu będzie można zebrać duży zbiór skrótów od użytkowników, gdzie niewiadoma jest zawsze tylko jedna - ich hasła. Wykorzystując ten fakt atakujący może przygotować tablice tęczowe ze skrótami zbudowanymi na spreparowanej wartości \emph{nonce}, co znacznie ułatwi zadanie znalezienia haseł użytkowników. Dodanie kolejnej niewiadomej, która tym razem pochodzi od klienta, zabezpiecza przed opisaną sytuacją znacznie zwiększając nakład obliczeń potrzebny do odgadnięcia wielu haseł z~bazy użytkowników atakowanej usługi.
 \item[response] \hfill \\
 Finalny skrót, będący dowodem autentyczności użytkownika. W~zależności od wybranego \emph{qop} oraz algorytmu może zawierać w~sobie pola \emph{nonce}, \emph{nc}, \emph{cnonce}, \emph{qop}, \emph{username}, \emph{realm} oraz hasło użytkownika. Zawarcie tych pól w~ciągu znaków poddanemu operacji funkcji skrótu, uniemożliwia prostą podmianę tych wartości w~ich oryginalnych polach przez atakującego.
 \item[opaque] \hfill \\
 Ciąg znaków zwrócony przez serwer wraz z~odpowiedzią \emph{401 Unauthorized}.
 \end{description}
 
-Serwer otrzymując ponowne żądanie, tym razem zawierające dane uwierzytelniające, próbuje samodzielnie utworzyć skrót, korzystając z~tych samych algorytmów i~zasad, na jakich powstawała wartość przekazywana w~polu \emph{response}. Do obliczeń wykorzystuje się pola przesłane z~powrotem od klienta, oraz jego hasło odczytane z~zewnętrznego źródła (np. bazy danych), więc nie jest wymagane trzymanie stanu tego procesu po stronie serwerowej.
+Serwer otrzymując kolejne żądanie, które tym razem zawiera dane uwierzytelniające, próbuje samodzielnie utworzyć skrót korzystając z~tych samych algorytmów i~zasad, na podstawie których powstawała wartość przekazywana w~polu \emph{response}. Do obliczeń wykorzystuje się pola przesłane z~powrotem od klienta oraz jego hasło odczytane z~zewnętrznego źródła (np. bazy danych), więc nie jest wymagane trzymanie stanu tego procesu po stronie serwerowej.
 
-Ponieważ większość informacji jest pozyskiwanych od klienta, konieczne jest zabezpieczenie się przed ewentualną podmianą tych wartości, zamieszczając je również w skrócie. W~przeciwnym wypadku atakujący mógłby podsłuchać wymianę komunikatów między prawdziwym użytkownikiem a~serwerem oraz wyciągnąć z~niego skrót znajdujący się w polu \emph{response}, a~następnie podmieniając inne pola komponować własne zapytania. Zmieniając wartość URI żądania mógłby uzyskiwać dostęp do innych zasobów należących do oryginalnego właściciela przechwyconej sesji. Wynik porównania przesłanego i~uzyskanego wyniku jest ostatecznym dowodem autentyczności użytkownika.
+Ponieważ większość informacji jest pozyskiwanych od klienta, konieczne jest zabezpieczenie się przed ewentualną podmianą tych wartości, zamieszczając je również w skrócie. W~przeciwnym wypadku atakujący mógłby podsłuchać wymianę komunikatów między prawdziwym użytkownikiem a~serwerem oraz wyciągnąć z~niego skrót znajdujący się w polu \emph{response}, a~następnie podmieniając inne pola komponować własne zapytania. Zmieniając wartość URI żądania mógłby uzyskiwać dostęp do innych zasobów należących do oryginalnego właściciela przechwyconej sesji. Wynik porównania przesłanego i~uzyskanego skrótu jest ostatecznym dowodem autentyczności użytkownika.
 
 Należy podkreślić, że schemat \emph{Digest Access Authentication} utajnia jedynie przesyłane hasło użytkownika. Komunikacja nie jest szyfrowana, więc zawsze istnieje ryzyko przechwycenia pakietów oraz przeglądanie zawartości odpowiedzi \emph{HTTP} zawierającej treść, która ma zostać wyświetlona uwierzytelnionemu użytkownikowi. W~razie chęci zabezpieczenia się przed tym, należy skorzystać z szyfrowanego protokołu \emph{HTTPS}.
 
@@ -1564,36 +1556,34 @@ Niestety podobnie jak jego poprzednik, \emph{Digest Access Authentication} nie p
 
 \paragraph{Form-based authentication}
 
-Ostatnim omawianym spośród najpopularniejszych schematów uwierzytelniania jest \emph{Form-based authentication}. Protokół \emph{HTTP} w~tym wypadku nie bierze bezpośredniego udziału w~uwierzytelnianiu użytkownika. Dane autoryzacji nie są przesyłane za pomocą nagłówków, a w~treści jego żądania. Z~tego wynika, że cały proces musi zostać samodzielnie zaimplementowany.
+Ostatnim omawianym spośród najpopularniejszych schematów uwierzytelniania jest \emph{Form-based authentication}. Protokół \emph{HTTP} w~tym wypadku nie bierze bezpośredniego udziału w~uwierzytelnianiu użytkownika. Dane autoryzacji nie są przesyłane za pomocą nagłówków, a w~treści jego żądania. Z~tego wynika, że cały proces należy samodzielnie zaimplementować.
 
 Kolejnym założeniem jest to, że całość danych przesyłana jest w~czystej postaci. Hasła nie są przetwarzane przez funkcje skrótu na etapie komunikacji, a~więc konieczne jest skorzystanie z~innego sposobu zabezpieczenia tych danych przed dostępem osób trzecich. Najczęściej oczywiście wykorzystuje się w~tym celu protokół \emph{HTTPS}.
 
-Przez zastosowanie szyfrowania komunikacji mamy zapewnioną ochronę nie tylko wrażliwych danych klienta, to znaczy jego prywatnego hasła, ale również innych treści takich jak dane pacjenta, które byłyby przesyłane np. podczas edycji, lub pobieraniu listy pacjentów. Wśród tych danych znajdują się zwykle numery PESEL, adresy e-mail, czy telefon kontaktowy i~niedopuszczalne jest umożliwienie dostępu do nich osobom niepowołanym.
+Zastosowanie szyfrowania komunikacji zapewnia ochronę wrażliwych danych klienta (jego prywatnego hasła) oraz innych treści, takich jak dane pacjentów, które byłyby przesyłane wewnątrz żądań lub odpowiedzi \emph{HTTP}. Wśród tych danych znajdują się zwykle numery PESEL, adresy e-mail, czy telefon kontaktowy i~niedopuszczalne jest umożliwienie dostępu do nich osobom niepowołanym.
 
-Ze względu na to, że metoda \emph{Form-based authentication} nie korzysta z żadnych standardów, przeglądarka nie ma możliwości automatycznie obsłużyć procesu logowania, wobec czego konieczna jest samodzielna implementacja widoku dla tego procesu. Zwykle używa się w~tym celu formularzy \emph{<FORM>} języka \emph{HTML}, których zawartość przesyłana jest do serwera metodą \emph{POST} protokołu \emph{HTTP}. W~tym wypadku konieczność utworzenia własnego widoku logowania nie jest przeszkodą, ponieważ warto zapewnić spójny interfejs graficzny, z~którym użytkownik powinien mieć styczność już na etapie logowania. W przypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} użytkownikowi zaprezentowane zostanie zaimplementowane w przeglądarce okno dialogowe na tle pustej strony. Przejmując kontrolę nad tym procesem, już na etapie pobierania danych mamy możliwość wyświetlić logo i~nazwę produktu oraz obsłużyć błędy logowania wyświetlając przydatne informacje.
+Do implementacji widoku dla tego procesu zwykle używa się formularzy \emph{<FORM>} języka \emph{HTML}, których zawartość przesyłana jest do serwera metodą \emph{POST} protokołu \emph{HTTP}. W~tym wypadku konieczność utworzenia własnego widoku logowania nie jest przeszkodą, ponieważ warto zapewnić spójny interfejs graficzny, z~którym użytkownik powinien mieć styczność już na etapie logowania. W przypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} użytkownikowi zaprezentowane zostanie zaimplementowane w przeglądarce okno dialogowe na tle pustej strony. Przejmując kontrolę nad tym procesem, już na etapie pobierania danych mamy możliwość wyświetlić logo i~nazwę produktu oraz obsłużyć błędy logowania wyświetlając przydatne informacje.
 
-W~implementacji obsługi logowania metodą \emph{Form-based authentication}, podobnie jak w~innych omawianych schematach należy zadbać o~to, aby chronione były nie tylko zasoby odpowiadające wyświetlanym treściom (tzn. adresy URL stron i~podstron, po których porusza się użytkownik), ale również cała komunikacja mająca miejsce w~tle, na przykład wywołania metod \emph{WebService'u} przy pomocy zapytań \emph{AJAX}. Odpowiedzialność tą najlepiej jest przerzucić na instancje znajdujące się na wyższym poziomie abstrakcji, tak jak w wypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} mógł zajmować się tym serwer WWW lub kontener aplikacji, poprzez zdefiniowanie chronionych adresów URL w~pliku konfiguracyjnym. Pozwoli to na uniknięcie konieczności pamiętania o ręcznym wywołaniu procesu sprawdzenia czy użytkownik został uwierzytelniony dla każdej operacji z~osobna, przed zwróceniem potencjalnie wrażliwych danych. O~tym jak tego dokonać, przeczytać można w~podrozdziale \ref{sec:ochronaWybranychZasobow}.
+Podobnie jak w~innych omawianych schematach, w~implementacji obsługi logowania metodą \emph{Form-based authentication} należy zadbać o~odpowiednią ochronę zasobów. Powinna ona obejmować zasoby odpowiadające wyświetlanym treściom (tzn. adresy URL stron i~podstron, po których porusza się użytkownik) oraz całą komunikację mającą miejsce w~tle, na przykład wywołania metod \emph{WebService'u} przy pomocy zapytań \emph{AJAX}. Odpowiedzialność tą najlepiej jest przerzucić na instancje znajdujące się na wyższym poziomie abstrakcji, tak jak w wypadku \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} mógł zajmować się tym serwer WWW lub kontener aplikacji. Pozwoli to na uniknięcie konieczności pamiętania o~ręcznym wywołaniu procesu sprawdzenia autentyczności użytkownika dla każdej operacji z~osobna, przed zwróceniem potencjalnie wrażliwych danych. O~tym jak tego dokonano, przeczytać można w~podrozdziale \ref{sec:ochronaWybranychZasobow}.
 
-Scenariusz użytkowania usługi zaczyna się operacją logowania niezależnie od tego czy użytkownik wprowadza URL odnoszący się bezpośrednio do formularza pozwalającego na uwierzytelnienie się, czy próbuje uzyskać dostęp do zasobu chronionego. Należy przy tym podkreślić, że ekran logowania nie jest z~oczywistych względów w~żaden sposób chroniony - musi być dostępny dla każdego użytkownika chcącego zalogować się w~usłudze. W~przypadku gdy niezalogowany użytkownik próbuje dostać się do chronionego zasobu, zostaje on automatycznie przekierowany do ekranu logowania. W~przeciwieństwie do poprzednio omawianych metod uwierzytelniania, w~takim wypadku nie trzeba zwracać komunikatu \emph{401 Unauthorized}, a~wystarczy wysłać przekierowanie w postaci odpowiedzi \emph{303 See Other}, który zostanie automatycznie obsłużony przez przeglądarkę kierując użytkownika do podstrony logowania.
+Scenariusz użytkowania usługi zaczyna się operacją logowania niezależnie od tego czy użytkownik wprowadza URL odnoszący się bezpośrednio do formularza pozwalającego na uwierzytelnienie się, czy próbuje uzyskać dostęp do zasobu chronionego. Należy przy tym podkreślić, że ekran logowania nie jest z~oczywistych względów w~żaden sposób chroniony -- musi być dostępny dla każdego użytkownika chcącego zalogować się w~usłudze. W~przypadku gdy niezalogowany użytkownik próbuje dostać się do chronionego zasobu, zostaje on automatycznie przekierowany do ekranu logowania. W~przeciwieństwie do poprzednio omawianych metod uwierzytelniania, w~takim wypadku nie trzeba zwracać komunikatu \emph{401 Unauthorized}, a~wystarczy wysłać przekierowanie w postaci odpowiedzi \emph{303 See Other}, która zostanie automatycznie obsłużona przez przeglądarkę kierując użytkownika do podstrony logowania.
 
-Po wypełnieniu danych w~formularzu wysyłane jest zapytanie \emph{POST} pod adres operacji uwierzytelniania. Jeśli dane przekazane przez użytkownika są poprawne, rozpoczynana jest sesja, której identyfikatorem od tej pory posługuje się użytkownik jako jedyną wartością potrzebną do udowodnienia swojej tożsamości. Klucz sesji przechowywany jest w \emph{Cookies} po stronie klienta oraz załączany do każdego kolejnego żądania.
+Po wypełnieniu danych w~formularzu wysyłane jest zapytanie \emph{POST} pod adres operacji uwierzytelniania. Jeśli dane przekazane przez użytkownika są poprawne rozpoczynana jest sesja, której tajny identyfikator stanowi od tej pory dla użytkownika jedyną wartość konieczną do udowodnienia swojej tożsamości. Identyfikator sesji przechowywany jest w \emph{Cookies} po stronie klienta oraz załączany do każdego kolejnego żądania.
 
-Sesja ma ograniczony czas trwania, ale może również zostać przedwcześnie przeterminowana poprzez wylogowanie. W~przeciwieństwie do metod \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication} mając pełną kontrolę nad procesem uwierzytelniania, można tego łatwo dokonać udostępniając operację unieważniającą klucz sesji wywołującego ją użytkownika.
-
-Więcej o~sposobach tworzenia i~zarządzania sesją można przeczytać w podrozdziale \ref{sec:sesja}.
+Sesja ma ograniczony czas trwania, ale może również zostać przedwcześnie przeterminowana poprzez wylogowanie. W~przeciwieństwie do metod \emph{Basic Access Authentication} oraz \emph{Digest Access Authentication}, mając pełną kontrolę nad procesem uwierzytelniania można tego łatwo dokonać udostępniając operację unieważniającą identyfikator sesji wywołującego ją użytkownika. Więcej o~sposobach tworzenia i~zarządzania sesją można przeczytać w podrozdziale \ref{sec:sesja}.
 
 \subsubsection{Wybór metody}
 
-Niezmiernie ważnym aspektem dla wyboru odpowiedniego schematu uwierzytelniania jest uchronienie nie tylko wrażliwych danych użytkownika ale i~pacjenta. \emph{Basic Access Authentication} oraz \emph{Form-based Authentication} nie zapewniają same w~sobie ochrony dla żadnego z~nich, podczas gdy \emph{Digest Access Authentication} chroni hasło użytkownika, pozostawiając jednak inne treści w~czystej postaci. Konieczne jest zatem, niezależnie od wyboru, wprowadzenie szyfrowania całej komunikacji pomiędzy klientem a~serwerem przy pomocy protokołu \emph{HTTPS}. W~takim wypadku korzyść zastosowania \emph{Digest Access Authentication} w~miejsce \emph{Basic Access Authentication} jest niewielka, ponieważ dane użytkownika będą bezpieczne niezależnie od wyboru. Prostota \emph{Basic Access Authentication} przemawia na jej korzyść, jednak niesie ze sobą wiele ograniczeń takich jak brak możliwości wylogowania oraz implementacji własnego interfejsu logowania.
+Niezmiernie ważnym aspektem dla wyboru odpowiedniego schematu uwierzytelniania jest uchronienie wrażliwych danych użytkownika i~pacjenta. Metody \emph{Basic Access Authentication} oraz \emph{Form-based Authentication} nie zapewniają same w~sobie ochrony dla żadnego z~nich, podczas gdy schemat \emph{Digest Access Authentication} chroni hasło użytkownika, pozostawiając jednak inne treści w~czystej postaci. Wprowadzenie szyfrowania całej komunikacji pomiędzy klientem a~serwerem przy pomocy protokołu \emph{HTTPS} będzie zatem konieczne niezależnie od dokonanego wyboru. W~takim wypadku korzyść zastosowania \emph{Digest Access Authentication} w~miejsce \emph{Basic Access Authentication} jest niewielka, ponieważ dane użytkownika będą bezpieczne niezależnie od wyboru. Prostota \emph{Basic Access Authentication} przemawia na jej korzyść, jednak niesie ze sobą wiele ograniczeń takich jak brak możliwości wylogowania oraz implementacji własnego interfejsu logowania.
 
-\emph{Form-based Authentication} wymaga więcej pracy ze względu na konieczność implementacji obsługi sesji, jednak w~aplikacjach tego typu jest najlepszym wyborem dla osiągnięcia pełnej kontroli nad procesem uwierzytelniania i~na tą metodę zdecydowano się w~ramach tworzonej aplikacji.
+Metoda \emph{Form-based Authentication} wymaga więcej pracy ze względu na konieczność implementacji obsługi sesji, jednak w~aplikacjach tego typu jest najlepszym wyborem dla osiągnięcia pełnej kontroli nad procesem uwierzytelniania i~na tą metodę zdecydowano się w~ramach tworzonej aplikacji.
 
 \subsubsection{Hashowanie}
 \label{sec:hashowanie}
 
-W~przypadku wycieku bazy danych zawierającej hasła użytkownika, ich bezpieczeństwo jest zagrożone nie tylko w~obrębie usługi, na której przeprowadzono atak, ale też innych serwisów, w~których są oni zarejestrowani. Jest to spowodowane bardzo częstą, ale błędną praktyką stosowania tych samych haseł dostępu dla różnych usług przez jedną osobę. Atakujący w~przedstawionym przypadku ma zwykle dostęp do haseł oraz innych danych użytkownika, na przykład adresów e-mail, z~których może skorzystać, aby odnaleźć inne serwisy, gdzie zarejestrowana jest dana osoba i~dokonać próby włamania. Atak na mało znaczącą dla użytkownika usługę, gdzie bezpieczeństwo może być znacznie obniżone, taką jak forum dyskusyjne czy portal informacyjny, może doprowadzić do przejęcia kontroli nad najistotniejszymi systemami, na przykład pocztą elektroniczną. Niezmiernie ważne jest więc, aby bez względu na wrażliwość przechowywanych danych zapewnić swoim użytkownikom odpowiednie bezpieczeństwo.
+W~przypadku wycieku bazy danych zawierającej hasła użytkownika ich bezpieczeństwo jest zagrożone nie tylko w~obrębie usługi, na której przeprowadzono atak, ale też innych serwisów, w~których są oni zarejestrowani. Jest to spowodowane bardzo częstą, ale błędną praktyką korzystania z tych samych haseł dostępu dla różnych usług. Atakujący w~przedstawionym przypadku ma zwykle dostęp do haseł oraz innych danych użytkowników, na przykład ich adresów e-mail. Korzystając z nich można łatwo odnaleźć inne serwisy, gdzie zarejestrowana jest dana osoba i~dokonać próby włamania. Atak na mało znaczącą dla użytkownika usługę, w której bezpieczeństwo jest znacznie obniżone (np. forum dyskusyjne czy portal informacyjny), może doprowadzić do przejęcia kontroli nad najistotniejszymi systemami takimi jak poczta elektroniczna. Niezmiernie ważne jest więc, aby bez względu na wrażliwość przechowywanych danych zapewnić swoim użytkownikom odpowiednie bezpieczeństwo.
 
-Podstawową metodą obrony przed wyciekiem haseł jest przechowywanie ich postaci innej niż dostarczają użytkownicy, do czego służą funkcje skrótu. Ich wynikiem jest skrót, zwany również hashem, który ze względu na jednokierunkowość tej operacji nie pozwala na odzyskanie argumentu wejściowego, jakim jest oryginalne hasło.
+Podstawową metodą obrony przed wyciekiem haseł jest przechowywanie ich w postaci innej niż dostarczają użytkownicy, do czego służą funkcje skrótu. Ich wynikiem jest skrót, zwany również hashem, który ze względu na jednokierunkowość tej operacji nie pozwala na odzyskanie argumentu wejściowego, jakim jest oryginalne hasło.
 
 Istnieją różne rodzaje funkcji skrótu i~nie wszystkie z~nich nadają się do bezpiecznego przechowywania haseł. Niezależnie od długości argumentu, przy tej samej konfiguracji wynik będzie miał jednakową długość, a~każda najmniejsza zmiana w~parametrze wejściowym skutkuje w całkowicie innej przyporządkowanej wartości wynikowej, co obrazuje przykład z~wykorzystaniem algorytmu \emph{MD5}.
 
@@ -2004,11 +1994,11 @@ Cel pracy został osiągnięty w~zadowalającym stopniu. Stworzony system pozwal
 
 System pozwala na dopasowanie bazy możliwych świadczeń lekarskich do potrzeb danego gabinetu. W~tym celu konieczne jest jednak przygotowanie skryptu modyfikującego bazę danych. Znacznie lepszym podejściem byłoby umożliwienie graficznego rozszerzania bazy z~poziomu aplikacji webowej.
 
-Większość komercyjnych produktów przeznaczonych do obsługi gabinetu lekarskiego oferuje znacznie bardziej rozbudowane funkcjonalności, takie jak prowadzenie rozliczeń z~Narodowym Funduszem Zdrowia, wystawianie recept czy generowanie raportów. Każdy z~tych punktów jest potencjalnym miejscem rozwoju utworzonego systemu.
+Większość komercyjnych produktów przeznaczonych do obsługi gabinetu lekarskiego oferuje znacznie bardziej rozbudowane funkcjonalności, takie jak prowadzenie rozliczeń z~Narodowym Funduszem Zdrowia, wystawianie recept czy generowanie raportów. Każdy z~tych punktów jest potencjalnym miejscem rozwoju utworzonego systemu. Logika aplikacji, wydzielona w~postaci \emph{Web Service'u}, pozwoli także w~przyszłości rozwinąć system o~inne platformy mobilne.
 
 W~związku z~mało złożoną strukturą bazy danych oraz znacznie rosnącą popularnością baz typu \emph{NoSQL}, autor przy kolejnym projekcie tej klasy zdecydowałby się na użycie jej w~miejsce \emph{PostgreSQL Server}. Pozwoliłoby to uniknąć komplikacji płynących z~trudności odwzorowania modelu relacyjnego na obiektowy i przyspieszyłoby prace rozwojowe.
 
-W trakcie pisania niniejszej pracy autor znacznie poszerzył swoją wiedzę w~zakresie bezpieczeństwa, architektury i~protokołów wykorzystywanych w~aplikacjach internetowych. Nie ograniczono się do opisu wykorzystanych rozwiązań, ale także dokonano ich porównania na tle alternatyw, dzięki czemu praca może stanowić cenne źródło informacji na temat wymienionych dziedzin.
+W~trakcie pisania niniejszej pracy autor znacznie poszerzył swoją wiedzę w~zakresie bezpieczeństwa, architektury i~protokołów wykorzystywanych w~aplikacjach internetowych. Nie ograniczono się do opisu wykorzystanych rozwiązań, ale także dokonano ich porównania na tle alternatyw, dzięki czemu praca może stanowić cenne źródło informacji na temat wymienionych dziedzin.
 
 % itd.
 % \appendix
